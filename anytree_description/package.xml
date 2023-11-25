@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>anytree_description</name>
+  <version>0.0.0</version>
+  <description>The anytree description package</description>
+
+ 
+  <maintainer email="emir.kocak@trinity.ox.ac.uk">Emir Kocak</maintainer>
+  <license>BSD</license>
+  <url type="website">https://ori.ox.ac.uk/</url>
+  <author email="emir.kocak@trinity.ox.ac.uk">Jacques Cloete</author>
+
+
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>joint_state_publisher</build_depend>
+  <build_depend>joint_state_publisher_gui</build_depend>
+  <build_depend>robot_state_publisher</build_depend>
+  <build_depend>rviz</build_depend>
+  <build_depend>urdf</build_depend>
+  <build_depend>xacro</build_depend>
+
+  <build_export_depend>joint_state_publisher</build_export_depend>
+  <build_export_depend>joint_state_publisher_gui</build_export_depend>
+  <build_export_depend>robot_state_publisher</build_export_depend>
+  <build_export_depend>rviz</build_export_depend>
+  <build_export_depend>urdf</build_export_depend>
+  <build_export_depend>xacro</build_export_depend>
+
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+
+</package>
