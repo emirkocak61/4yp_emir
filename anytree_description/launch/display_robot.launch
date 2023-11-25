@@ -1,0 +1,12 @@
+<?xml version ="1.0" ?>
+<launch>
+    <arg name="use_gui" default="true" />
+    <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" unless="$(arg use_gui)"/>
+    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher" if="$(arg use_gui)"/>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree.rviz"/>
+</launch>
