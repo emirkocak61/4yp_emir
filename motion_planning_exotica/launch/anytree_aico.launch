@@ -1,0 +1,12 @@
+<launch>
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg if="$(arg debug)" name="launch_prefix" value="xterm -e gdb -ex run --args python$(env ROS_PYTHON_VERSION)" />
+
+  <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
+  <param name="robot_description_semantic" textfile="$(find anytree_description)/config/anytree.srdf" />
+
+  <node launch-prefix="$(arg launch_prefix)" pkg="motion_planning_exotica" type="anytree_aico.py" name="anytree_aico_node" output="screen" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
+</launch>
