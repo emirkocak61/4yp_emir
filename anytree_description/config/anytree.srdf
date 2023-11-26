@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="anymal">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="whole_body">
+        <joint name="world_joint"/>
+        <joint name="joint1"/>
+        <joint name="joint2"/>
+        <joint name="joint3"/>
+        <joint name="joint4"/>
+        <joint name="joint5"/>
+        <joint name="joint6"/>
+    </group>
+    <group name="base">
+        <joint name="world_joint"/>
+    </group>
+    <group name="arm">
+        <chain base_link="link00" tip_link="link06"/>
+    </group>
+    <group name="gripper">
+        <link name="gripperStator"/>
+        <link name="gripperMover"/>
+    </group>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="end_effector" parent_link="gripperStator" group="whole_body" parent_group="gripper"/>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="world_joint" type="floating" parent_frame="world_frame" child_link="base"/>
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="LF_HAA"/>
+    <passive_joint name="LF_HFE"/>
+    <passive_joint name="LF_KFE"/>
+    <passive_joint name="LH_HAA"/>
+    <passive_joint name="LH_HFE"/>
+    <passive_joint name="LH_KFE"/>
+    <passive_joint name="RF_HAA"/>
+    <passive_joint name="RF_HFE"/>
+    <passive_joint name="RF_KFE"/>
+    <passive_joint name="RH_HAA"/>
+    <passive_joint name="RH_HFE"/>
+    <passive_joint name="RH_KFE"/>
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="LF_FOOT" link2="LF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="LF_KFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="LF_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LF_FOOT" link2="LF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="base" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="link00" reason="Never"/>
+    <disable_collisions link1="LF_FOOT" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LF_KFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LF_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LF_HFE" link2="LH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="base" reason="Adjacent"/>
+    <disable_collisions link1="LF_HFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="link02" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="link03" reason="Never"/>
+    <disable_collisions link1="LF_HFE" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="LF_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LF_KFE" link2="LF_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LF_KFE" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="LH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="base" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="LF_KFE" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="LF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="LF_shank_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="LH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="LH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="LF_thigh_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="LH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="LH_KFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="LH_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LH_FOOT" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="base" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="link00" reason="Never"/>
+    <disable_collisions link1="LH_FOOT" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="LH_KFE" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="LH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="LH_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LH_HFE" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="base" reason="Adjacent"/>
+    <disable_collisions link1="LH_HFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="link02" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="link03" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="link04" reason="Never"/>
+    <disable_collisions link1="LH_HFE" link2="link06" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="LH_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LH_KFE" link2="LH_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="LH_KFE" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="base" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LH_KFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="LH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="LH_shank_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RF_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="LH_thigh_fixed" link2="link02" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="RF_HFE" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="RF_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RF_FOOT" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="base" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="link00" reason="Never"/>
+    <disable_collisions link1="RF_FOOT" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RF_KFE" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RF_shank_fixed" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RF_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RF_HFE" link2="RH_FOOT" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="base" reason="Adjacent"/>
+    <disable_collisions link1="RF_HFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="link02" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="link03" reason="Never"/>
+    <disable_collisions link1="RF_HFE" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="RF_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RF_KFE" link2="RF_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RF_KFE" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="base" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="RF_KFE" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="RF_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="RF_shank_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="RF_thigh_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="RH_HFE" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="RH_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RH_FOOT" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="base" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="link00" reason="Never"/>
+    <disable_collisions link1="RH_FOOT" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="RH_KFE" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="RH_shank_fixed" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="RH_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RH_HFE" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="base" reason="Adjacent"/>
+    <disable_collisions link1="RH_HFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="gripperStator" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="link02" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="link03" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="link04" reason="Never"/>
+    <disable_collisions link1="RH_HFE" link2="link06" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="RH_shank_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RH_KFE" link2="RH_thigh_fixed" reason="Adjacent"/>
+    <disable_collisions link1="RH_KFE" link2="base" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RH_KFE" link2="link00" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="RH_thigh_fixed" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="alphasense_mesh" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="RH_shank_fixed" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="base" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="face_front" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="link00" reason="Never"/>
+    <disable_collisions link1="RH_thigh_fixed" link2="link02" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="base" reason="Adjacent"/>
+    <disable_collisions link1="alphasense_mesh" link2="face_front" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="link00" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="link02" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="link06" reason="Never"/>
+    <disable_collisions link1="alphasense_mesh" link2="perception_head_cage" reason="Default"/>
+    <disable_collisions link1="base" link2="face_front" reason="Adjacent"/>
+    <disable_collisions link1="base" link2="face_rear" reason="Adjacent"/>
+    <disable_collisions link1="base" link2="front_handle" reason="Adjacent"/>
+    <disable_collisions link1="base" link2="interface_hatch" reason="Adjacent"/>
+    <disable_collisions link1="base" link2="link00" reason="Never"/>
+    <disable_collisions link1="base" link2="link02" reason="Never"/>
+    <disable_collisions link1="base" link2="link03" reason="Never"/>
+    <disable_collisions link1="base" link2="perception_head_cage" reason="Adjacent"/>
+    <disable_collisions link1="face_front" link2="face_rear" reason="Never"/>
+    <disable_collisions link1="face_front" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="face_front" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="face_front" link2="link00" reason="Never"/>
+    <disable_collisions link1="face_front" link2="link02" reason="Never"/>
+    <disable_collisions link1="face_front" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="front_handle" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="gripperMover" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="gripperStator" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="link00" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="link02" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="link03" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="link04" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="link06" reason="Never"/>
+    <disable_collisions link1="face_rear" link2="perception_head_cage" reason="Default"/>
+    <disable_collisions link1="front_handle" link2="interface_hatch" reason="Never"/>
+    <disable_collisions link1="front_handle" link2="link00" reason="Never"/>
+    <disable_collisions link1="front_handle" link2="link02" reason="Never"/>
+    <disable_collisions link1="front_handle" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="gripperMover" link2="gripperStator" reason="Adjacent"/>
+    <disable_collisions link1="gripperMover" link2="link03" reason="Never"/>
+    <disable_collisions link1="gripperMover" link2="link04" reason="Never"/>
+    <disable_collisions link1="gripperMover" link2="link06" reason="Never"/>
+    <disable_collisions link1="gripperStator" link2="link03" reason="Never"/>
+    <disable_collisions link1="gripperStator" link2="link04" reason="Never"/>
+    <disable_collisions link1="gripperStator" link2="link06" reason="Adjacent"/>
+    <disable_collisions link1="interface_hatch" link2="link00" reason="Adjacent"/>
+    <disable_collisions link1="interface_hatch" link2="link02" reason="Never"/>
+    <disable_collisions link1="interface_hatch" link2="link03" reason="Never"/>
+    <disable_collisions link1="interface_hatch" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="link00" link2="link02" reason="Adjacent"/>
+    <disable_collisions link1="link00" link2="link03" reason="Never"/>
+    <disable_collisions link1="link00" link2="link04" reason="Never"/>
+    <disable_collisions link1="link00" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="link02" link2="link03" reason="Adjacent"/>
+    <disable_collisions link1="link02" link2="link06" reason="Default"/>
+    <disable_collisions link1="link02" link2="perception_head_cage" reason="Never"/>
+    <disable_collisions link1="link03" link2="link04" reason="Adjacent"/>
+    <disable_collisions link1="link03" link2="link06" reason="Never"/>
+    <disable_collisions link1="link04" link2="link06" reason="Adjacent"/>
+</robot>
