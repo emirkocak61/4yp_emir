@@ -1,0 +1,2551 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /ANYmal1
+        - /Switch1/Links1
+        - /Handle1/Links1
+        - /Handle1/Links1/base1
+        - /Safety Switch1/Status1
+        - /Safety Switch1/Links1
+        - /Gate Valve1/Links1
+        - /Gate Valve1/Links1/base1
+        - /Button1/Links1
+        - /Button1/Links1/base1
+        - /Needle Valve1/Links1
+        - /Needle Valve1/Links1/base1
+        - /Globe Valve1/Links1
+        - /Globe Valve1/Links1/base1
+        - /Ball Valve1/Links1
+        - /Ball Valve1/Links1/base1
+      Splitter Ratio: 0.6490727663040161
+    Tree Height: 1434
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /Interact1
+      - /2D Nav Goal1
+      - /Center Frame1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+      - /Current View1/Focal Point1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Displays
+    Help Height: 138
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+      Splitter Ratio: 0.5
+    Tree Height: 267
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.10000000149011612
+      Cell Size: 0.25
+      Class: rviz/Grid
+      Color: 0; 0; 0
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 100
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Alpha: 1
+      Marker Scale: 0.25
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: false
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /rviz_world_loader/markers_visual
+          Name: Visual
+          Namespaces:
+            {}
+          Queue Size: 0
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: false
+          Marker Topic: /rviz_world_loader/markers_collision
+          Name: Collision
+          Namespaces:
+            {}
+          Queue Size: 0
+          Value: false
+      Enabled: true
+      Name: World
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Class: rviz/RobotModel
+          Collision Enabled: false
+          Enabled: true
+          Links:
+            All Links Enabled: true
+            Expand Joint Details: false
+            Expand Link Details: false
+            Expand Tree: false
+            LF_FOOT:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_HAA:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_HFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_HIP:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LF_KFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_SHANK:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LF_THIGH:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LF_hip_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_shank_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LF_thigh_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_FOOT:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_HAA:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_HFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_HIP:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LH_KFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_SHANK:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LH_THIGH:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            LH_hip_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_shank_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            LH_thigh_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            Link Tree Style: Links in Alphabetic Order
+            RF_FOOT:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_HAA:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_HFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_HIP:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RF_KFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_SHANK:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RF_THIGH:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RF_hip_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_shank_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RF_thigh_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_FOOT:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_HAA:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_HFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_HIP:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RH_KFE:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_SHANK:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RH_THIGH:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            RH_hip_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_shank_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            RH_thigh_fixed:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            alphasense_mesh:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            base:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            base_inertia:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            battery:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            body_top:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            bottom_shell:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            cam0_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam1_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam2_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam3_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam4_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam5_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            cam6_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            depth_camera_front_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            depth_camera_front_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            depth_camera_left_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            depth_camera_left_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            depth_camera_rear_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            depth_camera_rear_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            depth_camera_right_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            depth_camera_right_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            docking_hatch_cover:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            face_front:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            face_rear:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            front_handle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            gripperMover:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            gripperStator:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            handle:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            hatch:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            hatch_unitree_support:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            imu_link:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            imu_sensor_frame:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            interface_hatch:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            lidar:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link00:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link01:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link02:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link03:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link04:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link05:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            link06:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            perception_head_cage:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            remote:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            top_shell:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            unitree_mount:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            wide_angle_camera_front_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            wide_angle_camera_front_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+            wide_angle_camera_rear_camera:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+              Value: true
+            wide_angle_camera_rear_camera_parent:
+              Alpha: 1
+              Show Axes: false
+              Show Trail: false
+          Name: RobotModel
+          Robot Description: anymal_description
+          TF Prefix: ""
+          Update Interval: 0
+          Value: true
+          Visual Enabled: true
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: true
+          Enabled: false
+          Name: Interactive Marker
+          Show Axes: true
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: /interaction_marker/update
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 0; 255
+          Color Transformer: FlatColor
+          Decay Time: 0.25
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Interactive Marker Point Cloud
+          Position Transformer: XYZ
+          Queue Size: 10
+          Selectable: false
+          Size (Pixels): 3
+          Size (m): 0.07500000298023224
+          Style: Flat Squares
+          Topic: /slam_supervisor/marker_cloud
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+      Enabled: true
+      Name: ANYmal
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /robot_respawner_marker
+      Name: Robot Respawner
+      Namespaces:
+        {}
+      Queue Size: 1
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /wrench_marker
+      Name: Wrench Tool
+      Namespaces:
+        {}
+      Queue Size: 1
+      Value: true
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Depth Camera Front
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /depth_camera_front/point_cloud_self_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Depth Camera Rear
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /depth_camera_rear/point_cloud_self_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Depth Camera Left
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /depth_camera_left/point_cloud_self_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: FlatColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Depth Camera Right
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /depth_camera_right/point_cloud_self_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Depth Camera Front raw
+              Position Transformer: XYZ
+              Queue Size: 1
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Flat Squares
+              Topic: /depth_camera_front/depth/color/points
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Depth Camera Rear raw
+              Position Transformer: XYZ
+              Queue Size: 1
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Flat Squares
+              Topic: /depth_camera_rear/depth/color/points
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Depth Camera Left raw
+              Position Transformer: XYZ
+              Queue Size: 1
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Flat Squares
+              Topic: /depth_camera_left/depth/color/points
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Depth Camera Right raw
+              Position Transformer: XYZ
+              Queue Size: 1
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.009999999776482582
+              Style: Flat Squares
+              Topic: /depth_camera_right/depth/color/points
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+          Enabled: false
+          Name: Raw depth cameras
+      Enabled: true
+      Name: Depth Cameras
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Group
+              Displays:
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 204; 0; 0
+                  Color Transformer: FlatColor
+                  Decay Time: 1
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Front Hallucinated Points
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: false
+                  Size (Pixels): 3
+                  Size (m): 0.029999999329447746
+                  Style: Flat Squares
+                  Topic: /depth_camera_front/hallucinated_points
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 204; 0; 0
+                  Color Transformer: FlatColor
+                  Decay Time: 1
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Rear Hallucinated Points
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: false
+                  Size (Pixels): 3
+                  Size (m): 0.029999999329447746
+                  Style: Flat Squares
+                  Topic: /depth_camera_rear/hallucinated_points
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 204; 0; 0
+                  Color Transformer: FlatColor
+                  Decay Time: 1
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Right Hallucinated Points
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: false
+                  Size (Pixels): 3
+                  Size (m): 0.029999999329447746
+                  Style: Flat Squares
+                  Topic: /depth_camera_right/hallucinated_points
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 204; 0; 0
+                  Color Transformer: FlatColor
+                  Decay Time: 1
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Left Hallucinated Points
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: false
+                  Size (Pixels): 3
+                  Size (m): 0.029999999329447746
+                  Style: Flat Squares
+                  Topic: /depth_camera_left/hallucinated_points
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+              Enabled: false
+              Name: Hallucinated Pointclouds
+            - Class: rviz/Group
+              Displays:
+                - Class: rviz/Marker
+                  Enabled: true
+                  Marker Topic: /depth_camera_front/occlusion_lines
+                  Name: Front Occlusion Lines
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+                - Class: rviz/Marker
+                  Enabled: true
+                  Marker Topic: /depth_camera_rear/occlusion_lines
+                  Name: Rear Occlusion Lines
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+                - Class: rviz/Marker
+                  Enabled: true
+                  Marker Topic: /depth_camera_left/occlusion_lines
+                  Name: Left Occlusion Lines
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+                - Class: rviz/Marker
+                  Enabled: true
+                  Marker Topic: /depth_camera_right/occlusion_lines
+                  Name: Right Occlusion Lines
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+              Enabled: false
+              Name: Occlusion Lines
+          Enabled: false
+          Name: Hallucinated Points
+      Enabled: false
+      Name: Depth Image Filters
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 4.849430084228516
+            Min Value: -0.010197877883911133
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: LIDAR filtered
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 2
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /point_cloud_filter/lidar/point_cloud_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 4.853307723999023
+            Min Value: -0.010342717170715332
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: LIDAR-Depth Camera
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 2
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /point_cloud_filter/lidar_depth_camera/point_cloud_filtered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 4.853307723999023
+            Min Value: -0.010342717170715332
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: LIDAR raw
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 2
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /lidar/point_cloud
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
+      Enabled: false
+      Name: LIDAR
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /point_cloud_filter/filter_and_merger/lidar/self_filter_markers
+          Name: LIDAR
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /depth_camera_front/self_filter_markers
+          Name: Depth Camera Front
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /depth_camera_left/self_filter_markers
+          Name: Depth Camera Left
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /depth_camera_rear/self_filter_markers
+          Name: Depth Camera Rear
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /depth_camera_right/self_filter_markers
+          Name: Depth Camera Right
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+      Enabled: false
+      Name: Self Filter Markers
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Class: rviz/Pose
+          Color: 0; 126; 180
+          Enabled: true
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Name: Initial Guess
+          Queue Size: 10
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Shape: Arrow
+          Topic: /point_cloud_odometry/initial_guess
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Class: rviz/Pose
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Name: Resulting Pose
+          Queue Size: 10
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Shape: Arrow
+          Topic: /point_cloud_odometry/pose_visualizable
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 4.831459999084473
+            Min Value: -0.00835690088570118
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Input Point Cloud (registered)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 2
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /point_cloud_odometry/input_point_cloud_registered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: false
+          Autocompute Value Bounds:
+            Max Value: 3.1326000690460205
+            Min Value: -0.05119999870657921
+            Value: true
+          Axis: Z
+          Channel Name: probabilityStatic
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 1
+          Min Color: 0; 0; 0
+          Min Intensity: 0.10000000149011612
+          Name: Map (static)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /point_cloud_odometry/map_static
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: false
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: false
+          Autocompute Value Bounds:
+            Max Value: 3.1326000690460205
+            Min Value: -0.05119999870657921
+            Value: true
+          Axis: Z
+          Channel Name: probabilityStatic
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0.10000000149011612
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: Map (dynamic)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /point_cloud_odometry/map_dynamic
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: false
+          Value: false
+      Enabled: false
+      Name: Point Cloud based Odometry
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Class: rviz/Pose
+          Color: 0; 126; 180
+          Enabled: true
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Name: Initial Guess
+          Queue Size: 10
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Shape: Arrow
+          Topic: /slam/initial_guess
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Class: rviz/Pose
+          Color: 255; 25; 0
+          Enabled: true
+          Head Length: 0.30000001192092896
+          Head Radius: 0.10000000149011612
+          Name: Resulting Pose
+          Queue Size: 10
+          Shaft Length: 1
+          Shaft Radius: 0.05000000074505806
+          Shape: Arrow
+          Topic: /slam/pose_visualizable
+          Unreliable: false
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 14.429849624633789
+            Min Value: -0.7091337442398071
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Input Point Cloud (registered)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 2
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /slam/input_point_cloud_registered
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: false
+          Autocompute Value Bounds:
+            Max Value: 3.1326000690460205
+            Min Value: -0.05119999870657921
+            Value: true
+          Axis: Z
+          Channel Name: probabilityStatic
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 1
+          Min Color: 0; 0; 0
+          Min Intensity: 0.10000000149011612
+          Name: Map (static)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /slam/map_static
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: false
+          Value: false
+        - Alpha: 1
+          Autocompute Intensity Bounds: false
+          Autocompute Value Bounds:
+            Max Value: 3.1326000690460205
+            Min Value: -0.05119999870657921
+            Value: true
+          Axis: Z
+          Channel Name: probabilityStatic
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Max Intensity: 0.10000000149011612
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: Map (dynamic)
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /slam/map_dynamic
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: false
+          Value: false
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /slam/place_recognition_markers
+          Name: Place recognition database
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /slam/pose_graph
+              Name: Submaps pose graph
+              Namespaces:
+                {}
+              Queue Size: 1
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /slam/loop_detection_graph
+              Name: Loop detection graph
+              Namespaces:
+                {}
+              Queue Size: 1
+              Value: true
+          Enabled: false
+          Name: Pose graph
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 12.371679306030273
+            Min Value: -2.8999826908111572
+            Value: true
+          Axis: Z
+          Channel Name: probabilityStatic
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: Intensity
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Global map
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.019999999552965164
+          Style: Flat Squares
+          Topic: /slam/global_map
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: false
+          Value: true
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Image
+              Enabled: true
+              Image Topic: /slam/input_point_cloud_descriptor
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: Place recognition descriptor image
+              Normalize Range: true
+              Queue Size: 1
+              Transport Hint: raw
+              Unreliable: false
+              Value: true
+          Enabled: false
+          Name: Place recognition descriptor image
+      Enabled: false
+      Name: SLAM
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Class: grid_map_rviz_plugin/GridMap
+          Color: 200; 200; 200
+          Color Layer: elevation
+          Color Transformer: GridMapLayer
+          ColorMap: default
+          Enabled: true
+          Grid Cell Decimation: 1
+          Grid Line Thickness: 0.10000000149011612
+          Height Layer: elevation
+          Height Transformer: GridMapLayer
+          History Length: 1
+          Invert ColorMap: false
+          Max Color: 255; 255; 255
+          Max Intensity: 10
+          Min Color: 0; 0; 0
+          Min Intensity: 0
+          Name: Elevation Map
+          Show Grid Lines: true
+          Topic: /elevation_mapping/elevation_map_raw
+          Unreliable: false
+          Use ColorMap: true
+          Value: true
+      Enabled: false
+      Name: Elevation Map
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 1
+          Class: any_navigation_rviz_plugins/Path
+          Color: 64; 104; 225
+          Enabled: true
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Active Path
+          Queue Size: 10
+          Rotational Tol: true
+          Show Caption: false
+          Size: 0.3499999940395355
+          Topic: /path_planning_and_following/active_path
+          Translation Tol: true
+          Unreliable: false
+          Use Traversability As Color: false
+          Value: true
+        - Alpha: 1
+          Class: any_navigation_rviz_plugins/Path
+          Color: 237; 145; 33
+          Enabled: true
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Planned Path
+          Queue Size: 10
+          Rotational Tol: true
+          Show Caption: false
+          Size: 0.20000000298023224
+          Topic: /path_planning_and_following/planned_path
+          Translation Tol: true
+          Unreliable: false
+          Use Traversability As Color: false
+          Value: true
+        - Alpha: 1
+          Class: any_navigation_rviz_plugins/Path
+          Color: 151; 38; 189
+          Enabled: false
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Global Plan
+          Queue Size: 10
+          Rotational Tol: true
+          Show Caption: false
+          Size: 0.3499999940395355
+          Topic: /path_planning_and_following/waypoints_planner/global_plan
+          Translation Tol: true
+          Unreliable: false
+          Use Traversability As Color: false
+          Value: false
+        - Add yaw to z: false
+          Alpha: 1
+          Class: navigation_pose_graph_rviz_plugins/PoseGraph
+          Color: 78; 154; 6
+          Enabled: true
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Waypoints Graph
+          Queue Size: 10
+          Rotational Tol: false
+          Show Caption: false
+          Size: 0.10000000149011612
+          Topic: /path_planning_and_following/global_waypoints_manager/waypoints
+          Translation Tol: false
+          Unreliable: false
+          Use Traversability As Color: false
+          Value: true
+        - Add yaw to z: false
+          Alpha: 1
+          Class: navigation_pose_graph_rviz_plugins/PoseGraph
+          Color: 78; 154; 6
+          Enabled: false
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Path Planner Waypoints Graph
+          Queue Size: 10
+          Rotational Tol: false
+          Show Caption: false
+          Size: 0.10000000149011612
+          Topic: /path_planning_and_following/waypoints_planner/planner_waypoints
+          Translation Tol: false
+          Unreliable: false
+          Use Traversability As Color: true
+          Value: false
+        - Alpha: 0.699999988079071
+          Class: rviz/Map
+          Color Scheme: map
+          Draw Behind: false
+          Enabled: false
+          Name: Path Follower Costmap
+          Topic: /path_planning_and_following/costmap
+          Unreliable: false
+          Use Timestamp: false
+          Value: false
+        - Alpha: 1
+          Arrow Length: 0.30000001192092896
+          Axes Length: 0.30000001192092896
+          Axes Radius: 0.009999999776482582
+          Class: rviz/PoseArray
+          Color: 255; 25; 0
+          Enabled: false
+          Head Length: 0.019999999552965164
+          Head Radius: 0.03500000014901161
+          Name: Path Follower Trajectory
+          Queue Size: 10
+          Shaft Length: 0.05000000074505806
+          Shaft Radius: 0.014999999664723873
+          Shape: Arrow (3D)
+          Topic: /path_planning_and_following/trajectory_poses
+          Unreliable: false
+          Value: false
+        - Alpha: 1
+          Buffer Length: 1
+          Class: rviz/Path
+          Color: 25; 255; 0
+          Enabled: false
+          Head Diameter: 0.05999999865889549
+          Head Length: 0.03999999910593033
+          Length: 0.30000001192092896
+          Line Style: Lines
+          Line Width: 0.029999999329447746
+          Name: Path Follower Global Path
+          Offset:
+            X: 0
+            Y: 0
+            Z: 0
+          Pose Color: 255; 85; 255
+          Pose Style: Arrows
+          Queue Size: 10
+          Radius: 0.029999999329447746
+          Shaft Diameter: 0.019999999552965164
+          Shaft Length: 0.05000000074505806
+          Topic: /path_planning_and_following/global_plan
+          Unreliable: false
+          Value: false
+        - Alpha: 1
+          Axes Length: 1
+          Axes Radius: 0.10000000149011612
+          Class: rviz/Pose
+          Color: 245; 121; 0
+          Enabled: false
+          Head Length: 0.029999999329447746
+          Head Radius: 0.03999999910593033
+          Name: Path Follower Initial Rotation Marker
+          Queue Size: 10
+          Shaft Length: 0.10000000149011612
+          Shaft Radius: 0.019999999552965164
+          Shape: Arrow
+          Topic: /path_planning_and_following/initial_rotation_marker
+          Unreliable: false
+          Value: false
+        - Class: rviz/Marker
+          Enabled: false
+          Marker Topic: /path_planning_and_following/markers
+          Name: Path Follower Markers
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: false
+        - Class: rviz/MarkerArray
+          Enabled: false
+          Marker Topic: /path_planning_and_following/feasibility_footprint
+          Name: Feasibility Footprint
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: false
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Class: grid_map_rviz_plugin/GridMap
+              Color: 200; 200; 200
+              Color Layer: elevation
+              Color Transformer: GridMapLayer
+              ColorMap: default
+              Enabled: true
+              Grid Cell Decimation: 1
+              Grid Line Thickness: 0.10000000149011612
+              Height Layer: elevation
+              Height Transformer: GridMapLayer
+              History Length: 1
+              Invert ColorMap: false
+              Max Color: 255; 255; 255
+              Max Intensity: 10
+              Min Color: 0; 0; 0
+              Min Intensity: 0
+              Name: Obstacle map
+              Show Grid Lines: true
+              Topic: /path_planning_and_following/global_replanning/obstacle_map
+              Unreliable: false
+              Use ColorMap: true
+              Value: true
+            - Add yaw to z: false
+              Alpha: 1
+              Class: navigation_pose_graph_rviz_plugins/PoseGraph
+              Color: 78; 154; 6
+              Enabled: false
+              Font Size: 0.05000000074505806
+              History Length: 1
+              Name: Input pose graph
+              Queue Size: 1
+              Rotational Tol: false
+              Show Caption: false
+              Size: 0.10000000149011612
+              Topic: /path_planning_and_following/global_replanning/input_pose_graph
+              Translation Tol: false
+              Unreliable: false
+              Use Traversability As Color: true
+              Value: false
+            - Add yaw to z: false
+              Alpha: 1
+              Class: navigation_pose_graph_rviz_plugins/PoseGraph
+              Color: 78; 154; 6
+              Enabled: true
+              Font Size: 0.05000000074505806
+              History Length: 1
+              Name: Output pose graph
+              Queue Size: 1
+              Rotational Tol: false
+              Show Caption: false
+              Size: 0.10000000149011612
+              Topic: /path_planning_and_following/global_replanning/output_pose_graph
+              Translation Tol: false
+              Unreliable: false
+              Use Traversability As Color: true
+              Value: true
+          Enabled: false
+          Name: Global Replanning
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Class: collision_filter_rviz_plugin/Obstacles
+              Enabled: true
+              Footprint Topic: /collision_filter/footprint
+              Map Topic: /collision_filter/map
+              Name: Obstacles
+              Obstacle Layer: obstacle
+              Robot Frame: base
+              Unreliable: false
+              Value: true
+          Enabled: true
+          Name: Remote Operation
+      Enabled: true
+      Name: Path Planning and Following
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: true
+          Enabled: true
+          Name: Environment
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: /environment_visualizer/update
+          Value: true
+        - Alpha: 1
+          Class: any_navigation_rviz_plugins/Path
+          Color: 134; 164; 255
+          Enabled: true
+          Font Size: 0.05000000074505806
+          History Length: 1
+          Name: Path Preview
+          Queue Size: 10
+          Rotational Tol: true
+          Show Caption: false
+          Size: 0.25
+          Topic: /rqt_mission_execution/path_preview
+          Translation Tol: true
+          Unreliable: false
+          Use Traversability As Color: false
+          Value: true
+      Enabled: true
+      Name: Mission
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/MarkerArray
+          Enabled: true
+          Marker Topic: /inspection_setup/markers
+          Name: Inspection Setup Markers
+          Namespaces:
+            {}
+          Queue Size: 1
+          Value: true
+      Enabled: false
+      Name: Inspection
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: true
+          Enabled: true
+          Name: InteractiveMarkers
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: /interactive_waypoints/update
+          Value: true
+      Enabled: false
+      Name: Waypoints Editor
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 10
+                Min Value: -10
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 30; 237; 163
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Selected Map Point Cloud
+              Position Transformer: XYZ
+              Queue Size: 1
+              Selectable: true
+              Size (Pixels): 1
+              Size (m): 0.009999999776482582
+              Style: Points
+              Topic: /pharos_map_editor/selected_map_point_cloud
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /pharos_map_editor/selected_map_pose_graph
+              Name: Selected Map Pose Graph
+              Namespaces:
+                {}
+              Queue Size: 1
+              Value: true
+          Enabled: true
+          Name: Selected Map
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Group
+              Displays:
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 0; 71; 255
+                  Color Transformer: FlatColor
+                  Decay Time: 0
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Parent Map Point Cloud
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: true
+                  Size (Pixels): 1
+                  Size (m): 0.009999999776482582
+                  Style: Points
+                  Topic: /pharos_map_editor/parent_map_point_cloud
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Class: rviz/MarkerArray
+                  Enabled: true
+                  Marker Topic: /pharos_map_editor/parent_map_pose_graph
+                  Name: Parent Map Pose Graph
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+              Enabled: true
+              Name: Parent Map
+            - Class: rviz/Group
+              Displays:
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 239; 41; 41
+                  Color Transformer: FlatColor
+                  Decay Time: 0
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Child Map Point Cloud
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: true
+                  Size (Pixels): 1
+                  Size (m): 0.009999999776482582
+                  Style: Points
+                  Topic: /pharos_map_editor/child_map_point_cloud
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Class: rviz/MarkerArray
+                  Enabled: true
+                  Marker Topic: /pharos_map_editor/child_map_pose_graph
+                  Name: Child Map Pose Graph
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+              Enabled: false
+              Name: Child Map
+            - Class: rviz/Group
+              Displays:
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 252; 233; 79
+                  Color Transformer: FlatColor
+                  Decay Time: 0
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Aligned Child Map Point Cloud
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: true
+                  Size (Pixels): 1
+                  Size (m): 0.009999999776482582
+                  Style: Points
+                  Topic: /pharos_map_editor/aligned_child_map_point_cloud
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Class: rviz/MarkerArray
+                  Enabled: true
+                  Marker Topic: /pharos_map_editor/aligned_child_map_pose_graph
+                  Name: Aligned Child Map Pose Graph
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+              Enabled: true
+              Name: Aligned Child Map
+            - Class: rviz/Group
+              Displays:
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 34.42845916748047
+                    Min Value: -19.300201416015625
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 252; 233; 79
+                  Color Transformer: AxisColor
+                  Decay Time: 0
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Merged Map Point Cloud
+                  Position Transformer: XYZ
+                  Queue Size: 1
+                  Selectable: true
+                  Size (Pixels): 1.5
+                  Size (m): 0.009999999776482582
+                  Style: Points
+                  Topic: /pharos_map_editor/fused_map_point_cloud
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+                - Class: rviz/MarkerArray
+                  Enabled: true
+                  Marker Topic: /pharos_map_editor/fused_map_pose_graph
+                  Name: Merged Map Pose Graph
+                  Namespaces:
+                    {}
+                  Queue Size: 1
+                  Value: true
+                - Alpha: 1
+                  Autocompute Intensity Bounds: true
+                  Autocompute Value Bounds:
+                    Max Value: 10
+                    Min Value: -10
+                    Value: true
+                  Axis: Z
+                  Channel Name: intensity
+                  Class: rviz/PointCloud2
+                  Color: 255; 255; 255
+                  Color Transformer: ""
+                  Decay Time: 0
+                  Enabled: true
+                  Invert Rainbow: false
+                  Max Color: 255; 255; 255
+                  Min Color: 0; 0; 0
+                  Name: Overlapping points Parent-Child
+                  Position Transformer: ""
+                  Queue Size: 1
+                  Selectable: true
+                  Size (Pixels): 1
+                  Size (m): 0.009999999776482582
+                  Style: Points
+                  Topic: /pharos_map_editor/overlap_fusion_map_point_cloud
+                  Unreliable: false
+                  Use Fixed Frame: true
+                  Use rainbow: true
+                  Value: true
+              Enabled: true
+              Name: Merged Map
+            - Class: rviz/MarkerArray
+              Enabled: true
+              Marker Topic: /pharos_map_editor/region_of_interest
+              Name: Region Of Interest
+              Namespaces:
+                {}
+              Queue Size: 1
+              Value: true
+          Enabled: true
+          Name: MapMerging
+      Enabled: false
+      Name: SLAM Maps Merger
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 0.5
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 2.019165277481079
+            Min Value: -0.01582673192024231
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Input Point Cloud
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 1
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /slam_maps_transformer/map
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 0.5
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 2.019165277481079
+            Min Value: -0.01582673192024231
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: AxisColor
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Transformed Point Cloud
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: false
+          Size (Pixels): 1
+          Size (m): 1
+          Style: Points
+          Topic: /slam_maps_transformer/map_transformed
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: RGB8
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Points in Plane XY
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 25
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /slam_maps_transformer/points_in_plane_xy
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: RGB8
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Points in Plane XZ
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 25
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /slam_maps_transformer/points_in_plane_xz
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: RGB8
+          Decay Time: 0
+          Enabled: true
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Points in Plane YZ
+          Position Transformer: XYZ
+          Queue Size: 1
+          Selectable: true
+          Size (Pixels): 25
+          Size (m): 0.009999999776482582
+          Style: Points
+          Topic: /slam_maps_transformer/points_in_plane_yz
+          Unreliable: false
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: true
+        - Alpha: 1
+          Class: rviz/Axes
+          Enabled: true
+          Length: 1
+          Name: Axes
+          Radius: 0.10000000149011612
+          Reference Frame: <Fixed Frame>
+          Show Trail: false
+          Value: true
+      Enabled: false
+      Name: SLAM Maps Transformer
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz_image_floorplan/FloorplanDisplay
+          Enabled: true
+          Floorplan Frame: floorplan_tf
+          Image Alpha: 0.5
+          Image Topic: /floorplan_image
+          Image x translation: 0
+          Image y translation: 0
+          Image yaw angle: 0
+          Image z translation: 0
+          Meters per pixel: 0.0020000000949949026
+          Name: Floorplan
+          Value: true
+        - Class: rviz/InteractiveMarkers
+          Enable Transparency: false
+          Enabled: false
+          Name: Floorplan Marker
+          Show Axes: false
+          Show Descriptions: true
+          Show Visual Aids: false
+          Update Topic: /move_floorplan/update
+          Value: false
+      Enabled: false
+      Name: Floorplan Plugin
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        grip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Switch
+      Robot Description: switch/0/robot_description
+      TF Prefix: switch/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        grip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        neck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Handle
+      Robot Description: handle/0/robot_description
+      TF Prefix: handle/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        lever:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Safety Switch
+      Robot Description: HNF361_safety_switch/0/robot_description
+      TF Prefix: HNF361_safety_switch/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        handle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handle_rotated:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Gate Valve
+      Robot Description: PN16_gate_valve/0/robot_description
+      TF Prefix: PN16_gate_valve/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        shaft:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        top:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Button
+      Robot Description: /button/0/robot_description
+      TF Prefix: button/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        handle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handle_rotated:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Needle Valve
+      Robot Description: needle_valve/0/robot_description
+      TF Prefix: needle_valve/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        handle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handle_rotated:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Globe Valve
+      Robot Description: DN40_globe_valve/0/robot_description
+      TF Prefix: DN40_globe_valve/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base:
+          Alpha: 1
+          Show Axes: true
+          Show Trail: false
+          Value: true
+        handle:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handle_rotated:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: Ball Valve
+      Robot Description: VDL_6_20_110_ball_valve/0/robot_description
+      TF Prefix: VDL_6_20_110_ball_valve/0
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+  Enabled: true
+  Global Options:
+    Background Color: 238; 238; 236
+    Default Light: true
+    Fixed Frame: map
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+    - Class: center_frame_tool/CenterFrameTool
+      Frame: base
+    - Class: gazebo_play_tool/GazeboPlayTool
+    - Class: rviz_gazebo_interaction/RobotRespawner
+    - ~
+    - ~
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 6.514212608337402
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: -1.1399357318878174
+        Y: 2.544942617416382
+        Z: 0.9550346732139587
+      Focal Shape Fixed Size: false
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 0.35979652404785156
+      Target Frame: base
+      Yaw: 2.4567315578460693
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 1712
+  Hide Left Dock: false
+  Hide Right Dock: true
+  Place recognition descriptor image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000002bf0000060efc020000000ffb0000001200530065006c0065006300740069006f006e00000001e10000009b000000b300fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c00610079007301000000710000060e0000018800fffffffb0000001a004b0069006e006500630074002000430061006d0065007200610000000191000001010000000000000000fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0056006900650077007302000004c000000196000001d00000013bfb000000100044006900730070006c0061007900730000000301000001350000018800fffffffb0000001a004b0069006e006500630074002000430061006d0065007200610000000000ffffffff0000000000000000fb0000000c00430061006d00650072006100000001d20000007c0000000000000000fb00000016005a006f006f006d002000430061006d0065007200610100000131000000160000000000000000fb0000001c0054006800650072006d0061006c002000430061006d006500720061010000014d000000160000000000000000fb000000440050006c0061006300650020007200650063006f0067006e006900740069006f006e002000640065007300630072006900700074006f007200200069006d0061006700650000000000ffffffff0000002900ffffff000000010000017200000126fc0200000008fb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000003c000000b8000000b300fffffffc000000400000024d0000000000fffffffa000000000100000003fb00000012005000610074006800500061006e0065006c0000000000ffffffff0000000000000000fb00000012005000610074006800500061006e0065006c0100000000ffffffff0000000000000000fb0000000a0056006900650077007300000004ba000001720000015700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b20000000000000000fb000000140046006500650064006200610063006b00200031000000003d000000360000000000000000fb000000140046006500650064006200610063006b002000340000000079000000360000000000000000fb000000140046006500650064006200610063006b0020003300000000b5000000360000000000000000fb000000140046006500650064006200610063006b0020003200000000f1000000360000000000000000fb0000000c0052006500730075006c0074000000012d000000360000000000000000000000020000075a00000098fc0100000001fb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000000000000075a0000000000000000000000030000073f0000003efc0100000002fb0000000800540069006d006500000000000000073f0000083b00fffffffb0000000800540069006d00650100000000000004500000000000000000000006f40000060e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: true
+  Width: 2495
+  X: 787
+  Y: 442

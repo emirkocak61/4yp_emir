@@ -1,0 +1,42 @@
+slam:
+  mapping:
+    load_map_on_launch: false
+
+# Any other parameter that passed to the xacro file should go here
+# We need to pass these parameters before the block underneath
+load_anymal_description:
+  custom_parameters:
+    imu_roll: 1.008144836
+    imu_pitch: -0.297022562
+    imu_yaw: 90.450763662
+    B_r_BBcom_x: -0.010
+    B_r_BBcom_y: -0.015
+
+    drs_base: true
+    handle_z_offset: 0.003
+    interface_hatch: true
+
+    # Subt options
+    perception_head: false
+    bpearl_front: false
+    bpearl_rear: false
+
+    # If you want to simulate the stereo pairs, you can enable the flag here OR
+    # modify the specific world where you need the stereo
+    # If you enable it here, it will overwrite any other setting
+    # simulate_stereo_camera: false
+
+# Here we configure the main nodes/stacks to be launched
+stack_launcher:
+  nodes:
+    # The block below overrides the default ANYbotics path to find the xacro file
+    load_anymal_description:
+      preprocessed_params:
+        xacro_file:
+          value: $(rospack find anymal_coyote_drs)/urdf/anymal_coyote_drs.urdf.xacro
+    # Override default gui path
+    rqt_gui:
+      preprocessed_params:
+        rviz_display_config:
+          key: /gui/rqt_rviz_widget/display_config
+          value: $(rospack find simulation)/resources/anytree_locomanipulation_gazebo.rviz

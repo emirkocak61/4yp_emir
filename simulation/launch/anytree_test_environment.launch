@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!--=================================================================================================================================================================-->
+
+  <!-- Robot -->
+  <include file="$(find anymal_coyote_sim)/launch/sim_unitree.launch">
+    <arg name="extension_config_file" value="$(find simulation)/config/drs_sim_anytree.yaml"/>
+  </include>
+
+  <arg name="device" default="needle_valve" />
+
+  <!--=================================================================================================================================================================-->
+  <!-- Handles -->
+  <group if="$(eval device == 'handle')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/handle/launch/spawn_handle.launch">
+        <arg name="handle_ID" value="0"/>
+        <arg name="x" value="-1.0"/>
+        <arg name="y" value="4.0"/>
+        <arg name="z" value="0.7"/>
+        <arg name="Y" value="3.1419"/>
+        <arg name="P" value="0.0"/>
+        <arg name="R" value="-1.5707"/>
+    </include> 
+   </group>
+
+
+<!-- Valves -->
+  <group if="$(eval device == 'needle_valve')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/needle_valve/launch/spawn_needle_valve.launch">
+      <arg name="needle_valve_ID" value="0"/>
+      <arg name="x" value="0.7"/>
+      <arg name="y" value="0.0"/>
+      <arg name="z" value="1.0"/>
+      <arg name="Y" value="1.5708"/>
+      <arg name="P" value="0.0"/>
+      <arg name="R" value="-1.5708"/>
+    </include>
+  </group>
+
+<!--Connect odom and exotica/world_frame-->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="exotica_world_frame_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 odom exotica/world_frame"/>
+
+</launch> 
+
