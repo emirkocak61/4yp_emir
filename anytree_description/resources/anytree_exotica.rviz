@@ -8,7 +8,6 @@ Panels:
         - /Grid1
         - /RobotModel1
         - /TF1
-        - /TF1/Tree1
       Splitter Ratio: 0.5
     Tree Height: 746
   - Class: rviz/Selection
@@ -486,10 +485,320 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
+        exotica/Frame0AgripperMover:
+          Value: true
+        exotica/Frame0Bworld_frame:
+          Value: true
+        exotica/LF_FOOT:
+          Value: false
+        exotica/LF_FOOT_collision_0:
+          Value: false
+        exotica/LF_FOOT_collision_1:
+          Value: false
+        exotica/LF_HAA:
+          Value: false
+        exotica/LF_HFE:
+          Value: false
+        exotica/LF_HFE_collision_0:
+          Value: false
+        exotica/LF_HIP:
+          Value: false
+        exotica/LF_KFE:
+          Value: false
+        exotica/LF_KFE_collision_0:
+          Value: false
+        exotica/LF_SHANK:
+          Value: false
+        exotica/LF_THIGH:
+          Value: false
+        exotica/LF_hip_fixed:
+          Value: false
+        exotica/LF_shank_fixed:
+          Value: false
+        exotica/LF_shank_fixed_collision_0:
+          Value: false
+        exotica/LF_shank_fixed_collision_1:
+          Value: false
+        exotica/LF_thigh_fixed:
+          Value: false
+        exotica/LF_thigh_fixed_collision_0:
+          Value: false
+        exotica/LF_thigh_fixed_collision_1:
+          Value: false
+        exotica/LH_FOOT:
+          Value: false
+        exotica/LH_FOOT_collision_0:
+          Value: false
+        exotica/LH_FOOT_collision_1:
+          Value: false
+        exotica/LH_HAA:
+          Value: false
+        exotica/LH_HFE:
+          Value: false
+        exotica/LH_HFE_collision_0:
+          Value: false
+        exotica/LH_HIP:
+          Value: false
+        exotica/LH_KFE:
+          Value: false
+        exotica/LH_KFE_collision_0:
+          Value: false
+        exotica/LH_SHANK:
+          Value: false
+        exotica/LH_THIGH:
+          Value: false
+        exotica/LH_hip_fixed:
+          Value: false
+        exotica/LH_shank_fixed:
+          Value: false
+        exotica/LH_shank_fixed_collision_0:
+          Value: false
+        exotica/LH_shank_fixed_collision_1:
+          Value: false
+        exotica/LH_thigh_fixed:
+          Value: false
+        exotica/LH_thigh_fixed_collision_0:
+          Value: false
+        exotica/LH_thigh_fixed_collision_1:
+          Value: false
+        exotica/RF_FOOT:
+          Value: false
+        exotica/RF_FOOT_collision_0:
+          Value: false
+        exotica/RF_FOOT_collision_1:
+          Value: false
+        exotica/RF_HAA:
+          Value: false
+        exotica/RF_HFE:
+          Value: false
+        exotica/RF_HFE_collision_0:
+          Value: false
+        exotica/RF_HIP:
+          Value: false
+        exotica/RF_KFE:
+          Value: false
+        exotica/RF_KFE_collision_0:
+          Value: false
+        exotica/RF_SHANK:
+          Value: false
+        exotica/RF_THIGH:
+          Value: false
+        exotica/RF_hip_fixed:
+          Value: false
+        exotica/RF_shank_fixed:
+          Value: false
+        exotica/RF_shank_fixed_collision_0:
+          Value: false
+        exotica/RF_shank_fixed_collision_1:
+          Value: false
+        exotica/RF_thigh_fixed:
+          Value: false
+        exotica/RF_thigh_fixed_collision_0:
+          Value: false
+        exotica/RF_thigh_fixed_collision_1:
+          Value: false
+        exotica/RH_FOOT:
+          Value: false
+        exotica/RH_FOOT_collision_0:
+          Value: false
+        exotica/RH_FOOT_collision_1:
+          Value: false
+        exotica/RH_HAA:
+          Value: false
+        exotica/RH_HFE:
+          Value: false
+        exotica/RH_HFE_collision_0:
+          Value: false
+        exotica/RH_HIP:
+          Value: false
+        exotica/RH_KFE:
+          Value: false
+        exotica/RH_KFE_collision_0:
+          Value: false
+        exotica/RH_SHANK:
+          Value: false
+        exotica/RH_THIGH:
+          Value: false
+        exotica/RH_hip_fixed:
+          Value: false
+        exotica/RH_shank_fixed:
+          Value: false
+        exotica/RH_shank_fixed_collision_0:
+          Value: false
+        exotica/RH_shank_fixed_collision_1:
+          Value: false
+        exotica/RH_thigh_fixed:
+          Value: false
+        exotica/RH_thigh_fixed_collision_0:
+          Value: false
+        exotica/RH_thigh_fixed_collision_1:
+          Value: false
+        exotica/alphasense_mesh:
+          Value: false
+        exotica/alphasense_mesh_collision_0:
+          Value: false
+        exotica/base:
+          Value: false
+        exotica/base_collision_0:
+          Value: false
+        exotica/base_collision_1:
+          Value: false
+        exotica/base_collision_2:
+          Value: false
+        exotica/base_collision_3:
+          Value: false
+        exotica/base_collision_4:
+          Value: false
+        exotica/base_inertia:
+          Value: false
+        exotica/battery:
+          Value: false
+        exotica/body_top:
+          Value: false
+        exotica/bottom_shell:
+          Value: false
+        exotica/cam0_sensor_frame:
+          Value: false
+        exotica/cam1_sensor_frame:
+          Value: false
+        exotica/cam2_sensor_frame:
+          Value: false
+        exotica/cam3_sensor_frame:
+          Value: false
+        exotica/cam4_sensor_frame:
+          Value: false
+        exotica/cam5_sensor_frame:
+          Value: false
+        exotica/cam6_sensor_frame:
+          Value: false
+        exotica/depth_camera_front_camera:
+          Value: false
+        exotica/depth_camera_front_camera_parent:
+          Value: false
+        exotica/depth_camera_left_camera:
+          Value: false
+        exotica/depth_camera_left_camera_parent:
+          Value: false
+        exotica/depth_camera_rear_camera:
+          Value: false
+        exotica/depth_camera_rear_camera_parent:
+          Value: false
+        exotica/depth_camera_right_camera:
+          Value: false
+        exotica/depth_camera_right_camera_parent:
+          Value: false
+        exotica/docking_hatch_cover:
+          Value: false
+        exotica/face_front:
+          Value: false
+        exotica/face_front_collision_0:
+          Value: false
+        exotica/face_front_collision_1:
+          Value: false
+        exotica/face_front_collision_2:
+          Value: false
+        exotica/face_rear:
+          Value: false
+        exotica/face_rear_collision_0:
+          Value: false
+        exotica/face_rear_collision_1:
+          Value: false
+        exotica/face_rear_collision_2:
+          Value: false
+        exotica/front_handle:
+          Value: false
+        exotica/front_handle_collision_0:
+          Value: false
+        exotica/gripperMover:
+          Value: false
+        exotica/gripperMover_collision_0:
+          Value: false
+        exotica/gripperStator:
+          Value: false
+        exotica/gripperStator_collision_0:
+          Value: false
+        exotica/handle:
+          Value: false
+        exotica/hatch:
+          Value: false
+        exotica/hatch_unitree_support:
+          Value: false
+        exotica/imu_link:
+          Value: false
+        exotica/imu_sensor_frame:
+          Value: false
+        exotica/interface_hatch:
+          Value: false
+        exotica/interface_hatch_collision_0:
+          Value: false
+        exotica/lidar:
+          Value: false
+        exotica/link00:
+          Value: false
+        exotica/link00_collision_0:
+          Value: false
+        exotica/link01:
+          Value: false
+        exotica/link02:
+          Value: false
+        exotica/link02_collision_0:
+          Value: false
+        exotica/link02_collision_1:
+          Value: false
+        exotica/link02_collision_2:
+          Value: false
+        exotica/link03:
+          Value: false
+        exotica/link03_collision_0:
+          Value: false
+        exotica/link03_collision_1:
+          Value: false
+        exotica/link04:
+          Value: false
+        exotica/link04_collision_0:
+          Value: false
+        exotica/link05:
+          Value: false
+        exotica/link06:
+          Value: false
+        exotica/link06_collision_0:
+          Value: false
+        exotica/perception_head_cage:
+          Value: false
+        exotica/perception_head_cage_collision_0:
+          Value: false
+        exotica/remote:
+          Value: false
+        exotica/top_shell:
+          Value: false
+        exotica/unitree_mount:
+          Value: false
+        exotica/wide_angle_camera_front_camera:
+          Value: false
+        exotica/wide_angle_camera_front_camera_parent:
+          Value: false
+        exotica/wide_angle_camera_rear_camera:
+          Value: false
+        exotica/wide_angle_camera_rear_camera_parent:
+          Value: false
+        exotica/world_frame:
+          Value: false
+        exotica/world_frame/rot_x:
+          Value: false
+        exotica/world_frame/rot_y:
+          Value: false
+        exotica/world_frame/rot_z:
+          Value: false
+        exotica/world_frame/trans_x:
+          Value: false
+        exotica/world_frame/trans_y:
+          Value: false
+        exotica/world_frame/trans_z:
+          Value: false
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -497,9 +806,316 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        exotica/world_frame:
+          exotica/Frame0Bworld_frame:
+            exotica/Frame0AgripperMover:
+              {}
+          exotica/LF_FOOT:
+            {}
+          exotica/LF_FOOT_collision_0:
+            {}
+          exotica/LF_FOOT_collision_1:
+            {}
+          exotica/LF_HAA:
+            {}
+          exotica/LF_HFE:
+            {}
+          exotica/LF_HFE_collision_0:
+            {}
+          exotica/LF_HIP:
+            {}
+          exotica/LF_KFE:
+            {}
+          exotica/LF_KFE_collision_0:
+            {}
+          exotica/LF_SHANK:
+            {}
+          exotica/LF_THIGH:
+            {}
+          exotica/LF_hip_fixed:
+            {}
+          exotica/LF_shank_fixed:
+            {}
+          exotica/LF_shank_fixed_collision_0:
+            {}
+          exotica/LF_shank_fixed_collision_1:
+            {}
+          exotica/LF_thigh_fixed:
+            {}
+          exotica/LF_thigh_fixed_collision_0:
+            {}
+          exotica/LF_thigh_fixed_collision_1:
+            {}
+          exotica/LH_FOOT:
+            {}
+          exotica/LH_FOOT_collision_0:
+            {}
+          exotica/LH_FOOT_collision_1:
+            {}
+          exotica/LH_HAA:
+            {}
+          exotica/LH_HFE:
+            {}
+          exotica/LH_HFE_collision_0:
+            {}
+          exotica/LH_HIP:
+            {}
+          exotica/LH_KFE:
+            {}
+          exotica/LH_KFE_collision_0:
+            {}
+          exotica/LH_SHANK:
+            {}
+          exotica/LH_THIGH:
+            {}
+          exotica/LH_hip_fixed:
+            {}
+          exotica/LH_shank_fixed:
+            {}
+          exotica/LH_shank_fixed_collision_0:
+            {}
+          exotica/LH_shank_fixed_collision_1:
+            {}
+          exotica/LH_thigh_fixed:
+            {}
+          exotica/LH_thigh_fixed_collision_0:
+            {}
+          exotica/LH_thigh_fixed_collision_1:
+            {}
+          exotica/RF_FOOT:
+            {}
+          exotica/RF_FOOT_collision_0:
+            {}
+          exotica/RF_FOOT_collision_1:
+            {}
+          exotica/RF_HAA:
+            {}
+          exotica/RF_HFE:
+            {}
+          exotica/RF_HFE_collision_0:
+            {}
+          exotica/RF_HIP:
+            {}
+          exotica/RF_KFE:
+            {}
+          exotica/RF_KFE_collision_0:
+            {}
+          exotica/RF_SHANK:
+            {}
+          exotica/RF_THIGH:
+            {}
+          exotica/RF_hip_fixed:
+            {}
+          exotica/RF_shank_fixed:
+            {}
+          exotica/RF_shank_fixed_collision_0:
+            {}
+          exotica/RF_shank_fixed_collision_1:
+            {}
+          exotica/RF_thigh_fixed:
+            {}
+          exotica/RF_thigh_fixed_collision_0:
+            {}
+          exotica/RF_thigh_fixed_collision_1:
+            {}
+          exotica/RH_FOOT:
+            {}
+          exotica/RH_FOOT_collision_0:
+            {}
+          exotica/RH_FOOT_collision_1:
+            {}
+          exotica/RH_HAA:
+            {}
+          exotica/RH_HFE:
+            {}
+          exotica/RH_HFE_collision_0:
+            {}
+          exotica/RH_HIP:
+            {}
+          exotica/RH_KFE:
+            {}
+          exotica/RH_KFE_collision_0:
+            {}
+          exotica/RH_SHANK:
+            {}
+          exotica/RH_THIGH:
+            {}
+          exotica/RH_hip_fixed:
+            {}
+          exotica/RH_shank_fixed:
+            {}
+          exotica/RH_shank_fixed_collision_0:
+            {}
+          exotica/RH_shank_fixed_collision_1:
+            {}
+          exotica/RH_thigh_fixed:
+            {}
+          exotica/RH_thigh_fixed_collision_0:
+            {}
+          exotica/RH_thigh_fixed_collision_1:
+            {}
+          exotica/alphasense_mesh:
+            {}
+          exotica/alphasense_mesh_collision_0:
+            {}
+          exotica/base:
+            {}
+          exotica/base_collision_0:
+            {}
+          exotica/base_collision_1:
+            {}
+          exotica/base_collision_2:
+            {}
+          exotica/base_collision_3:
+            {}
+          exotica/base_collision_4:
+            {}
+          exotica/base_inertia:
+            {}
+          exotica/battery:
+            {}
+          exotica/body_top:
+            {}
+          exotica/bottom_shell:
+            {}
+          exotica/cam0_sensor_frame:
+            {}
+          exotica/cam1_sensor_frame:
+            {}
+          exotica/cam2_sensor_frame:
+            {}
+          exotica/cam3_sensor_frame:
+            {}
+          exotica/cam4_sensor_frame:
+            {}
+          exotica/cam5_sensor_frame:
+            {}
+          exotica/cam6_sensor_frame:
+            {}
+          exotica/depth_camera_front_camera:
+            {}
+          exotica/depth_camera_front_camera_parent:
+            {}
+          exotica/depth_camera_left_camera:
+            {}
+          exotica/depth_camera_left_camera_parent:
+            {}
+          exotica/depth_camera_rear_camera:
+            {}
+          exotica/depth_camera_rear_camera_parent:
+            {}
+          exotica/depth_camera_right_camera:
+            {}
+          exotica/depth_camera_right_camera_parent:
+            {}
+          exotica/docking_hatch_cover:
+            {}
+          exotica/face_front:
+            {}
+          exotica/face_front_collision_0:
+            {}
+          exotica/face_front_collision_1:
+            {}
+          exotica/face_front_collision_2:
+            {}
+          exotica/face_rear:
+            {}
+          exotica/face_rear_collision_0:
+            {}
+          exotica/face_rear_collision_1:
+            {}
+          exotica/face_rear_collision_2:
+            {}
+          exotica/front_handle:
+            {}
+          exotica/front_handle_collision_0:
+            {}
+          exotica/gripperMover:
+            {}
+          exotica/gripperMover_collision_0:
+            {}
+          exotica/gripperStator:
+            {}
+          exotica/gripperStator_collision_0:
+            {}
+          exotica/handle:
+            {}
+          exotica/hatch:
+            {}
+          exotica/hatch_unitree_support:
+            {}
+          exotica/imu_link:
+            {}
+          exotica/imu_sensor_frame:
+            {}
+          exotica/interface_hatch:
+            {}
+          exotica/interface_hatch_collision_0:
+            {}
+          exotica/lidar:
+            {}
+          exotica/link00:
+            {}
+          exotica/link00_collision_0:
+            {}
+          exotica/link01:
+            {}
+          exotica/link02:
+            {}
+          exotica/link02_collision_0:
+            {}
+          exotica/link02_collision_1:
+            {}
+          exotica/link02_collision_2:
+            {}
+          exotica/link03:
+            {}
+          exotica/link03_collision_0:
+            {}
+          exotica/link03_collision_1:
+            {}
+          exotica/link04:
+            {}
+          exotica/link04_collision_0:
+            {}
+          exotica/link05:
+            {}
+          exotica/link06:
+            {}
+          exotica/link06_collision_0:
+            {}
+          exotica/perception_head_cage:
+            {}
+          exotica/perception_head_cage_collision_0:
+            {}
+          exotica/remote:
+            {}
+          exotica/top_shell:
+            {}
+          exotica/unitree_mount:
+            {}
+          exotica/wide_angle_camera_front_camera:
+            {}
+          exotica/wide_angle_camera_front_camera_parent:
+            {}
+          exotica/wide_angle_camera_rear_camera:
+            {}
+          exotica/wide_angle_camera_rear_camera_parent:
+            {}
+          exotica/world_frame/rot_x:
+            {}
+          exotica/world_frame/rot_y:
+            {}
+          exotica/world_frame/rot_z:
+            {}
+          exotica/world_frame/trans_x:
+            {}
+          exotica/world_frame/trans_y:
+            {}
+          exotica/world_frame/trans_z:
+            {}
       Update Interval: 0
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -528,7 +1144,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.403299808502197
+      Distance: 3.375290632247925
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -536,17 +1152,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -0.08094556629657745
+        Y: -0.25544044375419617
+        Z: 0.32400718331336975
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4753979444503784
+      Pitch: 0.22539961338043213
       Target Frame: <Fixed Frame>
-      Yaw: 0.645398736000061
+      Yaw: 4.5085768699646
     Saved: ~
 Window Geometry:
   Displays:

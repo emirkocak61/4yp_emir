@@ -16,7 +16,7 @@
     <Maps>
         <EffFrame Name = "Frame">
             <EndEffector>
-                <Frame Link="gripperStator" LinkOffset="0 0 0.1 0 3.1416 0.0" BaseOffset="0.6 -0.1 0.5"/>
+                <Frame Link="gripperMover"/>
             </EndEffector>
       </EffFrame>
     </Maps>
@@ -31,7 +31,7 @@
     <Hrate>1</Hrate>
     <Wrate>1e4</Wrate>
 
-    <W> 1 1 1 1 1 1 </W>
+    <W> 1 1 1 1 1 1</W>
     </UnconstrainedTimeIndexedProblem>
 
 </FollowTrajConfig>
