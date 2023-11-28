@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>motion_planning_exotica</name>
   <version>0.0.0</version>
   <description>The motion_planning_exotica package</description>
@@ -35,12 +35,14 @@
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-pykdl</exec_depend>
 
   <depend>exotica_core</depend>
   <depend>exotica_python</depend>
   <depend>exotica_aico_solver</depend>
   <depend>exotica_core_task_maps</depend>
   <depend>exotica_ik_solver</depend>
+  <depend>exotica_nlopt_solver</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>actionlib</depend>
