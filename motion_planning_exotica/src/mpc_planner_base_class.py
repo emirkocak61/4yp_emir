@@ -73,6 +73,82 @@ class MPCMotionPlannerBaseClass:
         self.scene = self.problem.get_scene()       #Returns a Scene object
         self.joint_names = self.scene.get_controlled_joint_names() #Returns a list[str]
 
+        self.rest_pose = self.lookup_base_pose()
+
+        self.kinematic_tree = self.scene.get_kinematic_tree() #Returns Kinematic Tree
+        
+        #Get the joint limits of the robot, which are minimum and maximum
+        #values that each joint can reach
+        joint_limits = self.kinematic_tree.get_joint_limits() #Returns a 2D array
+        self.relative_joint_limits_upper = joint_limits[:,1]
+        self.relative_joint_limits_lower = joint_limits[:,0]
+        self.joint_limits_tolerance = 0.0001
+        self.set_joint_limits()
+
+        joint_velocities = self.kinematic_tree.get_velocity_limits()
+
+        #Create a subscriber to allow external nodes to trigger a reset of robot's rest pose
+        rospy.Subscriber("/reset_rest_pose",Bool,self.reset_rest_pose_callback)
+    
+    def reset_rest_pose_callback(self,reset_rest_pose):
+        if reset_rest_pose.data:
+            self.rest_pose = self.lookup_base_pose() #Sets rest pose for anytree base
+            self.set_joint_limits() #Sets joint limits according to new rest pose
+    
+    def set_joint_limits(self):
+        self.scene.set_model_state_map(
+            {
+                "world_joint/trans_x" : self.rest_pose[0],
+                "world_joint/trans_y" : self.rest_pose[1],
+                "world_joint/trans_z" : self.rest_pose[2],
+                "world_joint/rot_x" : self.rest_pose[3],
+                "world_joint/rot_y" : self.rest_pose[4],
+                "world_joint/rot_z" : self.rest_pose[5],
+            }
+        )
+        global_joint_limits_upper = self.relative_joint_limits_upper.copy()
+        global_joint_limits_lower = self.relative_joint_limits_lower.copy()
+
+        for i in range(0,self.base_dof):
+            global_joint_limits_upper[i] = (
+                self.rest_pose[i] 
+                + self.relative_joint_limits_upper[i] 
+                + self.joint_limits_tolerance
+            )
+            global_joint_limits_lower[i] = (
+                self.rest_pose[i] 
+                + self.relative_joint_limits_lower[i] 
+                - self.joint_limits_tolerance
+            )
+        
+        self.kinematic_tree.set_joint_limits_upper(global_joint_limits_upper)
+        self.kinematic_tree.set_joint_limtis_lower(global_joint_limits_lower)
+
+
+    def lookup_base_pose(self): #Finds the current tf transform for the base and converts it to XYZ+RPY
+        base_transform = self.tfBuffer.lookup_transform(
+            "odom","base",rospy.Time(0),rospy.Duration(3.0)
+        )
+        base_pose = array([0.0]*6)
+
+        rpy = transformations.euler_from_quaternion(
+            [
+            base_transform.transform.rotation.x,
+            base_transform.transform.rotation.y,
+            base_transform.transform.rotation.z,
+            base_transform.transform.rotation.w,
+            ]
+        )
+        base_pose[0] = base_transform.transform.translation.x
+        base_pose[1] = base_transform.transform.translation.y
+        base_pose[2] = base_transform.transform.translation.z
+        base_pose[3] = rpy[0]
+        base_pose[4] = rpy[1]
+        base_pose[5] = rpy[2]
+        
+        return base_pose
+
+
 
 
         

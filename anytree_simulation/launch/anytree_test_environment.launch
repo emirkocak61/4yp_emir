@@ -4,7 +4,7 @@
 
   <!-- Robot -->
   <include file="$(find anymal_coyote_sim)/launch/sim_unitree.launch">
-    <arg name="extension_config_file" value="$(find simulation)/config/drs_sim_anytree.yaml"/>
+    <arg name="extension_config_file" value="$(find anytree_simulation)/config/drs_sim_anytree.yaml"/>
   </include>
 
   <arg name="device" default="needle_valve" />
