@@ -29,44 +29,6 @@ public:
     
     ~UnitreeInterface() {}
     
-    void set_ctrl_gain() {
-        ROS_INFO_STREAM("Setting control gain");
-        lowcmd->setControlGain(KP,KW);
-        sendRecv();
-    }
-    
-    void go_to_start() {
-        Vec6 home_pose;
-        double duration = 1000;
-        home_pose << 0.0, 0.0, -0.005, -0.074, 0.0, 0.0; 
-        run(home_pose, duration);
-    }
-
-    
-
-    //A function to set the control mode of the arm, not sure if the error handling is necessary
-    //I only added for the sake of experience and learning
-    //TO-DO:  add other control modes
-    void set_ctrl_mode() {
-    // Update the RecvState structure
-    sendRecv();
-    // Check if the current state is LOWCMD
-    if (_ctrlComp->recvState.state != ArmFSMState::LOWCMD) { 
-        // Set to LOWCMD if it's not already
-        ROS_INFO_STREAM("Setting control mode to lowcmd");
-        sendRecvThread->start();
-        setFsm(ArmFSMState::PASSIVE);
-        setFsm(ArmFSMState::LOWCMD);
-        sendRecvThread->shutdown();
-        return;  
-    }
-    else {
-        ROS_INFO_STREAM("Control mode already in lowcmd");
-        return;   
-    }
-    
-}
-
     //The callback function for the /motion_plan topic
     void z1command(const trajectory_msgs::JointTrajectoryPointConstPtr &msg) {
         ROS_INFO_STREAM("Received Motion Plan, executing...");
@@ -80,7 +42,7 @@ public:
         //go_to_start();
         
     }
-
+    
     //Function that implements the torque calculation and communication with arm
     void run(Vec6 targetQ, double duration) {
         Vec6 initQ = lowstate->getQ();
@@ -97,6 +59,46 @@ public:
             timer.sleep();
         }
     }
+
+    void set_ctrl_gain() {
+        ROS_INFO_STREAM("Setting control gain");
+        //Set the control gain
+        lowcmd->setControlGain(KP,KW);
+        sendRecv();
+    }
+    
+    void go_to_start() {
+        Vec6 home_pose;
+        double duration = 1000;
+        home_pose << 0.0, 0.0, -0.005, -0.074, 0.0, 0.0; 
+        run(home_pose, duration);
+    }
+
+    
+
+    //A function to set the control mode of the arm to lowcmd
+    void set_ctrl_mode() {
+        // Update the RecvState structure
+        sendRecv();
+        // Check if the current state is LOWCMD
+        if (_ctrlComp->recvState.state != ArmFSMState::LOWCMD) { 
+            // Set to LOWCMD if it's not already
+            ROS_INFO_STREAM("Setting control mode to lowcmd");
+            sendRecvThread->start();
+            setFsm(ArmFSMState::PASSIVE);
+            setFsm(ArmFSMState::LOWCMD);
+            sendRecvThread->shutdown();
+            return;  
+        }
+        else {
+            ROS_INFO_STREAM("Control mode already in lowcmd");
+            return;   
+        }
+    }
+
+    
+
+    
 
 }; 
 
