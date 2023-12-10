@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
   geometry_msgs
+  trajectory_msgs
   roscpp
   sensor_msgs
   std_msgs
@@ -55,11 +56,15 @@ catkin_package(
 
 include_directories(
    ${catkin_INCLUDE_DIRS}
-   ~/catkin_ws/src/unitree_ros/z1_sdk/include
+   $ENV{HOME}/catkin_ws/src/unitree_ros/z1_sdk/include
+   $ENV{HOME}/catkin_ws/src/unitree_ros/z1_controller/config
+   $ENV{HOME}/catkin_ws/src/unitree_ros/z1_controller/include
+   /usr/include/eigen3
+
 )
 
 
-add_executable(z1_interface src/example_z1_interface.cpp)
+add_executable(z1_interface src/z1_lowcmd_ros.cpp)
 target_link_libraries(z1_interface 
   ${catkin_LIBRARIES}
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so
