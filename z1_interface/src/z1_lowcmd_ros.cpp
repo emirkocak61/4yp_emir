@@ -23,24 +23,24 @@ public:
         }
     
     ~UnitreeInterface() {}
+    
     //A function to set the control mode of the arm, not sure if the error handling is necessary
     //I only added for the sake of experience and learning
     //TO-DO:  add other control modes
-
-    
     void set_ctrl_mode(std::string ctrl_mode) {
         try {
             check_ctrl_mode(ctrl_mode);
+            setFsm(ArmFSMState::PASSIVE);
+            sendRecv();
+            setFsm(ArmFSMState::LOWCMD);
+            sendRecv();
         } catch (const std::runtime_error &e)  {
             std::cerr << "Caught an exception: " << e.what() << std::endl;
             //Set the control mode to passive
             setFsm(ArmFSMState::PASSIVE);
             sendRecv();
         }
-        setFsm(ArmFSMState::PASSIVE);
-        sendRecv();
-        setFsm(ArmFSMState::LOWCMD);
-        sendRecv();
+        
     }
 
     bool check_ctrl_mode(std::string mode) {
