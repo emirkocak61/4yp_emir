@@ -20,11 +20,12 @@ public:
     std::vector<double> KW ={2000,2000,2000,2000,2000,2000}) : unitreeArm(true) {
         
         ROS_INFO_STREAM("Z1 Interface Node is running, waiting for motion plans");
+        std::cout << std::fixed << std::setprecision(3);
         this->ctrl_mode = control_mode; //Defines which control mode to use
         this->KP = KP;
         this->KW = KW;
-
         sub = nh_.subscribe("/motion_plan", 10, &UnitreeInterface::z1command, this); //set up the subscriber
+        sendRecvThread->start();
         }
     
     ~UnitreeInterface() {}
@@ -32,19 +33,19 @@ public:
     //The callback function for the /motion_plan topic
     void z1command(const trajectory_msgs::JointTrajectoryPointConstPtr &msg) {
         ROS_INFO_STREAM("Received Motion Plan, executing...");
-        std::cout << std::fixed << std::setprecision(3);
         set_ctrl_mode();
         double duration = 1000;
         std::vector<double> Q = msg->positions;
         Vec6 motion_goal; 
         motion_goal << Q[0], Q[1], Q[2], Q[3], Q[4], Q[5];
         run(motion_goal, duration);
-        //go_to_start();
+        
         
     }
     
     //Function that implements the torque calculation and communication with arm
     void run(Vec6 targetQ, double duration) {
+        sendRecvThread->shutdown();
         Vec6 initQ = lowstate->getQ();
         Timer timer(_ctrlComp->dt);
         for(int i(0); i<duration; i++){
@@ -58,13 +59,13 @@ public:
             sendRecv();
             timer.sleep();
         }
+        sendRecvThread->start();
     }
 
     void set_ctrl_gain() {
         ROS_INFO_STREAM("Setting control gain");
         //Set the control gain
-        lowcmd->setControlGain(KP,KW);
-        sendRecv();
+        lowcmd->setControlGain(KP,KW);;
     }
     
     void go_to_start() {
@@ -78,16 +79,12 @@ public:
 
     //A function to set the control mode of the arm to lowcmd
     void set_ctrl_mode() {
-        // Update the RecvState structure
-        sendRecv();
         // Check if the current state is LOWCMD
         if (_ctrlComp->recvState.state != ArmFSMState::LOWCMD) { 
             // Set to LOWCMD if it's not already
             ROS_INFO_STREAM("Setting control mode to lowcmd");
-            sendRecvThread->start();
             setFsm(ArmFSMState::PASSIVE);
             setFsm(ArmFSMState::LOWCMD);
-            sendRecvThread->shutdown();
             return;  
         }
         else {
