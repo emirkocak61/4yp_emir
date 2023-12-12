@@ -89,6 +89,18 @@ class MPCMotionPlannerBaseClass:
 
         #Create a subscriber to allow external nodes to trigger a reset of robot's rest pose
         rospy.Subscriber("/reset_rest_pose",Bool,self.reset_rest_pose_callback)
+
+        #Set cost for each forward-iteration in the finite horizon
+        #In this case only terminal cost have a significant weight
+        #Should hopefully allow planner to explore getting around local minima
+        for t in range(self.problem.T):
+            self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],t)
+            self.problem.cost.set_rho(("Position", 1e1,t))
+        self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],-1)
+        self.problem.cost.set_rho(("Position", 1e1,-1))
+        
+        self.solver.debug_mode = False
+        self.solver.max_iterations = 1
     
     def reset_rest_pose_callback(self,reset_rest_pose):
         if reset_rest_pose.data:
@@ -147,6 +159,259 @@ class MPCMotionPlannerBaseClass:
         base_pose[5] = rpy[2]
         
         return base_pose
+    
+    def init_robot_pose(self): #Initializes the robot pose in EXOTica
+        self.q = self.problem.start_state.copy()
+        if (len(self.joint_names) - self.base_dof) != 0:
+            self.joint_states_callback(
+                rospy.wait_for_message("/z1_gazebo/joint_states", JointState)
+            )
+        
+        if self.base_dof != 0:
+            self.q[0 : self.base_dof] = self.lookup_base_pose()
+            joint_limits = self.kinematic_tree.get_joint_limits()
+            #Clamp q to within constraints
+            for i in range(0, self.base_dof) :
+                if self.q[i] > joint_limits[i,1]:
+                    self.q[i] = joint_limits[i,1]
+                elif self.q[i] < joint_limits[i,0]:
+                    self.q[i] = joint_limits[i,0]
+        
+        self.scene.set_model_state(self.q[: self.scene.num_positions])
+        self.problem.update(self.scene.get_controlled_state(),0)
+        self.scene.get_kinematic_tree().publish_frames()
+
+
+    def joint_states_callback(self, joint_states):
+        #Note: assumes all joint_states messages contain all joints
+        for i in range(0,len(self.joint_names)):
+            if self.joint_names[i] in joint_states.name:
+                self.q[i] = joint_states.position[
+                    joint_states.name.index(self.joint_names[i])
+                ]
+    
+    def get_error(self): #Computes the task error as a scalar value
+        error_array = array(self.problem.get_state_cost(0))
+        square_error = error_array.dot(error_array)
+        rospy.loginfo("Pose error %f", math.sqrt(square_error))
+        return math.sqrt(square_error)
+    
+    def interactive_servoing(self):
+        update_xy = self.lookup_base_pose()
+        self.scene.set_model_state_map(
+            {
+                "world_joint/trans_x" : update_xy[0],
+                "world_joint/trans_y" : update_xy[1],
+            }
+        )
+
+        self.q[0:2] = update_xy[0:2]
+        joint_limits = self.get_kinematic_tree()
+        global_joint_limits_upper = joint_limits[:,1]
+        global_joint_limits_lower = joint_limits[:,0]
+
+        global_joint_limits_upper[0] = (
+                update_xy[0]
+                + self.relative_joint_limits_upper[0]
+                + self.joint_limit_tolerance
+            )  # x
+        global_joint_limits_upper[1] = (
+                update_xy[1]
+                + self.relative_joint_limits_upper[1]
+                + self.joint_limit_tolerance
+            )  # y
+
+        global_joint_limits_lower[0] = (
+                update_xy[0]
+                + self.relative_joint_limits_lower[0]
+                - self.joint_limit_tolerance
+            )  # x
+        global_joint_limits_lower[1] = (
+                update_xy[1]
+                + self.relative_joint_limits_lower[1]
+                - self.joint_limit_tolerance
+            )  # y
+        
+        self.kinematic_tree.set_joint_limits_upper(global_joint_limits_upper)
+        self.kinematic_tree.set_joint_limtis_lower(global_joint_limits_lower)
+
+    def publish_to_robot(self): #Publishes motion plan as a single waypoint trajectory_msgs/JointTrajectory
+        trajectory_msg = JointTrajectory()
+        trajectory_msg.joint_names = self.joint_names
+
+        trajectory_point = JointTrajectoryPoint()
+        trajectory_point.positions = self.q[0:12].copy()
+        trajectory_point.time_from_start = rospy.Duration.from_sec(self.dt)
+
+        trajectory_msg.points.append(trajectory_point)
+        self.motion_plan_publisher.publish(trajectory_msg)
+    
+    def iterate(self): #Doesn't update q from the base pose, therefore exotica robot state is not updated
+
+        #Inform exotica of unexpected changes to XY as a side-effect of ANYNova rotating its base
+        self.interactive_servoing()
+
+        self.problem.start_time = self.t #Set the problem start time
+        self.problem.start_state = self.q #Set the problem start state
+
+        #Solve using MPC
+        solution = self.solver.solve()
+
+        self.problem.update(self.q,solution[0],0) 
+
+        #Update the joint positions
+        self.q[:] = self.problem.X[:,1].copy()
+        self.scene.set_model_state(self.q[: self.scene.num_positions])
+
+    def perform_motion(self):       #Trajectory goal defined as a target pose (not timed)
+        self._result.result = True
+        self.init_robot_pose()
+        self.t = 0.0
+        counter = 0
+
+        while (counter < self.counter) and (self.t < self.t_limit):
+            try:
+                #Check that preempt has not been requested by the client
+                if self._as.is_preempt_requested():
+                    self._result.result = False
+                    rospy.logwarn("%s: PREEMPTED (Goal Cancelled)",self.action_name)
+                    self._as.set_preempted()
+                    break
+
+                self.iterate() #Generate motion plan via EXOTica
+                self.publish_to_robot() #Send motion plan to robot
+                error = self.get_error() #Calculate error
+
+                #Publish feedback to client
+                self._feedback.error = error
+                self._as.publish_feedback(self._feedback)
+
+                #Check whether to increment the counter
+                if error < self.tolerance:
+                    counter += 1
+                
+                #Sleep and increment time
+                self.rate.sleep()
+                self.t = self.t + self.dt
+
+            #Check that the motion plan hasn't been aborted via keyboard interupt
+            except KeyboardInterrupt:
+                self._result.result = False
+                rospy.logwarn("%s: ABORTED (KeyboardInterrupt)" ,self.action_name)
+                self._as.set_aborted(self._result)
+                break
+
+        #Check that EEF has reached target
+        if self._result.result == True:
+            error = self.get_error()
+            if error < self.tolerance:
+                rospy.loginfo("%s: SUCCESS (Approached Target)", self.action_name)
+                self._as.set_succeeded(self._result)
+            else:
+                self._result.result = False
+                rospy.logwarn("%s: ABORTED (Did not reached target within time limit)"
+                              , self.action_name)
+                self._as.set_aborted(self._result)
+        
+        self.problem.start_time = 0 #Reset problem start time
+
+    def perform_trajectory(
+        self, trajectory
+    ):  # Trajectory goal defined as a set of time-indexed waypoints
+        self._result.result = True
+        self.init_robot_pose()
+        self.scene.add_trajectory_from_array("TargetRelative", trajectory, 1.0)
+        self.t = 0.0
+        # self_counter = 0 # Counter for how many consecutive iterations the real EEF has been beyond the error margin for the motion plan EEF
+        t_limit = trajectory[-1, 0]
+
+        # Check that EEF is within tolerance of the start waypoint
+        self.problem.start_time = self.t  # Set problem start time
+        self.iterate()  # Generate motion plan via EXOTica
+        error = self.get_error()  # Calculate error
+        if error > self.start_tolerance:
+            self._result.result = False
+            rospy.loginfo(
+                "%s: ABORTED (EEF Start Pose Beyond Tolerance)" % self.action_name
+            )
+            self._as.set_aborted(self._result)
+
+        else:
+            self.init_robot_pose()  # Reset pose after checking start tolerance
+            while self.t < t_limit:
+                try:
+                    # Check that preempt has not been requested by the client
+                    if self._as.is_preempt_requested():
+                        self._result.result = False
+                        rospy.logwarn(
+                            "%s: PREEMPTED (Goal Cancelled)" % self.action_name
+                        )
+                        self._as.set_preempted()
+                        break
+
+                    self.iterate()  # Generate motion plan via EXOTica
+                    self.publish_to_robot()  # Send motion plan to robot
+                    error = self.get_error()  # Calculate error
+
+                    # Publish feedback to Client
+                    self._feedback.error = error
+                    self._as.publish_feedback(self._feedback)
+
+                    # Sleep and increment time
+                    self.rate.sleep()
+                    self.t = self.t + self.dt
+
+                # Check that motion plan has not been aborted via KeyboardInterrupt
+                except KeyboardInterrupt:
+                    self._result.result = False
+                    rospy.logwarn("%s: ABORTED (KeyboardInterrupt)" % self.action_name)
+                    self._as.set_aborted(self._result)
+                    break
+
+            # Check that EEF has reached Final Waypoint
+            rospy.loginfo(self._result.result)
+            if self._result.result == True:
+                error = self.get_error()
+                if error < self.tolerance:
+                    rospy.loginfo(
+                        "%s: SUCCESS (Completed Trajectory)" % self.action_name
+                    )
+                    self._as.set_succeeded(self._result)
+                else:
+                    self._result.result = False
+                    rospy.logwarn(
+                        "%s: ABORTED (Did Not Reach Final Waypoint Within Time Limit)"
+                        % self.action_name
+                    )
+                    self._as.set_aborted(self._result)
+
+        # Reset problem start time and remove trajectory
+        self.problem.start_time = 0
+        self.scene.remove_trajectory("TargetRelative")
+
+    def get_frame_from_pose(
+        self, pose_
+    ):  # Important for defining target frames for trajectories
+        frame_ = array([0.0] * 7)
+        frame_[0] = pose_.position.x
+        frame_[1] = pose_.position.y
+        frame_[2] = pose_.position.z
+        frame_[3] = pose_.orientation.x
+        frame_[4] = pose_.orientation.y
+        frame_[5] = pose_.orientation.z
+        frame_[6] = pose_.orientation.w
+        return frame_
+    
+    
+
+
+
+        
+
+
+
+
+
 
 
 
