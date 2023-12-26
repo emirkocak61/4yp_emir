@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(z1_interface)
+project(anytree_control_interface)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
  add_compile_options(-std=c++14)
@@ -64,8 +64,8 @@ include_directories(
 )
 
 
-add_executable(z1_interface src/z1_lowcmd_ros.cpp)
-target_link_libraries(z1_interface 
+add_executable(z1_control_interface src/z1_lowcmd_ros.cpp)
+target_link_libraries(z1_control_interface 
   ${catkin_LIBRARIES}
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so
 )

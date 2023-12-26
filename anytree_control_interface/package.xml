@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>z1_interface</name>
+  <name>anytree_control_interface</name>
   <version>0.0.0</version>
-  <description>The z1_interface package</description>
+  <description>Anytree control interface</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

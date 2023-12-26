@@ -389,9 +389,7 @@ class MPCMotionPlannerBaseClass:
         self.problem.start_time = 0
         self.scene.remove_trajectory("TargetRelative")
 
-    def get_frame_from_pose(
-        self, pose_
-    ):  # Important for defining target frames for trajectories
+    def get_frame_from_pose(self, pose_):  # Important for defining target frames for trajectories
         frame_ = array([0.0] * 7)
         frame_[0] = pose_.position.x
         frame_[1] = pose_.position.y

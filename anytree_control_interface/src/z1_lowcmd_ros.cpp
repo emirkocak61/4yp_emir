@@ -44,7 +44,7 @@ public:
     }
     
     //Function that implements the torque calculation and communication with arm
-    void run(Vec6 targetQ, double duration) {
+    void run(const Vec6 targetQ, double duration) {
         sendRecvThread->shutdown();
         Vec6 initQ = lowstate->getQ();
         Timer timer(_ctrlComp->dt);
