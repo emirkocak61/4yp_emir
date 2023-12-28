@@ -18,7 +18,7 @@ from std_msgs.msg import Float64MultiArray, Bool
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 rp = rospkg.RosPack()
-package_path = rp.get_path("motion_planning_exotica")
+package_path = rp.get_path("anytree_motion_planner")
 
 __all__ = ["MPCMotionPlannerBaseClass"]
 
@@ -43,7 +43,7 @@ class MPCMotionPlannerBaseClass:
         self.error_metric = "Position"
         self.tolerance = 2.5e-2 #Tolerance between EEF and Target
         self.counter = 10 #No. of consecutive iterations for which EEF is within tolerance
-        self.t_limit = 90.0 #time limit
+        self.t_limit = 10.0 #time limit - default 90
 
         #If the real arm can't follow the motion plan for maniplation, the motion plan should be stopped
         self.self_tolerance = 5e-2 #Tolerance between the motion plan and real EEF
@@ -64,9 +64,9 @@ class MPCMotionPlannerBaseClass:
 
         #Setup EXOTica
         self.solver = exo.Setup.load_solver(                #Returns a MotionSolver object
-            "{motion_planning_exotica}/resources/configs"
+            "{anytree_motion_planner}/resources/configs/"
             + str(self.action_name)
-            + "_mpc.xml"
+            +".xml"
         )
 
         self.problem = self.solver.get_problem()    #Returns a PlanningProblem object
@@ -82,7 +82,7 @@ class MPCMotionPlannerBaseClass:
         joint_limits = self.kinematic_tree.get_joint_limits() #Returns a 2D array
         self.relative_joint_limits_upper = joint_limits[:,1]
         self.relative_joint_limits_lower = joint_limits[:,0]
-        self.joint_limits_tolerance = 0.0001
+        self.joint_limit_tolerance = 0.0001
         self.set_joint_limits()
 
         joint_velocities = self.kinematic_tree.get_velocity_limits()
@@ -95,9 +95,9 @@ class MPCMotionPlannerBaseClass:
         #Should hopefully allow planner to explore getting around local minima
         for t in range(self.problem.T):
             self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],t)
-            self.problem.cost.set_rho(("Position", 1e1,t))
+            self.problem.cost.set_rho("Position", 1e1,t)
         self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],-1)
-        self.problem.cost.set_rho(("Position", 1e1,-1))
+        self.problem.cost.set_rho("Position", 1e1,-1)
         
         self.solver.debug_mode = False
         self.solver.max_iterations = 1
@@ -125,16 +125,16 @@ class MPCMotionPlannerBaseClass:
             global_joint_limits_upper[i] = (
                 self.rest_pose[i] 
                 + self.relative_joint_limits_upper[i] 
-                + self.joint_limits_tolerance
+                + self.joint_limit_tolerance
             )
             global_joint_limits_lower[i] = (
                 self.rest_pose[i] 
                 + self.relative_joint_limits_lower[i] 
-                - self.joint_limits_tolerance
+                - self.joint_limit_tolerance
             )
         
         self.kinematic_tree.set_joint_limits_upper(global_joint_limits_upper)
-        self.kinematic_tree.set_joint_limtis_lower(global_joint_limits_lower)
+        self.kinematic_tree.set_joint_limits_lower(global_joint_limits_lower)
 
 
     def lookup_base_pose(self): #Finds the current tf transform for the base and converts it to XYZ+RPY
@@ -164,8 +164,9 @@ class MPCMotionPlannerBaseClass:
         self.q = self.problem.start_state.copy()
         if (len(self.joint_names) - self.base_dof) != 0:
             self.joint_states_callback(
-                rospy.wait_for_message("/z1_gazebo/joint_states", JointState)
-            )
+                #A Joinst State message with 7 joints is published to the below topic
+                rospy.wait_for_message("/z1_gazebo/joint_states", JointState) 
+            )                                                                  
         
         if self.base_dof != 0:
             self.q[0 : self.base_dof] = self.lookup_base_pose()
@@ -193,7 +194,7 @@ class MPCMotionPlannerBaseClass:
     def get_error(self): #Computes the task error as a scalar value
         error_array = array(self.problem.get_state_cost(0))
         square_error = error_array.dot(error_array)
-        rospy.loginfo("Pose error %f", math.sqrt(square_error))
+        #rospy.loginfo("Pose error %f", math.sqrt(square_error))
         return math.sqrt(square_error)
     
     def interactive_servoing(self):
@@ -206,9 +207,9 @@ class MPCMotionPlannerBaseClass:
         )
 
         self.q[0:2] = update_xy[0:2]
-        joint_limits = self.get_kinematic_tree()
-        global_joint_limits_upper = joint_limits[:,1]
-        global_joint_limits_lower = joint_limits[:,0]
+        joint_limits = self.kinematic_tree.get_joint_limits()
+        global_joint_limits_upper = joint_limits[:, 1]
+        global_joint_limits_lower = joint_limits[:, 0]
 
         global_joint_limits_upper[0] = (
                 update_xy[0]
@@ -233,7 +234,7 @@ class MPCMotionPlannerBaseClass:
             )  # y
         
         self.kinematic_tree.set_joint_limits_upper(global_joint_limits_upper)
-        self.kinematic_tree.set_joint_limtis_lower(global_joint_limits_lower)
+        self.kinematic_tree.set_joint_limits_lower(global_joint_limits_lower)
 
     def publish_to_robot(self): #Publishes motion plan as a single waypoint trajectory_msgs/JointTrajectory
         trajectory_msg = JointTrajectory()
@@ -256,8 +257,11 @@ class MPCMotionPlannerBaseClass:
 
         #Solve using MPC
         solution = self.solver.solve()
+        
 
         self.problem.update(self.q,solution[0],0) 
+        print("Exotica Solution:")
+        print(solution[0])
 
         #Update the joint positions
         self.q[:] = self.problem.X[:,1].copy()
@@ -293,6 +297,7 @@ class MPCMotionPlannerBaseClass:
                 #Sleep and increment time
                 self.rate.sleep()
                 self.t = self.t + self.dt
+                #rospy.loginfo("t: %s", str(self.t))
 
             #Check that the motion plan hasn't been aborted via keyboard interupt
             except KeyboardInterrupt:
