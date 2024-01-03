@@ -2,7 +2,7 @@
 <launch>
 
     <!-- Motion Planner-->
-    <node name="motion_planner" pkg="anytree_motion_planner" type="approach_target.py" output="screen" />
+    <node name="motion_planner" pkg="anytree_motion_planner" type="approach_target_as" output="screen" />
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control_interface" type="anytree_base_control.py" output="screen" />
     <node name="anytree_arm_control" pkg="anytree_control_interface" type="z1_control_interface" output="screen" />

@@ -10,7 +10,7 @@ from bt_drs_msgs.msg import (
 from tf.transformations import quaternion_from_euler
 def feedback_callback(feedback):
     #Log feedback to the console
-    rospy.loginfo("Current eror: %s" % str(feedback.error))
+    rospy.loginfo("Current error: %s" % str(feedback.error))
 def main():
     # Initialize the ROS node
     rospy.init_node('send_approach_target')
@@ -44,10 +44,6 @@ def main():
     client.wait_for_result()
     #Get result
     result = client.get_result()
-    if result.result:
-        rospy.loginfo("Action successful: approached target")
-    else:
-        rospy.loginfo("Action failed...")
 
 if __name__ == "__main__":
     main()
