@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- Motion Planner-->
+    <node name="motion_planner" pkg="anytree_motion_planner" type="approach_target_as" output="screen" />
+    <!-- Control Nodes-->
+    <node name="anytree_base_control" pkg="anytree_control_interface" type="anytree_base_control.py" output="screen" />
+    <node name="anytree_arm_control" pkg="anytree_control_interface" type="z1_control_interface" output="screen" />
+
+    <!-- Target pose-->
+    <rosparam file="$(find anytree_simulation)/config/mp_test.yaml" param="target_pose_euler"/>
+
+
+</launch>

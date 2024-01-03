@@ -39,4 +39,4 @@ stack_launcher:
       preprocessed_params:
         rviz_display_config:
           key: /gui/rqt_rviz_widget/display_config
-          value: $(rospack find simulation)/resources/anytree_locomanipulation_gazebo.rviz
+          value: $(rospack find anytree_simulation)/resources/anytree_locomanipulation_gazebo.rviz
