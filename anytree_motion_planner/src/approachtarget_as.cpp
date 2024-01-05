@@ -4,7 +4,7 @@
 #include "bt_drs_msgs/approachTargetResult.h"
 #include "bt_drs_msgs/approachTargetFeedback.h"
 #include "exotica_core/exotica_core.h"
-#include "motion_planner_base.hpp"
+#include "anytree_motion_planner/MotionPlannerBaseClass.hpp"
 
 class ApproachTargetActionServer : public MotionPlannerBaseClass {
 

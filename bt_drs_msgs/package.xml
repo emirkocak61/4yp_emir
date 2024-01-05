@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bt_drs_msgs</name>
+  <version>0.0.0</version>
+  <description>Custom action, message, and service definitions for integration of Behavior Trees with motion planning and control tools in DRS</description>
+
+  <maintainer email="jacques@robots.ox.ac.uk">Jacques Cloete</maintainer>
+  <maintainer email="wolfgang@robots.ox.ac.uk">Wolfgang Merkt</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <depend>trajectory_msgs</depend>
+</package>

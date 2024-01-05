@@ -43,7 +43,7 @@ generate_messages(
 )
 
 catkin_package(
-#  INCLUDE_DIRS include
+INCLUDE_DIRS include
 #  LIBRARIES motion_planning_exotica
 CATKIN_DEPENDS sensor_msgs std_msgs actionlib_msgs geometry_msgs bt_drs_msgs
 #  DEPENDS system_lib
@@ -60,7 +60,7 @@ include_directories(
  ${catkin_INCLUDE_DIRS}
  )
 
-add_executable(approach_target_as src/approachtarget_as.cpp)
+add_executable(approach_target_as src/approachtarget_as.cpp src/MotionPlannerBaseClass.cpp)
 add_dependencies(approach_target_as ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(approach_target_as
   ${catkin_LIBRARIES}
@@ -69,9 +69,7 @@ target_link_libraries(approach_target_as
 
 
 ## Add cmake target dependencies of the executable
-
 ## Specify libraries to link a library or executable target against
-
 ## Specify libraries to link a library or executable target against
 
 

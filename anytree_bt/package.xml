@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>anytree_bt</name>
+  <version>0.0.0</version>
+  <description>The package that contains the BTs for anytree</description>
+  <maintainer email="emir.kocak@trinity.ox.ac.uk">emirkocak</maintainer>
+  <license>BSD</license>
+
+  <author email="emir.kocak@trinity.ox.ac.uk">Emir Kocak</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>behaviortree_cpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>bt_drs_msgs</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>controller_manager_msgs</build_depend>
+
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>behaviortree_cpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>actionlib</exec_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>bt_drs_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>controller_manager_msgs</exec_depend>
+
+  <depend>trajectory_msgs</depend>
+  <depend>tf2_eigen</depend>
+
+  <export>
+    <behaviortree_cpp bt_lib_plugin="libbt_nodes_drs" />
+  </export>
+</package>

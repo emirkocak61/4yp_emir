@@ -1,0 +1,5 @@
+bool query_spin
+---
+bool result
+---
+float64 error

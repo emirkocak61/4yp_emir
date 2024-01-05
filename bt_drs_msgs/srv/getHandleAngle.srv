@@ -1,0 +1,4 @@
+string device_type
+string device_id
+---
+float64 angle

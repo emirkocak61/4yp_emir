@@ -1,0 +1,13 @@
+geometry_msgs/Pose target
+string device_type
+int8 strategy
+float64 manipulation_todo
+int8 ANTICLOCKWISE=1
+int8 CLOCKWISE=-1
+int8 direction
+---
+bool result
+---
+float64 error
+float64 manipulation_remaining
+float64 angle_rotated

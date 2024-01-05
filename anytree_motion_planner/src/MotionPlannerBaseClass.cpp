@@ -1,4 +1,4 @@
-//This is the c++ implementation of the motion planner base class written by Jacques
+//The c++ implementation of the motion planner base class written by Jacques
 //This will allow faster runtime and easier use for further user as the EXOTica docs are more clear in c++
 //It is important to check where vectors are std::vector or Eigen::Matrix
 
@@ -19,20 +19,21 @@
 #include <vector>
 #include <chrono>
 #include <cmath>
+#include "anytree_motion_planner/MotionPlannerBaseClass.hpp"
 
 
 using namespace exotica;
 
-class MotionPlannerBaseClass {
+
     //Base class for an MPC and EXOTica based motion planner, implemented as a ros action server
     //Abstract base class, must implement:
     //Action specific intialization, defining and starting action server
     //Feedback and result action variables
     //Callback for the action server
     //Also requires a main function OUTSIDE class definition
-public:
+
     //Class constructor
-    MotionPlannerBaseClass(const std::string& actionName) : 
+    MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
                                 action_name(actionName), dt(0.02), rate(1/dt),
                                 base_dof(6),start_tolerance(5e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
@@ -85,12 +86,12 @@ public:
             }
         }
 
-    ~MotionPlannerBaseClass(){
+    MotionPlannerBaseClass::~MotionPlannerBaseClass(){
         Setup::Destroy();   //Destroy all the exotica related objects
     }
 
-    //Finds the current tf transform for the base and converts that to XYZ=RPY
-    std::vector<double> LookupBasePose() {
+    //Finds the current tf transform for the base and converts that to XYZ+RPY
+    std::vector<double> MotionPlannerBaseClass::LookupBasePose() {
          geometry_msgs::TransformStamped base_transform;
          base_transform = tfBuffer.lookupTransform("odom","base",ros::Time(0),ros::Duration(3.0));
          std::vector<double> base_pose(6,0.0);
@@ -118,7 +119,7 @@ public:
          return base_pose; //This vector effectively describes the base pose in terms of the 'odom' frame
     }
 
-    void SetJointLimits() {
+    void MotionPlannerBaseClass::SetJointLimits() {
         std::map<std::string,double> model_state;
         model_state["world_joint/trans_x"] = rest_pose[0];
         model_state["world_joint/trans_y"] = rest_pose[1];
@@ -144,7 +145,7 @@ public:
         kinematic_tree->SetJointLimitsLower(global_joint_limits_lower);
     }
 
-    void ResetRestPoseCb(const std_msgs::Bool::ConstPtr &msg) {
+    void MotionPlannerBaseClass::ResetRestPoseCb(const std_msgs::Bool::ConstPtr &msg) {
         if (msg->data == true) {
             rest_pose = LookupBasePose(); //Resets the rest pose
             SetJointLimits(); //Resets the joint limits according to new rest pose
@@ -152,7 +153,7 @@ public:
     }
 
     //Initializes the robot pose in EXOTica
-    void InitRobotPose() {
+    void MotionPlannerBaseClass::InitRobotPose() {
         q = Eigen::VectorXd(problem->GetStartState()); //Ensures that q is a copy of the returned vector
         if ((joint_names.size() - base_dof) != 0 ) {
             //Wait for a joint state message from the arm and call the callback function
@@ -183,7 +184,7 @@ public:
         }
     }
     //Publish motion plan as a single waypoint trajectory_msgs/JointTrajectory
-    void PublishToRobot() {
+    void MotionPlannerBaseClass::PublishToRobot() {
         trajectory_msgs::JointTrajectory trajectory_msg;
         trajectory_msg.joint_names = joint_names;
         trajectory_msgs::JointTrajectoryPoint trajectory_point;
@@ -196,7 +197,7 @@ public:
         motion_plan_publisher.publish(trajectory_msg);
     }
 
-    double GetError() {
+    double MotionPlannerBaseClass::GetError() {
         //A weird implementation going on here...
         double state_cost = problem->GetStateCost(0);
         double square_error = state_cost * state_cost;
@@ -204,7 +205,7 @@ public:
 
     }
 
-    void JointStatesCb(const sensor_msgs::JointState &joint_states){
+    void MotionPlannerBaseClass::JointStatesCb(const sensor_msgs::JointState &joint_states){
         //Assumes all joint_states messages contain all joints
         //Iterate over the joint names defined for the robot.
         for (size_t i=0;i < joint_names.size(); i++){
@@ -224,7 +225,7 @@ public:
         }
     }
 
-    void InteractiveServoing() {
+    void MotionPlannerBaseClass::InteractiveServoing() {
         std::vector<double> update_xy = LookupBasePose();
         std::map<std::string, double> model_state_xy;
         model_state_xy["world_joint/trans_x"] = update_xy[0];
@@ -253,7 +254,7 @@ public:
         kinematic_tree->SetJointLimitsLower(global_joint_limits_lower);
     }
 
-    void Iterate() {
+    void MotionPlannerBaseClass::Iterate() {
         //Inform EXOTica of unexpected changes to XY as a side-effect of ANYNova rotating its base
         InteractiveServoing();
         problem->SetStartTime(t); //Set problem start time
@@ -270,10 +271,8 @@ public:
         scene->SetModelState(q.head(scene->get_num_positions()));
     }
 
-    virtual void PerformMotion() {}; //Pure virtual function
-    virtual void PerformTrajectory() {}; 
-
-    KDL::Frame GetFrameFromPose(const geometry_msgs::Pose &pose) {
+    
+    KDL::Frame MotionPlannerBaseClass::GetFrameFromPose(const geometry_msgs::Pose &pose) {
         
         //Create a KDL Vector for the position
         KDL::Vector position(pose.position.x,pose.position.y,pose.position.z);
@@ -289,41 +288,6 @@ public:
         return frame;
     }
 
-protected:
-    ros::NodeHandle nh_; //Initialize the node handle first to avoid ros::Time related issues
-    std::string action_name; //Name of the ROS action
-    double dt; //Iteration time-step 0.02 corresponds to 50Hz control rate
-    ros::Rate rate; //Control frequency
-    size_t base_dof; //Degree of freedom of the base, 6 in the case of virtual floating base
-    double start_tolerance; //Tolerance between the End Effector Frame and Target at the start of motion plan
-    std::string error_metric;
-    double tolerance_; //Tolerance between EEF and Target
-    int counter_limit; //No of consecutive iterations for which EEF is within tolerance
-    double t_limit; //Time limit to achieve goal 
-    double t; //Time in exotica planning problem
-    Eigen::VectorXd q; //Joint states of the robot
-    //If the real arm can't follow the motion plans for manipulation, the motion plan should be stopped
-    double self_tolerance;
-    double self_counter; //No of consecutive iterations for which real EEF is outside tolerance
 
-    //ros::NodeHandle nh_;
-    ros::Publisher motion_plan_publisher; //Sets publisher to send motion plans which can be read by other nodes
-    ros::Subscriber reset_rest_pose_sub;
-    tf2_ros::Buffer tfBuffer;
-    tf2_ros::TransformListener listener; //Listens to published transforms from the robot sim
 
-    MotionSolverPtr solver; //Sets up EXOTica 
-    DynamicTimeIndexedShootingProblemPtr problem; //Sets up the planning problem object
-    ScenePtr scene; //The exotica planning scene
-    std::vector<std::string> joint_names; //Names of the controlled joints
-    std::vector<double> rest_pose; //Base pose of anymal at rest/beginning
-    KinematicTree* kinematic_tree; //The kinematic tree pointer from EXOTica scene
-
-    //Eigen::MatrixXd joint_limits; //Joint limits retrieved from exotica
-    Eigen::VectorXd relative_joint_limits_upper;
-    Eigen::VectorXd relative_joint_limits_lower;
-    double joint_limit_tolerance;
-    Eigen::MatrixXd joint_velocities;
-
-};
 

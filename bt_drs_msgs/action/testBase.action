@@ -1,0 +1,5 @@
+string test
+---
+bool result
+---
+float64 error
