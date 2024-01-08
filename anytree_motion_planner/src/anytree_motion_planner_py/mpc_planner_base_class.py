@@ -97,7 +97,7 @@ class MPCMotionPlannerBaseClass:
             self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],t)
             self.problem.cost.set_rho("Position", 1e1,t)
         self.problem.cost.set_goal("Position", [0.0,0.0,0.0,0.0,0.0,0.0],-1)
-        self.problem.cost.set_rho("Position", 1e1,-1)
+        self.problem.cost.set_rho("Position", 1e3,-1)
         
         self.solver.debug_mode = False
         self.solver.max_iterations = 1

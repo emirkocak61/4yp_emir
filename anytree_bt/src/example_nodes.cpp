@@ -30,4 +30,16 @@ BT::NodeStatus GripperInterface::close() {
     std::cout << "GripperInterface::close" << std::endl;
     return BT::NodeStatus::SUCCESS;
 }
+
+BT::NodeStatus SaySomething::tick()  {
+    auto msg = getInput<std::string>("message");
+    if (!msg)
+    {
+        throw BT::RuntimeError( "missing required input [message]: ", msg.error() );
+    }
+
+    std::cout << "Robot says: " << msg.value() << std::endl;
+    return BT::NodeStatus::SUCCESS;
+}
+
 } //Namespace ExampleNodes

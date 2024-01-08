@@ -78,7 +78,7 @@ using namespace exotica;
                     problem->cost.SetRho("Position",1e1,t);
                 }
                 problem->cost.SetGoal("Position", goal_ref,-1);
-                problem->cost.SetRho("Position",1e1,-1);
+                problem->cost.SetRho("Position",1e3,-1);
         
                 solver->debug_ = false;
                 solver->SetNumberOfMaxIterations(1);

@@ -20,12 +20,30 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager_msgs
   trajectory_msgs
   tf2_eigen
+  anymal_motion_control_msgs
+  control_unit_msgs
+  motion_transitioner_msgs
+  navigation_manager_msgs
+  operational_mode_manager_msgs
 )
 
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS roslib roscpp geometry_msgs std_msgs actionlib actionlib_msgs trajectory_msgs message_runtime behaviortree_cpp
+  CATKIN_DEPENDS 
+    roslib 
+    roscpp 
+    geometry_msgs 
+    std_msgs 
+    actionlib 
+    actionlib_msgs 
+    trajectory_msgs 
+    message_runtime 
+    behaviortree_cpp
+    anymal_motion_control_msgs
+    control_unit_msgs
+    motion_transitioner_msgs
+    operational_mode_manager_msgs
 )
 
 ###########
@@ -46,6 +64,7 @@ function(CompileExample name)
 endfunction()
 
 CompileExample(run_tree)
+CompileExample(example_tree_anymal)
 
 
 ## Declare a C++ library

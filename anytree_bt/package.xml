@@ -20,6 +20,28 @@
   <build_depend>bt_drs_msgs</build_depend>
   <build_depend>tf2_ros</build_depend>
   <build_depend>controller_manager_msgs</build_depend>
+  <!-- Packages for communicating with Anymal-->
+  <build_depend>control_unit_msgs</build_depend>
+  <build_depend>motion_transitioner_msgs</build_depend>
+  <build_depend>operational_mode_manager_msgs</build_depend>
+  <build_depend>anymal_motion_control_msgs</build_depend>
+  <build_depend>navigation_manager_msgs</build_depend>
+
+    <!-- ANYbotics requires manual specification of the -dev package as well-->
+  <build_depend>control_unit_msgs-dev</build_depend>
+  <build_depend>motion_transitioner_msgs-dev</build_depend>
+  <build_depend>operational_mode_manager_msgs-dev</build_depend>
+  <build_depend>anymal_motion_control_msgs-dev</build_depend>
+  <build_depend>navigation_manager_msgs-dev</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>behaviortree_cpp</build_export_depend>
+  <build_export_depend>control_unit_msgs</build_export_depend>
+  <build_export_depend>motion_transitioner_msgs</build_export_depend>
+  <build_export_depend>operational_mode_manager_msgs</build_export_depend>
+  <build_export_depend>anymal_motion_control_msgs</build_export_depend>
+  <build_export_depend>navigation_manager_msgs</build_export_depend>
+
 
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>roscpp</exec_depend>
@@ -36,6 +58,9 @@
 
   <depend>trajectory_msgs</depend>
   <depend>tf2_eigen</depend>
+
+  <exec_depend>control_unit_msgs</exec_depend>
+  <exec_depend>motion_transitioner_msgs</exec_depend>
 
   <export>
     <behaviortree_cpp bt_lib_plugin="libbt_nodes_drs" />
