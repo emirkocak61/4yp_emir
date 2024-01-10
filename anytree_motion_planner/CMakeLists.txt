@@ -67,6 +67,13 @@ target_link_libraries(approach_target_as
   # other libraries your executable depends on
 )
 
+function(CompileExample name)
+  add_executable(${name} src/examples/${name}.cpp)
+  add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})
+endfunction()
+
+CompileExample(example_motion)
 
 ## Add cmake target dependencies of the executable
 ## Specify libraries to link a library or executable target against

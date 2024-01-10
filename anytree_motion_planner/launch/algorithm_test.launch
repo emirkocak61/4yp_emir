@@ -5,8 +5,12 @@
 
   <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
   <param name="robot_description_semantic" textfile="$(find anytree_description)/config/anytree.srdf" />
-
-  <node launch-prefix="$(arg launch_prefix)" pkg="motion_planning_exotica" type="anytree_aico.py" name="anytree_aico_node" output="screen" />
+  <param name="/use_sim_time" value="false"/>
+  
+  <node launch-prefix="$(arg launch_prefix)" pkg="anytree_motion_planner" type="example_motion" name="test_node" output="screen" />
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
+
+  <!-- Visualize the goal pose as a tf frame-->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="goal_pose_broadcaster" args="0.6 0.1 0.4 0.0 0.0 0.0 1 exotica/Frame0Bworld_frame exotica/target_frame" />
 </launch>

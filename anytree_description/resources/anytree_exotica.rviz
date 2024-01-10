@@ -8,6 +8,8 @@ Panels:
         - /Grid1
         - /RobotModel1
         - /TF1
+        - /TF1/Frames1
+
       Splitter Ratio: 0.5
     Tree Height: 746
   - Class: rviz/Selection
@@ -486,7 +488,7 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/TF
       Enabled: true
-      Frame Timeout: 15
+      Frame Timeout: 1000
       Frames:
         All Enabled: false
         exotica/Frame0AgripperMover:

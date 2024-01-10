@@ -16,7 +16,7 @@
     <Maps>
         <EffFrame Name = "Frame">
             <EndEffector>
-                <Frame Link="gripperMover"/>
+                <Frame Link="gripperStator"/>
             </EndEffector>
       </EffFrame>
     </Maps>

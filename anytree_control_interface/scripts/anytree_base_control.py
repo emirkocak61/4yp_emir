@@ -84,8 +84,8 @@ class ANYTreeBaseControlInterface:
         self.pose_stamped.pose.orientation.z = new_quarternion[2]
         self.pose_stamped.pose.orientation.w = new_quarternion[3]
 
-        self.pose_stamped.pose.position.x = target_vector[0]
-        self.pose_stamped.pose.position.y = target_vector[1]
+        self.pose_stamped.pose.position.x = 0
+        self.pose_stamped.pose.position.y = 0
         self.pose_stamped.pose.position.z = target_vector[2]
 
         self.hold_position = True
