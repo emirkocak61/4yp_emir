@@ -85,7 +85,8 @@ public:
     /**
      * @brief Virtual function to perform motion. Must be implemented in the derived class
     */
-    virtual void PerformMotion() = 0;
+    virtual void PerformMotion() {};
+    virtual void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) {};
    
 
 protected:

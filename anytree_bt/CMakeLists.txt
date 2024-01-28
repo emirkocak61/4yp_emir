@@ -63,7 +63,7 @@ function(CompileExample name)
   target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})
 endfunction()
 
-CompileExample(run_tree)
+CompileExample(manipulate)
 CompileExample(example_tree_anymal)
 
 

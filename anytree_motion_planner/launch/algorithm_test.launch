@@ -12,5 +12,5 @@
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
 
   <!-- Visualize the goal pose as a tf frame-->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="goal_pose_broadcaster" args="0.6 0.1 0.4 0.0 0.0 0.0 1 exotica/Frame0Bworld_frame exotica/target_frame" />
+  
 </launch>

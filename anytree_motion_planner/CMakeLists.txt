@@ -59,13 +59,15 @@ include_directories(
   include
  ${catkin_INCLUDE_DIRS}
  )
+function(Compile name)
+  add_executable(${name} src/${name}.cpp src/MotionPlannerBaseClass.cpp)
+  add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})    
+endfunction(Compile name)
 
-add_executable(approach_target_as src/approachtarget_as.cpp src/MotionPlannerBaseClass.cpp)
-add_dependencies(approach_target_as ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(approach_target_as
-  ${catkin_LIBRARIES}
-  # other libraries your executable depends on
-)
+Compile(approachtarget_as)
+Compile(graspTarget_as)
+Compile(manipulateTarget_as)
 
 function(CompileExample name)
   add_executable(${name} src/examples/${name}.cpp)

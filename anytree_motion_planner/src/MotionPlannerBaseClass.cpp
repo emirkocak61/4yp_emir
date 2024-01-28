@@ -37,7 +37,7 @@ using namespace exotica;
                                 action_name(actionName), dt(0.02), rate(1/dt),
                                 base_dof(6),start_tolerance(5e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
-                                counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
+                                counter_limit(10), t_limit(10.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
         {
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
@@ -71,14 +71,17 @@ using namespace exotica;
             
                 int T = problem->get_T();
                 Eigen::VectorXd goal(6);
+                Eigen::VectorXd joint_limit  =  Eigen::VectorXd::Zero(scene->get_num_controls()*2);
                 goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
                 Eigen::VectorXdRefConst goal_ref = goal;
                 for (int t = 0; t < T; ++t) {
                     problem->cost.SetGoal("Position", goal_ref, t);
+                    problem->cost.SetGoal("JointLimit", joint_limit,t);
                     problem->cost.SetRho("Position",1e1,t);
+                    problem->cost.SetRho("JointLimit",1e3,t);
                 }
-                problem->cost.SetGoal("Position", goal_ref,-1);
-                problem->cost.SetRho("Position",1e3,-1);
+                problem->cost.SetGoal("Position", goal_ref,T-1);
+                problem->cost.SetRho("Position",1e3,T-1);
         
                 solver->debug_ = false;
                 solver->SetNumberOfMaxIterations(1);
@@ -87,6 +90,7 @@ using namespace exotica;
         }
 
     MotionPlannerBaseClass::~MotionPlannerBaseClass(){
+        solver.reset();
         Setup::Destroy();   //Destroy all the exotica related objects
     }
 
@@ -263,11 +267,10 @@ using namespace exotica;
         //Solve using MPC
         Eigen::MatrixXd solution;
         solver->Solve(solution);
-        
         problem->Update(q,solution.row(0),0);
-
+        
         //Update Joint Positions
-        q = problem->get_X().col(1);
+        q = problem->get_X(1);
         scene->SetModelState(q.head(scene->get_num_positions()));
     }
 

@@ -32,7 +32,7 @@ public:
         PerformMotion();
     }
 
-    void PerformMotion() {
+    void PerformMotion() override {
         result_.result = true;
         InitRobotPose();
         t = 0.0;

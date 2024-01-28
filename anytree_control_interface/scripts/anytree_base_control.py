@@ -119,6 +119,7 @@ class ANYTreeBaseControlInterface:
 if __name__ == "__main__":
 
     controller = ANYTreeBaseControlInterface() #Instantiate the controller
+    
     rospy.spin()
     controller.timer.shutdown()
 
