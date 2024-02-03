@@ -8,13 +8,12 @@ project(anytree_motion_planner)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  exotica_pinocchio_dynamics_solver
   roscpp
   rospy
   exotica_core
   exotica_python
   exotica_core_task_maps
-  exotica_ik_solver
-  exotica_nlopt_solver
   sensor_msgs
   geometry_msgs
   rospy
@@ -75,7 +74,8 @@ function(CompileExample name)
   target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})
 endfunction()
 
-CompileExample(example_motion)
+CompileExample(example_motion_aico)
+CompileExample(example_motion_ddp)
 
 ## Add cmake target dependencies of the executable
 ## Specify libraries to link a library or executable target against

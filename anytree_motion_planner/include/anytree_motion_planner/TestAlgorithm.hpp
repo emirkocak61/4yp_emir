@@ -2,6 +2,9 @@
  * Script to test mpc based algorithms on RVIZ
 */
 #pragma once
+#include <pinocchio/parsers/urdf.hpp>
+#include <pinocchio/algorithm/joint-configuration.hpp>
+#include <pinocchio/algorithm/rnea.hpp>
 
 #include <exotica_core/exotica_core.h>
 #include <ros/ros.h>
@@ -32,7 +35,7 @@ public:
     }
 
     //Assumes the input is in the form xyz+rpy
-    Pose GetPoseFromEuler(Eigen::VectorXd& euler) {
+    static Pose GetPoseFromEuler(Eigen::VectorXd& euler) {
         Pose pose;
         //Get the translation components
         pose.position.x = euler(0);
@@ -49,7 +52,7 @@ public:
         return pose;
     }
 
-    KDL::Frame GetFrameFromPose(const Pose &pose) {
+    static KDL::Frame GetFrameFromPose(const Pose &pose) {
         //Create a KDL Vector for the position
         KDL::Vector position(pose.position.x,pose.position.y,pose.position.z);
         //Create a KDL rotation from the quaternion
@@ -63,7 +66,7 @@ public:
         KDL::Frame frame(rotation,position);
         return frame;
     }
-
+    
     //Sets up the exotica problem
     void SetupProblem(const std::string& config_path,
                       const Eigen::VectorXd& start_state,
@@ -72,6 +75,7 @@ public:
         Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("test_node")));
 
         solver = XMLLoader::LoadSolver(config_path);
+
         PlanningProblemPtr planning_problem = solver->GetProblem();
         //Static cast the pointer to a DynamicTimeIndexedShootingProblem
         problem = std::static_pointer_cast<DynamicTimeIndexedShootingProblem>(planning_problem);
@@ -98,7 +102,11 @@ public:
         problem->cost.SetRho("Position",1e4,T-1);
         
         q = problem->GetStartState();
-        scene->SetModelState(q.head(scene->get_num_positions()));
+        std::cout << "Start state: " << q.transpose() << std::endl;
+        int n = scene->get_num_positions();
+        std::cout << "Number of positions: " << n << std::endl;
+        std::cout << "Number of states: " << scene->get_num_state() << std::endl;
+        scene->SetModelState(q.head(n));
         
         solver->debug_ = false;
         solver->SetNumberOfMaxIterations(1);        
@@ -123,7 +131,7 @@ public:
         return traj_exotica;
     }
 
-    void Algorithm() {
+    void Algorithm1() {
         problem->SetStartTime(t);
         problem->SetStartState(q);
         //Set the previous solution as an initial guess
@@ -131,22 +139,20 @@ public:
         
         //Solve problem
         std::unique_ptr<Eigen::MatrixXd> solution = std::make_unique<Eigen::MatrixXd>();
-        auto start = std::chrono::high_resolution_clock::now();
+
         solver->Solve(*solution);
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
-        t_algorithm.push_back(duration);
         //Apply only the first step of the solution
         problem->Update(q,solution->row(0),0);
-        //Print solution
-        std::cout << solution->row(0) << std::endl;
+
+        
         //Swap prevU and solution pointers for the next iteration
         prevU.swap(solution);
 
         //Update Joint Positions
         q = problem->get_X(1);
-        //Print state at time t=1
-        std::cout << q << std::endl;
+        //Solve dynamics to get control input
+        //Eigen::VectorXd control_input =  SolveDynamics();
+        //std::cout << control_input.transpose() << std::endl;
         scene->SetModelState(q.head(scene->get_num_positions()));
         //PublishFramesToRVIZ(q);
         scene->GetKinematicTree().PublishFrames();
@@ -158,7 +164,7 @@ public:
 
     void RunAlgorithm(const double& time_limit) {
         while (t < time_limit) {
-            Algorithm();
+            Algorithm1();
             r.sleep();
             t += dt;    
         }
@@ -169,13 +175,33 @@ public:
                 t = 0.0;
                 std::cout << "Performing Trajectory" << std::endl;
                 while (t < time_limit) {
-                    Algorithm();
+                    Algorithm1();
                     r.sleep();
                     t += dt;    
                 }
                 scene->RemoveTrajectory("TargetRelative");
             }
 
+    }
+
+    //Setup Pinocchio for dynamics 
+    void SetupPinocchio() {
+        std::string package_path = ros::package::getPath("z1_description");
+        const std::string model_urdf = package_path + "/xacro/z1.urdf";
+        pinocchio::urdf::buildModel(model_urdf,model);
+        std::cout << "Number of variables: " << model.nv << std::endl;
+        //Create data required by the model
+        pinocchio::Data data1(model);
+        data = data1;
+    }
+
+    Eigen::VectorXd SolveDynamics() {
+        Eigen::VectorXd qp = q.segment(0,6);
+        Eigen::VectorXd vp = q.segment(6,6);
+        Eigen::VectorXd a = Eigen::VectorXd::Zero(model.nv);
+
+        const Eigen::VectorXd& tau = pinocchio::rnea(model,data,qp,vp,a);
+        return tau;
     }
 
     //Returns the average time (in microseconds) to run each iteration of the algorithm
@@ -204,18 +230,21 @@ private:
     ros::NodeHandle nh_pub;
     MotionSolverPtr solver; //EXOTica solver
     DynamicTimeIndexedShootingProblemPtr problem; //EXOTica planning problem
+    
     ScenePtr scene; //EXOTica scene
     Eigen::VectorXd q; //Vector to store joint configurations
     ros::V_string joint_names;
     ros::Rate r; 
     ros::Publisher pub;
    
-
     double dt; //problem time step
     double t; //variable to keep track of time
     bool isTraj; //If a trajectory algorithm is being tested
     std::unique_ptr<Eigen::MatrixXd> prevU; //Matrix to store the previous solution
     std::vector<std::chrono::microseconds> t_algorithm; //Vector that stores time of each iteration of the algorithm 
-
+    
+    //Pinocchio Related Objects
+    pinocchio::Model model;
+    pinocchio::Data data;
 };
 

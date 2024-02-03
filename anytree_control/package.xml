@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>anytree_control_interface</name>
+  <name>anytree_control</name>
   <version>0.0.0</version>
   <description>Anytree control interface</description>
 
@@ -74,6 +74,10 @@
   <exec_depend>trajectory_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
 
+  <depend>exotica_core</depend>
+  <depend>exotica_python</depend>
+  <depend>exotica_core_task_maps</depend>
+  <depend>anytree_motion_planner</depend>
   <depend>unitree_ros</depend>
   <depend>z1_sdk</depend>
 

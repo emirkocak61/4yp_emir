@@ -5,13 +5,11 @@
 
   <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
   <param name="robot_description_semantic" textfile="$(find anytree_description)/config/anytree.srdf" />
-  <param name="/use_sim_time" value="false"/>
+  <!--param name="/use_sim_time" value="false" -->
+  
+  <node launch-prefix="$(arg launch_prefix)" pkg="anytree_control" type="armMotion" name="test_node" output="screen" />
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
-  
-  <node launch-prefix="$(arg launch_prefix)" pkg="anytree_motion_planner" type="example_motion" name="test_node" output="screen" />
-
-  
 
   <!-- Visualize the goal pose as a tf frame-->
   

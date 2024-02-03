@@ -41,8 +41,7 @@
   <depend>exotica_python</depend>
   <depend>exotica_aico_solver</depend>
   <depend>exotica_core_task_maps</depend>
-  <depend>exotica_ik_solver</depend>
-  <depend>exotica_nlopt_solver</depend>
+  <depend>exotica_pinocchio_dynamics_solver</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>actionlib</depend>
