@@ -7,28 +7,49 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
+#include <trajectory_msgs/JointTrajectory.h>
 #include <unitree_arm_sdk/control/unitreeArm.h>
 #include "tf2_ros/transform_listener.h"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2/LinearMath/Matrix3x3.h"
+#include <anytree_control/LowPassFilter.hpp>
 #include <thread>
 
-class Robot {
+class RobotInterface {
 public:
-    Robot() : arm(true) {
+    RobotInterface(const double& dt) : arm(true), r(1/dt), velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)) {
+        this->dt = dt;
         robot_name = "anytree";
+        motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
         arm.sendRecvThread->start();
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
+        std::vector<double> KP = {200,300,300,200,150,100};
+        std::vector<double> KD = {1000,1000,1000,1000,1000,1000};
+        arm.lowcmd->setControlGain(KP, KD);
     }
-    ~Robot() {}
+    ~RobotInterface() {}
     
-    void PublishMotionPlan() {}
-    void sendArmCommand(const Eigen::VectorXd& targetQ) {
+    void publishMotionPlan(const Eigen::VectorXd motion_plan) {
+        UNITREE_ARM::Timer publisher_timer(dt);
+        trajectory_msgs::JointTrajectory trajectory_msg;
+        trajectory_msgs::JointTrajectoryPoint trajectory_point;
+        trajectory_point.positions.reserve(robot_dof);
+        //Convert from eigen vector to std vector
+        for (int i = 0; i < 12; i++) {trajectory_point.positions[i] = motion_plan(i);}
+        ros::Duration duration;
+        trajectory_point.time_from_start = duration.fromSec(dt);
+        trajectory_msg.points.push_back(trajectory_point);
+        motion_plan_publisher.publish(trajectory_msg);
+        publisher_timer.sleep();
+    }
+
+    void publishArmPlan(const Eigen::VectorXd motion_plan) {
         arm.sendRecvThread->shutdown();
+        Vec6 targetQ = motion_plan.segment(motion_plan.size() - arm_dof,arm_dof); 
         Vec6 initQ = arm.lowstate->getQ();
         double duration = 10; 
-        UNITREE_ARM::Timer timer2(0.002); //This is the default control frequency of 500Hz
+        UNITREE_ARM::Timer timer(0.002); //This is the default control frequency of 500Hz
         //Timer timer(control_frequency);
         for(int i(0); i<duration; i++){
             arm.q = initQ * (1-i/duration) + targetQ * (i/duration);
@@ -39,7 +60,7 @@ public:
             arm.setArmCmd(arm.q, arm.qd, arm.tau);
             //setGripperCmd(gripperQ, gripperW, gripperTau);
             arm.sendRecv();
-            timer2.sleep();
+            timer.sleep();
         }
         arm.sendRecvThread->start();
     }
@@ -54,7 +75,6 @@ public:
         Eigen::VectorXd arm_position = arm.lowstate->getQ();
         Eigen::VectorXd arm_velocity = arm.lowcmd->getQd();
         GetBaseState(base_pose, base_twist);
-        
         robot_state << (*base_pose), arm_position, (*base_twist), arm_velocity;
         return robot_state;
     }
@@ -63,7 +83,6 @@ public:
         
         std::thread pose_thread(getBasePose, std::ref(base_pose));
         std::thread twist_thread(getBaseTwist,std::ref(base_twist));
-
         pose_thread.join();
         twist_thread.join();
     }
@@ -107,8 +126,15 @@ public:
 
 protected:
     ros::NodeHandle nh_;
+    ros::Publisher motion_plan_publisher;
+    ros::Rate r;
+    double dt; //Control frequency 
     int robot_dof = 12; //Base + arm
     int base_dof = 6;
+    int arm_dof = 6;
+
     UNITREE_ARM::unitreeArm arm;
+    LowPassFilter<Eigen::VectorXd> velocity_filter; 
+    
 
 };

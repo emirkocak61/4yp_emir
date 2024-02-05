@@ -67,6 +67,18 @@ include_directories(
    $ENV{HOME}/catkin_ws/src/4yp_emir/anytree_control/include
 )
 
+function(Compile name)
+  add_executable(${name} src/${name}.cpp)
+  add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name} 
+  ${catkin_LIBRARIES}
+  ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so)
+endfunction()
+
+#Compile(z1_lowcmd_ros)
+#Compile(armMotion)
+#Compile(state_thread_test)
+Compile(unitree)
 
 add_executable(z1_control_interface src/z1_lowcmd_ros.cpp)
 target_link_libraries(z1_control_interface 
@@ -85,3 +97,4 @@ target_link_libraries(state_thread_test
   ${catkin_LIBRARIES}
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so
 )
+

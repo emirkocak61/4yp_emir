@@ -18,7 +18,7 @@ int main(int argc,char** argv) {
     geometry_msgs::Pose target_pose = TestAlgorithm::GetPoseFromEuler(target_euler);
     KDL::Frame target_frame = TestAlgorithm::GetFrameFromPose(target_pose);
 
-    controller.SetupPlanningProblem(config_path);
+    controller.SetupPlanningProblem(config_path,start_state);
     controller.SetGoal(target_frame);
     controller.Run();
     }
