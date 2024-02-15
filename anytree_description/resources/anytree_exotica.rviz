@@ -9,7 +9,6 @@ Panels:
         - /RobotModel1
         - /TF1
         - /TF1/Frames1
-
       Splitter Ratio: 0.5
     Tree Height: 746
   - Class: rviz/Selection
@@ -491,9 +490,9 @@ Visualization Manager:
       Frame Timeout: 1000
       Frames:
         All Enabled: false
-        exotica/Frame0AgripperMover:
+        exotica/Frame0AgripperStator:
           Value: true
-        exotica/Frame0Bworld_frame:
+        exotica/Frame0BTargetRelative:
           Value: true
         exotica/LF_FOOT:
           Value: false
@@ -639,6 +638,10 @@ Visualization Manager:
           Value: false
         exotica/RH_thigh_fixed_collision_1:
           Value: false
+        exotica/Target:
+          Value: true
+        exotica/TargetRelative:
+          Value: true
         exotica/alphasense_mesh:
           Value: false
         exotica/alphasense_mesh_collision_0:
@@ -809,8 +812,8 @@ Visualization Manager:
       Show Names: true
       Tree:
         exotica/world_frame:
-          exotica/Frame0Bworld_frame:
-            exotica/Frame0AgripperMover:
+          exotica/Frame0BTargetRelative:
+            exotica/Frame0AgripperStator:
               {}
           exotica/LF_FOOT:
             {}
@@ -955,6 +958,10 @@ Visualization Manager:
           exotica/RH_thigh_fixed_collision_0:
             {}
           exotica/RH_thigh_fixed_collision_1:
+            {}
+          exotica/Target:
+            {}
+          exotica/TargetRelative:
             {}
           exotica/alphasense_mesh:
             {}

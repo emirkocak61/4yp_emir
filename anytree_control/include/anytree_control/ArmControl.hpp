@@ -67,7 +67,7 @@ public:
         // Use Eigen::Map to directly map trajectory_point.positions to an Eigen::VectorXd
         Eigen::Map<Eigen::VectorXd>(trajectory_point.positions.data(), trajectory_point.positions.size()) = X.head(6);
         Eigen::Map<Eigen::VectorXd>(trajectory_point.velocities.data(),trajectory_point.velocities.size()) = X.tail(6);
-        Eigen::Map<Eigen::VectorXd>(trajectory_point.accelerations.data(),trajectory_point.accelerations.size()) = prevU->row(1);
+        //Eigen::Map<Eigen::VectorXd>(trajectory_point.accelerations.data(),trajectory_point.accelerations.size()) = prevU->row(1);
         trajectory_msg.points.push_back(trajectory_point);
         motion_plan_publisher.publish(trajectory_msg);   
     }

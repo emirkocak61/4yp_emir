@@ -9,7 +9,7 @@
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
   
-  <node launch-prefix="$(arg launch_prefix)" pkg="anytree_motion_planner" type="example_motion" name="test_node" output="screen" />
+  <node launch-prefix="$(arg launch_prefix)" pkg="anytree_motion_planner" type="example_motion_aico" name="test_node" output="screen" />
 
   
 

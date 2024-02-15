@@ -4,9 +4,8 @@
 //File that contains custom node definitions
 #include <anytree_bt/anymal/motion_transitioner.hpp>
 #include <anytree_bt/ApproachTarget.hpp>
-#include <anytree_bt/ManipulateTarget.hpp>
 #include <anytree_bt/ExampleNodes.hpp>
-#include <anytree_bt/ResetArmPose.hpp>
+
 
 int main(int argc,char** argv) {
     ros::init(argc,argv,"example_bt_node");
@@ -19,7 +18,7 @@ int main(int argc,char** argv) {
     factory.registerNodeType<ExampleNodes::SaySomething>("SaySomething");
     factory.registerNodeType<ApproachTarget>("ApproachTarget");
     //factory.registerNodeType<GraspTarget>("GraspTarget");
-    factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
+    //factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
     //factory.registerNodeType<ResetArmPose>("ResetArmPose");
 
     

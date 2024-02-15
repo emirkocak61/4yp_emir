@@ -98,3 +98,8 @@ target_link_libraries(state_thread_test
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so
 )
 
+add_executable(robot_interface_test src/robot_interface_test.cpp)
+target_link_libraries(robot_interface_test
+  ${catkin_LIBRARIES}
+)
+

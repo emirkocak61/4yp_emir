@@ -5,6 +5,9 @@
 
 #include <exotica_core/exotica_core.h>
 #include <ros/ros.h>
+#include <fstream>
+#include <vector>
+#include <std_msgs/Float64MultiArray.h>
 #include <geometry_msgs/Pose.h>
 
 using namespace exotica;
@@ -13,8 +16,13 @@ class TestAICO {
     typedef KDL::Frame Frame;
 public:
 
-    TestAICO() : dt(0.02), r(1/dt) {}
-    ~TestAICO() {}
+    TestAICO() : r(20) {
+        dataFile = std::ofstream("position_data.csv"); //File to record position data
+        dt = 0.05;
+        mp_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan",10);
+        state_subsciber = nh_.subscribe("/z1_joint_states",10,&TestAICO::RobotStateCb,this);
+    }
+    ~TestAICO() {dataFile.close();}
 
     void SetupProblem(const std::string& config_path,
                       const Eigen::VectorXd& start_state) {
@@ -32,11 +40,32 @@ public:
         scene->GetKinematicTree().PublishFrames();
         //Initialize q
         q = Eigen::VectorXd::Zero(arm_dof);
+        qd = Eigen::VectorXd::Zero(arm_dof);
+        robot_state = Eigen::VectorXd::Zero(arm_dof);
         solver->debug_ = false;
         solver->SetNumberOfMaxIterations(1);      
         t = 0.0;
-        std::cout << "Problem all set up" << std::endl;
-        
+        std::cout << "Problem all set up" << std::endl;   
+    }
+
+    void PublishMotionPlan() {
+        trajectory_msgs::JointTrajectory trajectory_msg;
+        trajectory_msg.points.reserve(1);
+        trajectory_msgs::JointTrajectoryPoint trajectory_point;
+        trajectory_point.positions.resize(6);
+        trajectory_point.velocities.resize(6); 
+        //Convert from Eigen::VectorXd to std::vector
+        // Use Eigen::Map to directly map trajectory_point.positions to an Eigen::VectorXd
+        Eigen::Map<Eigen::VectorXd>(trajectory_point.positions.data(), trajectory_point.positions.size()) = q;
+        Eigen::Map<Eigen::VectorXd>(trajectory_point.velocities.data(),trajectory_point.velocities.size()) = qd;
+        trajectory_msg.points.push_back(trajectory_point);
+        mp_publisher.publish(trajectory_msg);  
+    }
+
+    void RobotStateCb(const sensor_msgs::JointStateConstPtr &state) {
+        std::lock_guard<std::mutex> lock(state_mutex);
+        Eigen::Map<const Eigen::VectorXd> tempMap(state->position.data(), state->position.size());
+        robot_state = tempMap;
     }
 
     void SetupGoal(const Frame target_frame) {
@@ -47,68 +76,40 @@ public:
         goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
         for (int t(0); t < T; t++) {
             problem->SetGoal("Position",goal,t);
-            problem->SetRho("Position",1e1,t);
+            problem->SetRho("Position",1e2,t);
         }
         problem->SetGoal("Position",goal,-1);
-        problem->SetRho("Position", 1e4,-1);
+        problem->SetRho("Position", 1e6,-1);
         std::cout << "Problem goal set" << std::endl;
     }
 
     void Algorithm() {
         problem->SetStartTime(0);
-        problem->SetStartState(q);
+        problem->SetStartState(robot_state);
         //Create a solution container
         std::unique_ptr<Eigen::MatrixXd> solution = std::make_unique<Eigen::MatrixXd>();
         //Solve problem
-        auto start = std::chrono::high_resolution_clock::now();
         solver->Solve(*solution);
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
-        t_algorithm.push_back(duration);
-        q = solution->row(1);
+        //Calculate velocities
+        Eigen::VectorXd qnew(6);
+        qnew = solution->row(1);
+        qd = (qnew-q)/(dt);
+        q = qnew;
         std::cout << "q: " << q.transpose() << std::endl;
         //Update problem
         problem->Update(q.transpose(),0);
-        std::cout << "Model State:" << scene->GetModelState().transpose() << std::endl;
         scene->GetKinematicTree().PublishFrames();        
-    }
-
-    void PublishTrajectoryToRVIZ(const std::unique_ptr<Eigen::MatrixXd>& solution) {
-        ros::Rate loop_rate(50.0);
-        int t = 0;
-        int PlaybackWaitInterval = 30;
-        while (ros::ok())
-        {
-            int i = 1;
-            if (t == 0 || t == solution->rows() - 1) i = PlaybackWaitInterval;
-            while (i-- > 0)
-            {
-                problem->Update(solution->row(t).transpose(),t);
-                std::cout << "Model State:" << scene->GetModelState().transpose() << std::endl;
-                scene->GetKinematicTree().PublishFrames();
-                ros::spinOnce();
-                loop_rate.sleep();
-            }
-            t = t + 1 >= solution->rows() ? 0 : t + 1;
-        }
-        
-    }
-
-    double GetAverageTime() {
-        size_t n = t_algorithm.size();
-        std::chrono::microseconds sum(0);
-        for (size_t i = 0; i < n; i++) {
-            sum += t_algorithm[i];
-        }
-        return static_cast<double>(sum.count()) / n; //Returns the average time to run each iteartion of the algorithm
     }
 
     void Run() {
         t=0;
         int i = 0;
-        while (t < time_limit) {
+        while (t < time_limit) { 
             std::cout << "Iteration: " << i << std::endl;
+            //Run one iteration
             Algorithm();
+            //Publish the motion plan
+            PublishMotionPlan();
             ros::spinOnce();
             r.sleep();
             t += dt;
@@ -120,18 +121,26 @@ public:
 
 protected:
     int arm_dof = 6;
-    double time_limit = 10.0;
+    double time_limit = 50.0;
     //EXOTica related objects
     MotionSolverPtr solver;
     UnconstrainedTimeIndexedProblemPtr problem;
     ScenePtr scene;
     Eigen::VectorXd q; //Vector to store joint positions
+    Eigen::VectorXd qd; //Vector to store joint velocities
+    std::mutex state_mutex;
+    Eigen::VectorXd robot_state;
 
     ros::NodeHandle nh_;
     ros::V_string joint_names;
     ros::Rate r;
+    ros::Publisher mp_publisher;
+    ros::Subscriber state_subsciber;
 
     double dt; //Problem time step
     double t; //Variable to keep track the problem time
-    std::vector<std::chrono::microseconds> t_algorithm; //Vector that stores time of each iteration of the algorithm 
+    std::vector<Eigen::VectorXd> position_data; //Vector to stor the position data at each time step
+    std::vector<double> time_step; //Vector to store time step information
+    std::ofstream dataFile;
+
 };

@@ -5,7 +5,6 @@
     <!-- <ControlLimitedFeasibilityDrivenDDPSolver Name="MySolver"/> -->
     <AICOSolver Name="MySolver"/>
     
-
     <UnconstrainedTimeIndexedProblem Name="MyProblem">
         <!-- <DerivativeOrder>2</DerivativeOrder> -->
         <PlanningScene>
@@ -35,28 +34,24 @@
                 </EndEffector>
             </EffFrame>
             <JointLimit Name="JointLimit" />
-            <JointVelocityLimit Name="JointVelocityLimit" dt="0.02" MaximumJointVelocity="3.1415"/>
+            <JointVelocityLimit Name="JointVelocityLimit" dt="0.05" SafePercentage="0.01" MaximumJointVelocity="0.5" Debug="0" />
         </Maps>
-
+        
         <Cost>
-            <Task Task="Position" Rho="1e3" />
+            <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e1"/>
-            <Task Task="JointVelocityLimit" Rho="1e2" />
+            <Task Task="JointLimit" Rho="1e2"/>
+            <Task Task="JointVelocityLimit" Rho="1e3"/>
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
 
         <!-- 150 or above allows planner to escape local minimum in example -->
-        <T>50</T>
-
-        <!-- 130 or below causes planner to get trapped in local minimum in example -->
-        <!-- <T>130</T> -->
-
-        <!-- Strange behaviour between those values... -->
-
+        <T>30</T>
+        <W>6 5 4 3 2 1</W>
+        <Wrate>1e4</Wrate>
         <!-- Time interval between forward-iterations -->
-        <tau>0.02</tau>
+        <tau>0.05</tau>
 
     </UnconstrainedTimeIndexedProblem>
 </PlannerDemoConfig>

@@ -38,14 +38,16 @@ public:
         t = 0.0;
         int counter = 0;
 
-        while (counter < counter_limit && t < t_limit){
+        while (counter < counter_limit && t < 20){
             if (as_.isPreemptRequested()) {
                 result_.result = false;
                 ROS_WARN("%s: PREEMPTED (Goal Cancelled)", action_name.c_str());
                 as_.setPreempted();
                 break;
             }
-
+            Eigen::VectorXd state_error = q - robot_state;
+            std::cout << "State error norm: " << state_error.norm() << std::endl;
+            error_vector.push_back(state_error.norm());
             Iterate(); //Generate motion plan via EXOTica
             PublishToRobot(); //Send motion plan to the robot
             double error = GetError(); //Calculate error
@@ -76,13 +78,17 @@ public:
             }
         }
         problem->SetStartTime(0.0); //Reset problem start time
+        double mean_error = 0;
+        for (size_t i = 0; i < error_vector.size(); i++) {mean_error += error_vector[i];}
+        mean_error = mean_error/(static_cast<double>(error_vector.size()));
+        std::cout << "Mean state error: " << mean_error << std::endl;
     }
 protected:
     std::string robot_name;
     actionlib::SimpleActionServer<bt_drs_msgs::approachTargetAction> as_;
     bt_drs_msgs::approachTargetFeedback feedback_;
     bt_drs_msgs::approachTargetResult result_;
-
+    std::vector<double> error_vector;
 };
 
 int main(int argc,char** argv) {

@@ -11,11 +11,11 @@ class UnitreeRos {
 public:
     UnitreeRos() : 
     arm(true), 
+    dt(0.05),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false) {
         SetupArm();
-        targetQdd = Eigen::VectorXd::Zero(arm_dof);
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRos::MotionPlanCb, this);
-        state_publisher = nh_.advertise<sensor_msgs::JointState>("/z1_joint_states",10);    
+        state_publisher = nh_.advertise<sensor_msgs::JointState>("/z1_joint_states",10);   //z1_gazebo/joint_states/filtered  
     }
     ~UnitreeRos() {
         // Stop the publishing thread if it's running
@@ -30,31 +30,26 @@ public:
         // Use Eigen::Map to directly map the positions to an Eigen::VectorXd
         Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data(), arm_dof);
         Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data(), arm_dof);
-        Eigen::Map<const Eigen::VectorXd> acceleration_map(motion_plan.accelerations.data(), arm_dof);
         arm.q = positions_map;
         arm.qd = velocities_map;
-        targetQdd = acceleration_map;
-        
-        sendArmCommand();
+        sendArmCommand(positions_map);
     }
-
-    void sendArmCommand() {
+    
+    void sendArmCommand(const Eigen::VectorXd& targetQ) {
         arm.sendRecvThread->shutdown();
-        //std::unique_lock<std::mutex> lock(lowstate_mutex);
         //Vec6 initQ = arm.lowstate->getQ();
-        //lock.unlock();
         //double duration = 10; //Use 5 instead of 10 to compensate for any delays 
-        //UNITREE_ARM::Timer timer(arm._ctrlComp->dt); //This is the default control frequency of 500Hz
+        //UNITREE_ARM::Timer timer(0.02); //This is the default control frequency of 50Hz
         //Timer timer(control_frequency);
         //for(int i(0); i<duration; i++){
-        //arm.q =  targetQ;
-        //arm.qd = (targetQ - initQ) / (duration * arm._ctrlComp->dt);
-        arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
-        //gripperQ = -0.001;
-        arm.setArmCmd(arm.q, arm.qd, arm.tau);
-        //setGripperCmd(gripperQ, gripperW, gripperTau);
-        arm.sendRecv();
-        //timer.sleep();
+            //arm.q =  initQ * (1-i/duration) + targetQ * (i/duration);
+            //arm.qd = (targetQ - initQ) / (duration * arm._ctrlComp->dt);
+            arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
+            //gripperQ = -0.001;
+            arm.setArmCmd(arm.q, arm.qd, arm.tau);
+            //setGripperCmd(gripperQ, gripperW, gripperTau);
+            arm.sendRecv();
+            //timer.sleep();
         //}
         arm.sendRecvThread->start();
     }
@@ -64,7 +59,7 @@ public:
         arm.sendRecvThread->start();
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
-        std::vector<double> KP = {100,150,150,100,75,50};
+        std::vector<double> KP = {100,150,150,150,75,50};
         std::vector<double> KD = {1000,1000,1000,1000,1000,1000};
         //Set control gains
         arm.lowcmd->setControlGain(KP,KD);
@@ -107,15 +102,16 @@ private:
             rate.sleep();
         }
     }
+
     ros::NodeHandle nh_;
     ros::Subscriber motion_plan_sub;
     ros::Publisher state_publisher;
     int arm_dof = 6;
+    double dt;
 
     LowPassFilter<Eigen::VectorXd> velocity_filter; //LowPassFilter for velocity readings
     UNITREE_ARM::unitreeArm arm;
     trajectory_msgs::JointTrajectoryPoint motion_plan;
-    Eigen::VectorXd targetQdd;
 
     std::thread publisher_thread;
     bool isPublishing;

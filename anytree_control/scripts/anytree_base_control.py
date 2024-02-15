@@ -50,7 +50,7 @@ class ANYTreeBaseControlInterface:
         self.pose_stamped = PoseStamped()
         self.pose_stamped.header.frame_id = "base"
 
-        self.timer = rospy.Timer(rospy.Duration(0.02),self.timer_callback)
+        self.timer = rospy.Timer(rospy.Duration(0.05),self.timer_callback)
 
     #Determines the base pose (relative to 'base origin') from XYZ + RPY
     def compute_pose_stamped(self, trajectory_msg):

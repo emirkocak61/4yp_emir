@@ -2,24 +2,8 @@
 //This will allow faster runtime and easier use for further user as the EXOTica docs are more clear in c++
 //It is important to check where vectors are std::vector or Eigen::Matrix
 
-#include "exotica_core/exotica_core.h" //Include exotica
-#include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
-#include "sensor_msgs/JointState.h"
-#include "tf2_ros/transform_listener.h"
-#include "actionlib/client/simple_action_client.h"
-#include "actionlib/server/simple_action_server.h"
-#include "control_msgs/GripperCommandAction.h"
-#include "std_msgs/Float64MultiArray.h"
-#include "std_msgs/Bool.h"
-#include "trajectory_msgs/JointTrajectory.h"
-#include "tf2/LinearMath/Quaternion.h"
-#include "tf2/LinearMath/Matrix3x3.h"
-#include <array>
-#include <vector>
-#include <chrono>
-#include <cmath>
 #include "anytree_motion_planner/MotionPlannerBaseClass.hpp"
+
 
 
 using namespace exotica;
@@ -34,13 +18,14 @@ using namespace exotica;
 
     //Class constructor
     MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
-                                action_name(actionName), dt(0.02), rate(1/dt),
+                                action_name(actionName), dt(0.05), rate(1/dt),
                                 base_dof(6),start_tolerance(5e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
                                 counter_limit(10), t_limit(10.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
         {
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
+            state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
             solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/" + action_name + ".xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();
@@ -85,11 +70,18 @@ using namespace exotica;
         
                 solver->debug_ = false;
                 solver->SetNumberOfMaxIterations(1);
+
+                prevU = std::make_unique<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(T-1,12));
+                robot_state = Eigen::VectorXd::Zero(24);
+                q = robot_state;
                 
+                std::string filePath = "/home/emirkocak/Documents/position_comparison.txt";
+                outFile = std::ofstream(filePath.c_str());  
             }
         }
 
     MotionPlannerBaseClass::~MotionPlannerBaseClass(){
+        outFile.close();
         solver.reset();
         Setup::Destroy();   //Destroy all the exotica related objects
     }
@@ -193,8 +185,10 @@ using namespace exotica;
         trajectory_msg.joint_names = joint_names;
         trajectory_msgs::JointTrajectoryPoint trajectory_point;
         trajectory_point.positions.resize(12); //Ensure the vector has 12 elements
+        trajectory_point.velocities.resize(12); //Ensure the vector has 12 elements
         //Convert from Eigen::VectorXd to std::vector
-        for (int i = 0; i < 12; i++) {trajectory_point.positions[i] = q(i);}
+        Eigen::Map<Eigen::VectorXd>(trajectory_point.positions.data(), trajectory_point.positions.size()) = q.head(12);
+        Eigen::Map<Eigen::VectorXd>(trajectory_point.velocities.data(), trajectory_point.velocities.size()) = q.tail(12);
         ros::Duration duration;
         trajectory_point.time_from_start = duration.fromSec(dt);
         trajectory_msg.points.push_back(trajectory_point);
@@ -260,18 +254,29 @@ using namespace exotica;
 
     void MotionPlannerBaseClass::Iterate() {
         //Inform EXOTica of unexpected changes to XY as a side-effect of ANYNova rotating its base
-        InteractiveServoing();
+        //InteractiveServoing();
         problem->SetStartTime(t); //Set problem start time
-        problem->SetStartState(q); //Set problem start state
-
-        //Solve using MPC
-        Eigen::MatrixXd solution;
-        solver->Solve(solution);
-        problem->Update(q,solution.row(0),0);
+        outFile << "t = " << t << std::endl;
+        outFile << "q:" << q.transpose().head(12) << std::endl;
+        Eigen::VectorXd state = robot_state;
+        outFile << "State: " << state.transpose().head(12) << std::endl;
+        //Use the predicted state for solving the problem
+        problem->SetStartState(state); //Set problem start state
+        //Set the previous solution as initial guess
+        problem->set_U(prevU->transpose());
+        //Initialize solution container
+        std::unique_ptr<Eigen::MatrixXd> solution = std::make_unique<Eigen::MatrixXd>();
+        solver->Solve(*solution);
         
+        //Apply only the first step of the solution
+        problem->Update(q,solution->row(0),0);
+        //Swap prevU and solution pointers for next iteration
+        prevU.swap(solution);
         //Update Joint Positions
+        //outFile << "State evolution at time " << t << ":" << state_evolution << std::endl;
         q = problem->get_X(1);
-        scene->SetModelState(q.head(scene->get_num_positions()));
+        
+        //scene->SetModelState(q.head(scene->get_num_positions()));
     }
 
     
@@ -290,6 +295,13 @@ using namespace exotica;
         KDL::Frame frame(rotation,position);
         return frame;
     }
+
+    void MotionPlannerBaseClass::RobotStateCb(const std_msgs::Float64MultiArrayConstPtr &state) {
+        std::lock_guard<std::mutex> lock(state_mutex);
+        Eigen::Map<const Eigen::VectorXd> tempMap(&state->data[0], state->data.size());
+        robot_state = tempMap;
+    }
+        
 
 
 

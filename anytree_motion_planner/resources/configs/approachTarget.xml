@@ -17,7 +17,7 @@
                     <DoubleIntegratorDynamicsSolver Name="MyDynamicsSolver">
                         <ControlLimitsLow>-5</ControlLimitsLow>
                         <ControlLimitsHigh>5</ControlLimitsHigh>
-                        <dt>0.02</dt>
+                        <dt>0.05</dt>
                     </DoubleIntegratorDynamicsSolver>
                 </DynamicsSolver>
                 <Links>
@@ -47,28 +47,28 @@
 
         <!-- Penalities on joint positions and velocities -->
         <Q>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</Q>
-        <Q_rate>1</Q_rate> <!-- Relative scaling on Q matrix -->
+        <Q_rate>100</Q_rate> <!-- Relative scaling on Q matrix -->
 
         <!-- Penalties on terminal joint positions and velocities -->
         <!-- Note high penalty on terminal velocities to encourage motion at earlier iterations -->
-        <Qf>0 0 0 0 0 0 0 0 0 0 0 0 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5</Qf>
-        <Qf_rate>1</Qf_rate> <!-- Relative scaling on Qf matrix -->
+        <Qf>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</Qf>
+        <Qf_rate>100</Qf_rate> <!-- Relative scaling on Qf matrix -->
 
         <!-- Weights on joint accelerations -->
         <R>1 1 1 1 1 1 1 1 1 1 1 1</R>
-        <R_rate>1</R_rate> <!-- Relative scaling on R matrix -->
+        <R_rate>2</R_rate> <!-- Relative scaling on R matrix -->
 
         <Cost>
             <Task Task="Position" Rho="1e3" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e4"/>
+            <Task Task="JointLimit" Rho="1e2"/>
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
-        <T>150</T>
+        <T>30</T>
 
         <!-- Time interval between forward-iterations -->
-        <tau>0.02</tau>
+        <tau>0.05</tau>
 
     </DynamicTimeIndexedShootingProblem>
 </PlannerDemoConfig>

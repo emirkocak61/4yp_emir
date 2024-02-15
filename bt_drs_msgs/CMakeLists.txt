@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   trajectory_msgs
   message_generation
+  std_msgs
 )
 
 ################################################
@@ -14,11 +15,11 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   TimeIndexedPose.msg
+   TimeIndexedTrajectory.msg
+)
 
 ## Generate services in the 'srv' folder
 add_service_files(

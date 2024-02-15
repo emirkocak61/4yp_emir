@@ -18,6 +18,7 @@
 #include <vector>
 #include <chrono>
 #include <cmath>
+#include <fstream>
 
 using namespace exotica;
 /**
@@ -87,6 +88,7 @@ public:
     */
     virtual void PerformMotion() {};
     virtual void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) {};
+    void RobotStateCb(const std_msgs::Float64MultiArrayConstPtr &state);
    
 
 protected:
@@ -102,12 +104,14 @@ protected:
     double t_limit; //Time limit to achieve goal 
     double t; //Time in exotica planning problem
     Eigen::VectorXd q; //Joint states of the robot
+    Eigen::VectorXd robot_state;
     //If the real arm can't follow the motion plans for manipulation, the motion plan should be stopped
     double self_tolerance;
     double self_counter; //No of consecutive iterations for which real EEF is outside tolerance
 
     //ROS related members
     ros::Publisher motion_plan_publisher; //ROS Publisher to  /motion_plan topic
+    ros::Subscriber state_subscriber;
     ros::Subscriber reset_rest_pose_sub; //ROS Subscriber to /reset_rest_pose_topic
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener listener; //Listens to published transforms from the robot sim
@@ -123,6 +127,10 @@ protected:
     Eigen::VectorXd relative_joint_limits_lower;
     double joint_limit_tolerance;
     Eigen::MatrixXd joint_velocities;
+
+    std::unique_ptr<Eigen::MatrixXd> prevU; //Matrix to store previous control inputs
+    std::mutex state_mutex;
+    std::ofstream outFile; //This will be used to log the outputs of certain operations (testing)
 
 };
 

@@ -77,6 +77,10 @@ endfunction()
 CompileExample(example_motion_aico)
 CompileExample(example_motion_ddp)
 
+#add_executable(MPCPlanner src/MPCPlanner.cpp)
+#add_dependencies(MPCPlanner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#target_link_libraries(MPCPlanner PUBLIC ${catkin_LIBRARIES})  
+
 ## Add cmake target dependencies of the executable
 ## Specify libraries to link a library or executable target against
 ## Specify libraries to link a library or executable target against

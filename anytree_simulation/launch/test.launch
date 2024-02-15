@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-
-    <!-- Motion Planner-->
-    <node name="approach_target" pkg="anytree_motion_planner" type="approachtarget_as" output="screen" />
     <!-- Control Nodes-->
-    <node name="anytree_base_control" pkg="anytree_control_interface" type="anytree_base_control.py" output="screen" />
-    <node name="anytree_arm_control" pkg="anytree_control_interface" type="z1_control_interface" output="screen" />
-    <node name="grasp_target" pkg="anytree_motion_planner" type="graspTarget_as" output="screen"/>
-    <node name="manipulate_target" pkg="anytree_motion_planner" type="manipulateTarget_as" output="screen" />
-
+    <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />
+    <node name="unitree" pkg="anytree_control" type="unitree" output="screen" />
+    <node name="state_publiher" pkg="anytree_control" type="robot_interface_test" output="screen" />
+    <!-- Motion Planner-->
+    <!--node name="MPCPlanner_node" pkg="anytree_motion_planner" type="MPCPlanner" output="screen" -->
+    <node name="approachTarget_as" pkg="anytree_motion_planner" type="approachtarget_as" output="screen" />
     <!-- Target pose-->
     <!--rosparam file="$(find anytree_simulation)/config/mp_test.yaml" param="target_pose_euler"-->
 </launch>
