@@ -96,7 +96,7 @@ public:
             std::lock_guard<std::mutex> lock_base_twist(base_twist_mutex);
             //Positions
             robot_state.head(base_dof) = base_pose;
-            robot_state.segment(base_dof,arm_dof) = arm_state.head(6) + (dt) * arm_state.tail(6);
+            robot_state.segment(base_dof,arm_dof) = arm_state.head(6);
             //Velocities
             robot_state.segment(robot_dof,base_dof) = base_twist;
             robot_state.tail(arm_dof) = arm_state.tail(6);

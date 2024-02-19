@@ -59,14 +59,14 @@ include_directories(
  ${catkin_INCLUDE_DIRS}
  )
 function(Compile name)
-  add_executable(${name} src/${name}.cpp src/MotionPlannerBaseClass.cpp)
+  add_executable(${name} src/${name}.cpp)
   add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})    
 endfunction(Compile name)
 
 Compile(approachtarget_as)
-Compile(graspTarget_as)
-Compile(manipulateTarget_as)
+Compile(grasptarget_as)
+Compile(manipulatetarget_as)
 
 function(CompileExample name)
   add_executable(${name} src/examples/${name}.cpp)

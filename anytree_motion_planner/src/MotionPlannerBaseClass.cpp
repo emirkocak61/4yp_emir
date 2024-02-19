@@ -3,6 +3,7 @@
 //It is important to check where vectors are std::vector or Eigen::Matrix
 
 #include "anytree_motion_planner/MotionPlannerBaseClass.hpp"
+#include <cmath>
 
 
 
@@ -18,12 +19,13 @@ using namespace exotica;
 
     //Class constructor
     MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
-                                action_name(actionName), dt(0.05), rate(1/dt),
+                                action_name(actionName), dt(1), rate(1),
                                 base_dof(6),start_tolerance(5e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
                                 counter_limit(10), t_limit(10.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
-        {
+        {   
+            //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
@@ -59,14 +61,17 @@ using namespace exotica;
                 Eigen::VectorXd joint_limit  =  Eigen::VectorXd::Zero(scene->get_num_controls()*2);
                 goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
                 Eigen::VectorXdRefConst goal_ref = goal;
+                double alpha = 0.8;
+                double rho;
                 for (int t = 0; t < T; ++t) {
+                    rho = pow(alpha,t) * 1e5;
                     problem->cost.SetGoal("Position", goal_ref, t);
                     problem->cost.SetGoal("JointLimit", joint_limit,t);
-                    problem->cost.SetRho("Position",1e1,t);
-                    problem->cost.SetRho("JointLimit",1e3,t);
+                    problem->cost.SetRho("Position",rho,t);
+                    problem->cost.SetRho("JointLimit",1e2,t);
                 }
-                problem->cost.SetGoal("Position", goal_ref,T-1);
-                problem->cost.SetRho("Position",1e3,T-1);
+                //problem->cost.SetGoal("Position", goal_ref,T-1);
+                //problem->cost.SetRho("Position",1e3,T-1);
         
                 solver->debug_ = false;
                 solver->SetNumberOfMaxIterations(1);
@@ -74,6 +79,7 @@ using namespace exotica;
                 prevU = std::make_unique<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(T-1,12));
                 robot_state = Eigen::VectorXd::Zero(24);
                 q = robot_state;
+                scene->GetKinematicTree().PublishFrames();
                 
                 std::string filePath = "/home/emirkocak/Documents/position_comparison.txt";
                 outFile = std::ofstream(filePath.c_str());  
@@ -255,7 +261,7 @@ using namespace exotica;
     void MotionPlannerBaseClass::Iterate() {
         //Inform EXOTica of unexpected changes to XY as a side-effect of ANYNova rotating its base
         //InteractiveServoing();
-        problem->SetStartTime(t); //Set problem start time
+        problem->SetStartTime(0.0); //Set problem start time
         outFile << "t = " << t << std::endl;
         outFile << "q:" << q.transpose().head(12) << std::endl;
         Eigen::VectorXd state = robot_state;
@@ -269,12 +275,13 @@ using namespace exotica;
         solver->Solve(*solution);
         
         //Apply only the first step of the solution
-        problem->Update(q,solution->row(0),0);
+        problem->Update(state,solution->row(0),0);
         //Swap prevU and solution pointers for next iteration
         prevU.swap(solution);
         //Update Joint Positions
         //outFile << "State evolution at time " << t << ":" << state_evolution << std::endl;
         q = problem->get_X(1);
+        scene->GetKinematicTree().PublishFrames();
         
         //scene->SetModelState(q.head(scene->get_num_positions()));
     }

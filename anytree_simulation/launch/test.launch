@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+    <arg name="debug" default="false" />
+    <arg unless="$(arg debug)" name="launch_prefix" value="" />
+    <arg if="$(arg debug)" name="launch_prefix" value="xterm -e gdb -ex run --args python$(env ROS_PYTHON_VERSION)" />
+
+    <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
+    <param name="robot_description_semantic" textfile="$(find anytree_description)/config/anytree.srdf" />
+    <param name="/use_sim_time" value="false"/>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_description)/resources/anytree_exotica.rviz"/> 
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />
     <node name="unitree" pkg="anytree_control" type="unitree" output="screen" />
-    <node name="state_publiher" pkg="anytree_control" type="robot_interface_test" output="screen" />
+    <!--node name="state_publiher" pkg="anytree_control" type="robot_interface_test" output="screen" -->
     <!-- Motion Planner-->
     <!--node name="MPCPlanner_node" pkg="anytree_motion_planner" type="MPCPlanner" output="screen" -->
-    <node name="approachTarget_as" pkg="anytree_motion_planner" type="approachtarget_as" output="screen" />
+    <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_as" output="screen" />
+    <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_as" output="screen" />
+    <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_as" output="screen" />
+    
+    
     <!-- Target pose-->
     <!--rosparam file="$(find anytree_simulation)/config/mp_test.yaml" param="target_pose_euler"-->
 </launch>

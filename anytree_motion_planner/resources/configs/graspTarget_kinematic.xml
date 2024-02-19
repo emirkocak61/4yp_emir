@@ -3,9 +3,9 @@
     <!-- <FeasibilityDrivenDDPSolver Name="mySolver" Debug="1"/> -->
     <!-- <AnalyticDDPSolver Name="mySolver" Debug="1" FunctionTolerance="1e-5" FunctionTolerancePatience="1"/> -->
     <!-- <ControlLimitedFeasibilityDrivenDDPSolver Name="MySolver"/> -->
-    <ControlLimitedDDPSolver Name="MySolver"/>
-
-    <DynamicTimeIndexedShootingProblem Name="MyProblem">
+    <AICOSolver Name="MySolver"/>
+    
+    <UnconstrainedTimeIndexedProblem Name="MyProblem">
         <!-- <DerivativeOrder>2</DerivativeOrder> -->
         <PlanningScene>
             <Scene>
@@ -13,18 +13,11 @@
                 <URDF>{anytree_description}/urdf/anytree.urdf</URDF>
                 <SRDF>{anytree_description}/config/anytree.srdf</SRDF>
                 <SetRobotDescriptionRosParams>1</SetRobotDescriptionRosParams>
-                <DynamicsSolver>
-                    <DoubleIntegratorDynamicsSolver Name="MyDynamicsSolver">
-                        <ControlLimitsLow>-5</ControlLimitsLow>
-                        <ControlLimitsHigh>5</ControlLimitsHigh>
-                        <dt>1</dt>
-                    </DoubleIntegratorDynamicsSolver>
-                </DynamicsSolver>
                 <Links>
                     <Link Name="Target"/>
                     <Link Name="TargetRelative" Parent="Target"/>
                 </Links>
-
+                
                 <!-- <JointVelocityLimits>0.0 0.0 0.02 0.02 0.02 0.02 0.628 0.628 0.628 0.837 0.837 0.837</JointVelocityLimits> -->
                 <JointVelocityLimits>0.0 0.0 0.01 0.002 0.002 0.002 3.1415 3.1415 3.1415 3.1415 3.1415 3.1415</JointVelocityLimits>
 
@@ -38,37 +31,30 @@
 
         <Maps>
             <EffFrame Name="Position">
+            <Type>RPY</Type>
                 <EndEffector>
                     <Frame Link="gripperStator" LinkOffset="0.3 0 0 -1.5708 0 1.5708" Base="TargetRelative"/>
                 </EndEffector>
             </EffFrame>
-            <JointLimit Name="JointLimit"/>
+            <JointLimit Name="JointLimit" />
+            <JointVelocityLimit Name="JointVelocityLimit" dt="0.1" SafePercentage="0.01" MaximumJointVelocity="1.0" Debug="0" />
         </Maps>
-
-        <!-- Penalities on joint positions and velocities -->
-        <Q>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</Q>
-        <Q_rate>1e2</Q_rate> <!-- Relative scaling on Q matrix -->
-
-        <!-- Penalties on terminal joint positions and velocities -->
-        <!-- Note high penalty on terminal velocities to encourage motion at earlier iterations -->
-        <Qf>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</Qf>
-        <Qf_rate>100</Qf_rate> <!-- Relative scaling on Qf matrix -->
-
-        <!-- Weights on joint accelerations -->
-        <R>1 1 1 1 1 1 1 1 1 1 1 1</R>
-        <R_rate>2</R_rate> <!-- Relative scaling on R matrix -->
-
+        
         <Cost>
-            <Task Task="Position"  />
+            <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e2"/>
+            <Task Task="JointLimit" Rho="1"/>
+            <Task Task="JointVelocityLimit" Rho="1e7"/>
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
-        <T>100</T>
 
+        <!-- 150 or above allows planner to escape local minimum in example -->
+        <T>30</T>
+        <W>1e2 1e2 1e2 1e2 1e2 1e2 6 5 4 3 2 1</W>
+        <Wrate>1e3</Wrate>
         <!-- Time interval between forward-iterations -->
-        <tau>1</tau>
+        <tau>0.1</tau>
 
-    </DynamicTimeIndexedShootingProblem>
+    </UnconstrainedTimeIndexedProblem>
 </PlannerDemoConfig>

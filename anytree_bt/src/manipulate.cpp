@@ -5,6 +5,10 @@
 #include <anytree_bt/anymal/motion_transitioner.hpp>
 #include <anytree_bt/ApproachTarget.hpp>
 #include <anytree_bt/ExampleNodes.hpp>
+#include <anytree_bt/GraspTarget.hpp>
+#include <anytree_bt/ManipulateTarget.hpp>
+#include <anytree_bt/ResetArmPose.hpp>
+#include <anytree_bt/GripperCommand.hpp>
 
 
 int main(int argc,char** argv) {
@@ -17,9 +21,10 @@ int main(int argc,char** argv) {
     factory.registerNodeType<MotionTransitionerAnymal>("GoToMotionState");
     factory.registerNodeType<ExampleNodes::SaySomething>("SaySomething");
     factory.registerNodeType<ApproachTarget>("ApproachTarget");
-    //factory.registerNodeType<GraspTarget>("GraspTarget");
-    //factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
-    //factory.registerNodeType<ResetArmPose>("ResetArmPose");
+    factory.registerNodeType<GraspTarget>("GraspTarget");
+    factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
+    factory.registerNodeType<GripperCommand>("GripperCommand");
+    factory.registerNodeType<ResetArmPose>("ResetArmPose");
 
     
     //Load tree from xml file

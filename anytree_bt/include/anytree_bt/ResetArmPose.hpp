@@ -1,5 +1,4 @@
 #pragma once
-
 #include <behaviortree_cpp/behavior_tree.h>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
@@ -7,17 +6,24 @@
 
 class ResetArmPose : public BT::SyncActionNode {
 public:
-    ResetArmPose(const std::string& name) : 
-        BT::SyncActionNode(name, {}) {
-            pub = nh_.advertise<std_msgs::Bool>("/reset_arm_pose",10);
+    ResetArmPose(const std::string& name, const BT::NodeConfig& config) : 
+        BT::SyncActionNode(name, config) {
+            pub = nh_.advertise<std_msgs::Bool>("/z1_gazebo/reset_arm_pose",10);
         }
     
     ~ResetArmPose() override {}
-       
+
+    static BT::PortsList providedPorts() {
+        return {};
+    }
+    
+
     BT::NodeStatus tick() override {
-        std_msgs::Bool reset_arm_pose;
-        reset_arm_pose.data = true;
-        pub.publish(reset_arm_pose);
+        ROS_INFO("Resetting arm pose");
+        std_msgs::Bool arm_command;
+        arm_command.data = true;
+        //If not open it probably wants to close the gripper
+        pub.publish(arm_command);
         return BT::NodeStatus::SUCCESS;
     }
 

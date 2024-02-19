@@ -4,7 +4,7 @@ int main(int argc,char**argv) {
     ros::init(argc, argv, "robot_interface_node");
     ros::NodeHandle nh;
     
-    RobotInterface robotInterface(0.05);
+    RobotInterface robotInterface(0.02);
     
     // Start the spinner with 2 threads
     ros::AsyncSpinner spinner(3);

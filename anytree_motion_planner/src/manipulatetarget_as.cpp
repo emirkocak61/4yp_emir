@@ -5,16 +5,15 @@
 #include <bt_drs_msgs/manipulateTargetFeedback.h>
 #include <bt_drs_msgs/manipulateTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
-#include <anytree_motion_planner/MotionPlannerBaseClass.hpp>
+#include <anytree_motion_planner/MPCMotionPlanner.hpp>
 
-class ManipulateTargetActionServer : public MotionPlannerBaseClass {
+class ManipulateTargetActionServer : public MPCKinematicsPlanner {
 public:
     
     ManipulateTargetActionServer() 
-    : MotionPlannerBaseClass("manipulateTarget"),
+    : MPCKinematicsPlanner("manipulateTarget"),
     robot_name("anytree"),
     as_(nh_,action_name + "_as", boost::bind(&ManipulateTargetActionServer::execute_cb,this, _1), false) {
-        gripper_pub = nh_.advertise<std_msgs::Bool>("/gripper_command",10);
         as_.start();
     }
 
@@ -23,8 +22,8 @@ public:
         KDL::Frame T_approach;
         T_approach = GetFrameFromPose(goal->target);
 
-        //Attach object in the absolute world frame
-        scene->AttachObjectLocal("Target","",T_approach);
+        //Setup Goal
+        SetupGoal(T_approach);
         ROS_INFO("Manipulating target"); 
         std::shared_ptr<Trajectory> trajectory = std::make_shared<Trajectory>(DefineTrajectory(goal));
         PerformTrajectory(trajectory);
@@ -32,19 +31,18 @@ public:
 
     void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override {
         result_.result = true;
-        std_msgs::Bool gripper_command;
         InitRobotPose();
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0);
+        t_limit = data(data.rows()-1,0) + 10; //Add a constant as an error margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
         Iterate();
         double error = GetManipulationError(); //Calculates error
         
-        if (error > start_tolerance) {
+        if (error > 0.5) {
             result_.result = false;
             ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
             as_.setAborted(result_);
@@ -60,13 +58,6 @@ public:
                     as_.setPreempted();
                     break;
                 }
-                if (t == 1.0) {
-                    gripper_command.data = true;
-                    gripper_pub.publish(gripper_command);}
-                if (t == 5.0) {
-                    gripper_command.data = false;
-                    gripper_pub.publish(gripper_command);}
-
 
                 Iterate();
                 PublishToRobot();
@@ -84,7 +75,7 @@ public:
             //Check that EEF has reached final waypoint
             if(result_.result == true) {
                 error = GetManipulationError();
-                if (error < tolerance_) {
+                if (error < 0.5) {
                     ROS_INFO("%s: SUCCESS (Completed Trajectory)", action_name.c_str());
                     as_.setSucceeded(result_);
                 } else {
@@ -101,48 +92,45 @@ public:
     Trajectory DefineTrajectory(const bt_drs_msgs::manipulateTargetGoalConstPtr &goal) {
         //Use std::vector in order to add elements dynamically
         std::vector<Eigen::VectorXd> trajectoryPoints;
-        std::unique_ptr<Eigen::MatrixXd> trajectory;
-        int n = 5;
-        int m = 7;
-        trajectory = std::make_unique<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(n,m));
+        Eigen::MatrixXd trajectory;
         if (goal->device_type == "needle_valve") {
             max_increment = 0.005;
             manipulation_todo = goal->manipulation_todo;
             direction = goal->direction;
             if (goal->strategy == 0) {
+                /*
                 //First define the grasping trajectory
                 trajectory->row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
                 trajectory->row(1) << 2.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0; //head on
                 trajectory->row(2) << 4.0, 0.0, -0.0, 0.0, 0.0, 0.0, -1.5708; //rotate gripper
                 trajectory->row(3) << 6.0, 0.0, -0.0, -0.1, 0.0, 0.0, -1.5708; //approach
                 trajectory->row(4) << 7.0, 0.0, -0.0, -0.1, 0.0, 0.0, -1.5708; //close gripper
-                double time_stamp = 7.0;
+                */
+                double time_stamp = 0.0;
                 double manipulation_done = 0.0;
                 //Now define the manipulation trajectory
                 while (std::abs(manipulation_done) < std::abs(manipulation_todo)) {
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, 0.0, 0.0, -0.1, 0.0, 0.0, manipulation_done - 1.5708;
+                    point << time_stamp, 0.0, 0.0, -0.097, 0.0, 0.0, manipulation_done - 1.5708;
                     trajectoryPoints.push_back(point);
                     
                 }
             }
         }
         //Now convert the std::vector into Eigen Matrix
-        Eigen::MatrixXd full_trajectory(trajectoryPoints.size() + n,m);
-
-        // Copy the initial trajectory points:
-        for (int i = 0; i < n; ++i) {
-            full_trajectory.row(i) = trajectory->row(i);
-        }
+        size_t n = trajectoryPoints.size();
+        double m = 7;
+        trajectory = Eigen::MatrixXd::Zero(n,m);
+        
 
         //Copy the manipulation trajectory
-        for (size_t i = 0; i < trajectoryPoints.size(); i++) {
-            full_trajectory.row(i+n) = trajectoryPoints[i];
+        for (size_t i = 0; i < n; i++) {
+            trajectory.row(i) = trajectoryPoints[i];
         }
 
-        Trajectory traj_exotica(full_trajectory,1.0);
+        Trajectory traj_exotica(trajectory,0.1);
         return traj_exotica;
     }
 
@@ -156,12 +144,25 @@ public:
         return error;
     }
 
+    void SetupGoal(const KDL::Frame target_frame) override {
+        scene->AttachObjectLocal("Target","", target_frame);
+        int T = problem->GetT();
+        Eigen::VectorXd goal(6);
+        goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
+        double alpha = 0.999;
+        double rho = 1e3;
+        for (int t(0); t < T; t++) {
+            rho = pow(alpha,t) * 1e4;
+            problem->SetGoal("Position", goal, t);
+            problem->SetRho("Position",rho,t);
+        }
+    }
+
 protected:
     std::string robot_name;
     actionlib::SimpleActionServer<bt_drs_msgs::manipulateTargetAction> as_;
     bt_drs_msgs::manipulateTargetFeedback feedback_;
     bt_drs_msgs::manipulateTargetResult result_;
-    ros::Publisher gripper_pub;
 
     //Objects related to manipulation
     double manipulation_todo;
@@ -173,5 +174,7 @@ protected:
 int main(int argc,char** argv) {
     ros::init(argc,argv,"manipulateTarget");
     ManipulateTargetActionServer s; //Construct action server
-    ros::spin();
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    ros::waitForShutdown();
 }

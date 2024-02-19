@@ -121,6 +121,7 @@ public:
 
 protected:
     int arm_dof = 6;
+    int robot_dof = 6;
     double time_limit = 50.0;
     //EXOTica related objects
     MotionSolverPtr solver;
