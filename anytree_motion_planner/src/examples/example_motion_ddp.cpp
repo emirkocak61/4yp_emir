@@ -1,4 +1,4 @@
-#include <anytree_motion_planner/TestAlgorithm.hpp>
+#include <anytree_motion_planner/tests/TestAlgorithm.hpp>
 
 int main(int argc,char** argv) {
     ros::init(argc,argv, "test_node");

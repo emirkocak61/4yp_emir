@@ -86,7 +86,7 @@ target_link_libraries(z1_control_interface
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so
 )
 
-add_executable(armMotion src/armMotion.cpp)
+add_executable(armMotion src/tests/armMotion.cpp)
 target_link_libraries(armMotion
   ${catkin_LIBRARIES}
   ~/catkin_ws/src/unitree_ros/z1_sdk/lib/libZ1_SDK_x86_64.so

@@ -1,5 +1,5 @@
-#include <anytree_motion_planner/Tests/TestAlgorithm.hpp>
-#include <anytree_motion_planner/Tests/TestAICO_wb.hpp>
+#include <anytree_motion_planner/tests/TestAlgorithm.hpp>
+#include <anytree_motion_planner/tests/TestAICO_wb.hpp>
 
 
 int main(int argc,char** argv) {

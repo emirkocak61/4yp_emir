@@ -32,7 +32,7 @@ public:
     
     void SetupProblem() {
         Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle(action_name)));
-        solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/kinematic" + action_name + "_kinematic.xml");
+        solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/kinematic/" + action_name + "_kinematic.xml");
         solver->debug_ = false;
         solver->SetNumberOfMaxIterations(1);
         //Get EXOTica problem

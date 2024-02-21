@@ -1,5 +1,5 @@
 
-#include <anytree_motion_planner/TestAlgorithm.hpp>
+#include <anytree_motion_planner/tests/TestAlgorithm.hpp>
 #include <anytree_control/ArmControl.hpp>
 
 
