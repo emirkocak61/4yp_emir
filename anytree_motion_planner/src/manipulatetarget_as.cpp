@@ -15,6 +15,7 @@ public:
     robot_name("anytree"),
     as_(nh_,action_name + "_as", boost::bind(&ManipulateTargetActionServer::execute_cb,this, _1), false) {
         as_.start();
+        tolerance_ = 1e-2;
     }
 
     void execute_cb(const bt_drs_msgs::manipulateTargetGoalConstPtr &goal) {
@@ -42,7 +43,7 @@ public:
         Iterate();
         double error = GetManipulationError(); //Calculates error
         
-        if (error > 0.5) {
+        if (error > tolerance_) {
             result_.result = false;
             ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
             as_.setAborted(result_);
@@ -50,7 +51,6 @@ public:
         else{
             //If start pose check succeded initialise robot pose
             InitRobotPose();
-            //Open gripper
             while(t < t_limit) {
                 if (as_.isPreemptRequested()) {
                     result_.result = false;
@@ -75,7 +75,7 @@ public:
             //Check that EEF has reached final waypoint
             if(result_.result == true) {
                 error = GetManipulationError();
-                if (error < 0.5) {
+                if (error < tolerance_) {
                     ROS_INFO("%s: SUCCESS (Completed Trajectory)", action_name.c_str());
                     as_.setSucceeded(result_);
                 } else {

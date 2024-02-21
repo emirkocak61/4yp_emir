@@ -22,10 +22,10 @@
                 <JointVelocityLimits>0.0 0.0 0.01 0.002 0.002 0.002 3.1415 3.1415 3.1415 3.1415 3.1415 3.1415</JointVelocityLimits>
 
                 <!-- <JointPositionLimitsLower> -0.0 -0.0 -0.05 -0.02 -0.02 -0.02 -3.14 0.82 0.33 -3.14 -3.14 -3.14 </JointPositionLimitsLower> -->
-                <JointPositionLimitsLower> -0.0 -0.0 -0.045 -0.01 -0.01 -0.01 -2.62 0.0 -2.88 -1.52 -1.34 -2.79 </JointPositionLimitsLower>
+                <JointPositionLimitsLower> -0.0 -0.0 -0.01 -0.01 -0.01 -0.01 -2.62 0.0 -2.88 -1.52 -1.34 -2.79 </JointPositionLimitsLower>
 
                 <!-- <JointPositionLimitsUpper> 0.0 0.0 0.05 0.02 0.02 0.02 3.14 5.46 5.95 3.14 3.14 3.14 </JointPositionLimitsUpper> -->
-                <JointPositionLimitsUpper> 0.0 0.0 0.045 0.01 0.01 0.01 2.62 2.967 0 1.52 1.34 2.79 </JointPositionLimitsUpper>
+                <JointPositionLimitsUpper> 0.0 0.0 0.01 0.01 0.01 0.01 2.62 2.967 0 1.52 1.34 2.79 </JointPositionLimitsUpper>
             </Scene>
         </PlanningScene>
 
@@ -43,15 +43,15 @@
         <Cost>
             <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1"/>
-            <Task Task="JointVelocityLimit" Rho="1e7"/>
+            <Task Task="JointLimit" Rho="1e2"/>
+            <Task Task="JointVelocityLimit" Rho="1"/>
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
 
         <!-- 150 or above allows planner to escape local minimum in example -->
         <T>30</T>
-        <W>1e2 1e2 1e2 1e2 1e2 1e2 6 5 4 3 2 1</W>
+        <W>1e5 1e5 1e5 1e5 1e5 1e5 6 5 4 3 2 1</W>
         <Wrate>1e3</Wrate>
         <!-- Time interval between forward-iterations -->
         <tau>0.1</tau>

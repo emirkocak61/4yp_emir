@@ -17,7 +17,7 @@ public:
     //Instantiate the action server
     as_(nh_,action_name + "_as", boost::bind(&GraspTargetActionServer::execute_cb,this, _1), false) {
         as_.start();
-        tolerance_ = 0.2;
+        tolerance_ = 1e-2;
     }
 
 void execute_cb(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
@@ -75,8 +75,9 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     problem->SetStartTime(t);
     Iterate();
     double error = GetError(); //Calculates error
+    std::cout << "Error: " << error << std::endl;
     
-    if (error > 0.5) {
+    if (error > 1) {
         result_.result = false;
         ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
         as_.setAborted(result_);

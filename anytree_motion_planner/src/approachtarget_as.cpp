@@ -16,7 +16,7 @@ public:
     {
         //Initialize(); //Initialize ROS-time dependent objects. 
         as_.start();
-        tolerance_ = 0.5;
+        tolerance_ = 1e-2;
         
     }
     
@@ -36,6 +36,7 @@ public:
         //InitRobotPose();
         t = 0.0;
         int counter = 0;
+        double error;
 
         while (counter < counter_limit && t < time_limit){
             if (as_.isPreemptRequested()) {
@@ -47,7 +48,7 @@ public:
             
             Iterate(); //Generate motion plan via EXOTica
             PublishToRobot(); //Send motion plan to the robot
-            double error = GetError(); //Calculate error
+            error = GetError(); //Calculate error
             std::cout << "Error: " << error << std::endl;
             //Publish feedback to client
             feedback_.error = error;
@@ -63,7 +64,7 @@ public:
 
         //Check that EEF has reached target
         if (result_.result == true) {
-            double error = GetError();
+            error = GetError();
             if (error < tolerance_){
                 ROS_INFO("%s: SUCCESS (Approached Target)", action_name.c_str());
                 as_.setSucceeded(result_);

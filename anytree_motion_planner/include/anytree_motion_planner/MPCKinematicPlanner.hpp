@@ -57,12 +57,12 @@ public:
         int T = problem->GetT();
         Eigen::VectorXd goal(6);
         goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
-        double alpha = 0.75;
+        double alpha = 0.85;
         double rho;
         for (int t(0); t < T; t++) {
             rho = pow(alpha,t) * 1e4; //Rho decreses with each time step
-            problem->SetGoal("Position", goal, t);
-            problem->SetRho("Position",rho,t);
+            problem->cost.SetGoal("Position", goal, t);
+            problem->cost.SetRho("Position",rho,t);
         }
     }
 
@@ -126,7 +126,8 @@ public:
     }
 
     double GetError() {
-        return problem->GetScalarTaskCost(0);
+        Eigen::VectorXd error = problem->cost.GetTaskError("Position",0);
+        return error.norm();
     }
 
     void ArmStateCb(const sensor_msgs::JointStateConstPtr &state) {
@@ -181,7 +182,7 @@ protected:
     //Problem related data
     double dt; //Problem time step
     double t; //Variable to keep track the problem time
-    double counter_limit = 30;
+    double counter_limit = 15;
     double time_limit = 50.0; //Time limit for the action
     double joint_limit_tolerance = 0.0001;
     double tolerance_ = 7.5e-2;
