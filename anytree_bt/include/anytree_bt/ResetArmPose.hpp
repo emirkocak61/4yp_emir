@@ -24,6 +24,7 @@ public:
         arm_command.data = true;
         //If not open it probably wants to close the gripper
         pub.publish(arm_command);
+        ros::Duration(1.0).sleep();
         return BT::NodeStatus::SUCCESS;
     }
 

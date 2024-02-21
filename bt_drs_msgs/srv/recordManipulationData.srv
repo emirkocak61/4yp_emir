@@ -1,8 +1,0 @@
-bool record_data
-string device_type
-string device_id
-int8 ANTICLOCKWISE=1
-int8 CLOCKWISE=-1
-int8 direction
----
-bool success

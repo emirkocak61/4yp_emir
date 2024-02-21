@@ -1,5 +1,3 @@
-#pragma once
-
 #include <ros/ros.h>
 #include <exotica_core/exotica_core.h>
 #include <unitree_arm_sdk/control/unitreeArm.h>

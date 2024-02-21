@@ -25,6 +25,7 @@ public:
         //If not open it probably wants to clos the gripper
         else {gripper_msg.data = false;}
         pub.publish(gripper_msg);
+        ros::Duration(1.0).sleep();
         return BT::NodeStatus::SUCCESS;
     }
 

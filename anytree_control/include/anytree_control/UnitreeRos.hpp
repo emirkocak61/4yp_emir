@@ -1,5 +1,8 @@
 #pragma once
-
+/*
+    The class that interfaces the unitree arm with ROS. It includes the feedforward control function and publisher that
+    continuously publishes state information into a topic. The velocity state is low-pass filtered. 
+*/
 #include <ros/ros.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <sensor_msgs/JointState.h>

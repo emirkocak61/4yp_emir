@@ -2,14 +2,14 @@
 #include "bt_drs_msgs/approachTargetAction.h"
 #include "bt_drs_msgs/approachTargetResult.h"
 #include "bt_drs_msgs/approachTargetFeedback.h"
-#include "anytree_motion_planner/MPCMotionPlanner.hpp"
+#include <anytree_motion_planner/MPCKinematicPlanner.hpp>
 
-class ApproachTargetActionServer : public MPCKinematicsPlanner {
+class ApproachTargetActionServer : public MPCKinematicPlanner {
 
 public:
     ApproachTargetActionServer() 
         //Call the constructor of the base class
-        : MPCKinematicsPlanner("approachTarget"), 
+        : MPCKinematicPlanner("approachTarget"), 
         robot_name("anytree"),
         //Instantiate the action server
         as_(nh_, action_name + "_as", boost::bind(&ApproachTargetActionServer::execute_cb, this, _1), false)

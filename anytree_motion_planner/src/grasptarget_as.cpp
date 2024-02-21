@@ -6,13 +6,13 @@
 #include <bt_drs_msgs/graspTargetResult.h>
 #include <std_msgs/Bool.h>
 #include <actionlib/server/simple_action_server.h>
-#include <anytree_motion_planner/MPCMotionPlanner.hpp>
+#include <anytree_motion_planner/MPCKinematicPlanner.hpp>
 
-class GraspTargetActionServer : public MPCKinematicsPlanner {
+class GraspTargetActionServer : public MPCKinematicPlanner {
 public:
     GraspTargetActionServer()
     //Call the constructor of the base class
-    : MPCKinematicsPlanner("graspTarget"),
+    : MPCKinematicPlanner("graspTarget"),
     robot_name("anytree"),
     //Instantiate the action server
     as_(nh_,action_name + "_as", boost::bind(&GraspTargetActionServer::execute_cb,this, _1), false) {

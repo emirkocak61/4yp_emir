@@ -10,9 +10,9 @@
 
 using namespace exotica;
 
-class MPCKinematicsPlanner {
+class MPCKinematicPlanner {
 public:
-    MPCKinematicsPlanner(const std::string& actionName) : action_name(actionName),dt(0.1), t(0.0), rate(10) {
+    MPCKinematicPlanner(const std::string& actionName) : action_name(actionName),dt(0.1), t(0.0), rate(10) {
         q = Eigen::VectorXd::Zero(robot_dof);
         qd = Eigen::VectorXd::Zero(robot_dof);
         arm_state = Eigen::VectorXd::Zero(arm_dof);
@@ -20,19 +20,19 @@ public:
         robot_state = Eigen::VectorXd::Zero(robot_dof);
         //Initialize ros publisher and subscribers
         mp_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan",10);
-        arm_state_subsciber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MPCKinematicsPlanner::ArmStateCb,this);
-        base_state_subscriber = nh_.subscribe("/state_estimator/pose_in_odom",10,&MPCKinematicsPlanner::BaseStateCb,this);
+        arm_state_subsciber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MPCKinematicPlanner::ArmStateCb,this);
+        base_state_subscriber = nh_.subscribe("/state_estimator/pose_in_odom",10,&MPCKinematicPlanner::BaseStateCb,this);
         ros::Duration(1.0).sleep();
         SetupProblem();
     }
 
-    ~MPCKinematicsPlanner() {
+    ~MPCKinematicPlanner() {
         this->solver.reset();
         Setup::Destroy();}
     
     void SetupProblem() {
         Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle(action_name)));
-        solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/" + action_name + "_kinematic.xml");
+        solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/kinematic" + action_name + "_kinematic.xml");
         solver->debug_ = false;
         solver->SetNumberOfMaxIterations(1);
         //Get EXOTica problem
@@ -60,7 +60,7 @@ public:
         double alpha = 0.75;
         double rho;
         for (int t(0); t < T; t++) {
-            rho = pow(alpha,t) * 1e4;
+            rho = pow(alpha,t) * 1e4; //Rho decreses with each time step
             problem->SetGoal("Position", goal, t);
             problem->SetRho("Position",rho,t);
         }

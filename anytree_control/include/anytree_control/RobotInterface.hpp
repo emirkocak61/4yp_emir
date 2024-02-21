@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-    A class to represent anytree robot model
+    This class is used to combine all the state estimations from various topics into a one robot state vector
 */
 #include <ros/ros.h>
 #include <Eigen/Core>

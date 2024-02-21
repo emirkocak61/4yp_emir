@@ -5,13 +5,13 @@
 #include <bt_drs_msgs/manipulateTargetFeedback.h>
 #include <bt_drs_msgs/manipulateTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
-#include <anytree_motion_planner/MPCMotionPlanner.hpp>
+#include <anytree_motion_planner/MPCKinematicPlanner.hpp>
 
-class ManipulateTargetActionServer : public MPCKinematicsPlanner {
+class ManipulateTargetActionServer : public MPCKinematicPlanner {
 public:
     
     ManipulateTargetActionServer() 
-    : MPCKinematicsPlanner("manipulateTarget"),
+    : MPCKinematicPlanner("manipulateTarget"),
     robot_name("anytree"),
     as_(nh_,action_name + "_as", boost::bind(&ManipulateTargetActionServer::execute_cb,this, _1), false) {
         as_.start();
@@ -98,14 +98,6 @@ public:
             manipulation_todo = goal->manipulation_todo;
             direction = goal->direction;
             if (goal->strategy == 0) {
-                /*
-                //First define the grasping trajectory
-                trajectory->row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-                trajectory->row(1) << 2.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0; //head on
-                trajectory->row(2) << 4.0, 0.0, -0.0, 0.0, 0.0, 0.0, -1.5708; //rotate gripper
-                trajectory->row(3) << 6.0, 0.0, -0.0, -0.1, 0.0, 0.0, -1.5708; //approach
-                trajectory->row(4) << 7.0, 0.0, -0.0, -0.1, 0.0, 0.0, -1.5708; //close gripper
-                */
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
                 //Now define the manipulation trajectory

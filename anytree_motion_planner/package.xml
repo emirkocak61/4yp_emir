@@ -2,7 +2,7 @@
 <package format="3">
   <name>anytree_motion_planner</name>
   <version>0.0.0</version>
-  <description>The motion_planning_exotica package</description>
+  <description>The motion planner package for anytree</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

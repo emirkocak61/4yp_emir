@@ -29,7 +29,7 @@ using namespace exotica;
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
-            solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/" + action_name + ".xml");
+            solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic" + action_name + "_dynamic.xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();
             problem = std::dynamic_pointer_cast<DynamicTimeIndexedShootingProblem>(planning_problem);
 
@@ -260,14 +260,9 @@ using namespace exotica;
 
     void MotionPlannerBaseClass::Iterate() {
         //Inform EXOTica of unexpected changes to XY as a side-effect of ANYNova rotating its base
-        //InteractiveServoing();
-        problem->SetStartTime(0.0); //Set problem start time
-        outFile << "t = " << t << std::endl;
-        outFile << "q:" << q.transpose().head(12) << std::endl;
-        Eigen::VectorXd state = robot_state;
-        outFile << "State: " << state.transpose().head(12) << std::endl;
-        //Use the predicted state for solving the problem
-        problem->SetStartState(state); //Set problem start state
+        InteractiveServoing();
+        problem->SetStartTime(t); //Set problem start time
+        problem->SetStartState(q); //Set problem start state
         //Set the previous solution as initial guess
         problem->set_U(prevU->transpose());
         //Initialize solution container
@@ -275,15 +270,13 @@ using namespace exotica;
         solver->Solve(*solution);
         
         //Apply only the first step of the solution
-        problem->Update(state,solution->row(0),0);
+        problem->Update(q,solution->row(0),0);
         //Swap prevU and solution pointers for next iteration
         prevU.swap(solution);
         //Update Joint Positions
-        //outFile << "State evolution at time " << t << ":" << state_evolution << std::endl;
         q = problem->get_X(1);
         scene->GetKinematicTree().PublishFrames();
-        
-        //scene->SetModelState(q.head(scene->get_num_positions()));
+        scene->SetModelState(q.head(scene->get_num_positions()));
     }
 
     

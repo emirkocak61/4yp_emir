@@ -1,4 +1,4 @@
-//ROS Interface to control unitree arm in lowcmd mode
+//ROS Interface to control unitree arm in lowcmd mode [Deprecated]
 
 #include "ros/ros.h"
 #include <std_msgs/Bool.h>
