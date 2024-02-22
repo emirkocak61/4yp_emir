@@ -43,7 +43,7 @@
         <Cost>
             <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e2"/>
+            <Task Task="JointLimit" Rho="1e7"/>
             <Task Task="JointVelocityLimit" Rho="1"/>
         </Cost>
 

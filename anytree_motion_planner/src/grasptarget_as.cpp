@@ -84,7 +84,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     } 
     else{
         //If start pose check succeded initialise robot pose
-        InitRobotPose();
+        //InitRobotPose();
         while(t < t_limit) {
             if (as_.isPreemptRequested()) {
                 result_.result = false;

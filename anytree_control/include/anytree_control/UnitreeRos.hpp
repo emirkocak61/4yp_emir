@@ -65,7 +65,7 @@ public:
     void sendGripperCommand(const double& targetQ) {
         arm.sendRecvThread->shutdown();
         double initQ = arm.lowstate->getGripperQ();
-        double duration = 100;
+        double duration = 500;
         UNITREE_ARM::Timer timer(0.01);
         for (int i(0); i < duration; i++) {
             //Set the gripper commands by linear interpolation

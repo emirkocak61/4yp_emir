@@ -18,6 +18,7 @@ public:
         arm_state = Eigen::VectorXd::Zero(arm_dof);
         base_state = Eigen::VectorXd::Zero(base_dof);
         robot_state = Eigen::VectorXd::Zero(robot_dof);
+        relative_joint_limits = Eigen::MatrixXd::Zero(robot_dof, 2);
         //Initialize ros publisher and subscribers
         mp_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan",10);
         arm_state_subsciber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MPCKinematicPlanner::ArmStateCb,this);
@@ -41,7 +42,9 @@ public:
         scene = problem->GetScene();
         robot_state << base_state, arm_state;
         scene->SetModelState(robot_state);
-        problem->Update(scene->GetControlledState(),0);  
+        problem->Update(scene->GetControlledState(),0);
+        relative_joint_limits = scene->GetKinematicTree().GetJointLimits();
+        std::cout << "Joint limits loaded" << std::endl;
         SetJointLimits();
     }
 
@@ -77,19 +80,19 @@ public:
         scene->SetModelState(model_state); //Sets the state of the base in EXOTica
 
         Eigen::VectorXd global_joint_limits_upper, global_joint_limits_lower;
-        global_joint_limits_upper = scene->GetKinematicTree().GetJointLimits().col(1);
-        global_joint_limits_lower = scene->GetKinematicTree().GetJointLimits().col(0);
-
+        global_joint_limits_upper = relative_joint_limits.col(1);
+        global_joint_limits_lower = relative_joint_limits.col(0);
         for (int i = 0; i < base_dof; i++) {
-            global_joint_limits_upper(i) = (global_joint_limits_upper(i) +
-                                            robot_state(i) + joint_limit_tolerance);
-            global_joint_limits_lower(i) = (global_joint_limits_lower(i) +
-                                            robot_state(i) - joint_limit_tolerance);
+            global_joint_limits_upper(i) += (robot_state(i) + joint_limit_tolerance);
+            global_joint_limits_lower(i) += (robot_state(i) - joint_limit_tolerance);
         }
 
         //Set joint limits in EXOTica scene
         scene->GetKinematicTree().SetJointLimitsUpper(global_joint_limits_upper);
         scene->GetKinematicTree().SetJointLimitsLower(global_joint_limits_lower);
+
+        std::cout << "Upper limits: " << scene->GetKinematicTree().GetJointLimits().col(1) << std::endl;
+        std::cout << "Lower limits: " << scene->GetKinematicTree().GetJointLimits().col(0) << std::endl;
     }
 
     void Iterate() {
@@ -103,6 +106,7 @@ public:
         //Calculate velocities
         Eigen::VectorXd qnew(12);
         qnew = solution->row(1);
+        std::cout << "q: " << qnew.transpose() << std::endl;
         qd = (qnew-q)/(dt);
         q = qnew;
         //Update problem
@@ -182,7 +186,7 @@ protected:
     //Problem related data
     double dt; //Problem time step
     double t; //Variable to keep track the problem time
-    double counter_limit = 15;
+    double counter_limit = 10;
     double time_limit = 50.0; //Time limit for the action
     double joint_limit_tolerance = 0.0001;
     double tolerance_ = 7.5e-2;
@@ -192,6 +196,7 @@ protected:
     Eigen::VectorXd robot_state;
     Eigen::VectorXd arm_state;
     Eigen::VectorXd base_state;
+    Eigen::MatrixXd relative_joint_limits;
     //Mutexes to protect data
     std::mutex arm_mutex;
     std::mutex base_mutex; //Mutex to protect base pose data
