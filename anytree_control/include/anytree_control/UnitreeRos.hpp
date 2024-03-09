@@ -96,7 +96,7 @@ public:
     void ResetArmPoseCb(const std_msgs::Bool &message) {
         if(message.data == true) {
             Vec6 homeQ;
-            double duration = 100;
+            double duration = 500;
             homeQ << 0.0, 0.0, -0.005, -0.074, 0.0, 0.0;
             sendArmCommand(homeQ,duration);    
         }
@@ -105,7 +105,7 @@ public:
     void sendArmCommand(const Eigen::VectorXd& targetQ,const double duration) {
         arm.sendRecvThread->shutdown();
         Vec6 initQ = arm.lowstate->getQ();
-        UNITREE_ARM::Timer timer(0.01); //Sets control frequency to
+        UNITREE_ARM::Timer timer(0.002);
         //Timer timer(control_frequency);
         for(int i(0); i<duration; i++){
             arm.q =  initQ * (1-i/duration) + targetQ * (i/duration);

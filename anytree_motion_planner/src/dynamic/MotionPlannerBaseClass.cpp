@@ -5,8 +5,6 @@
 #include "anytree_motion_planner/MotionPlannerBaseClass.hpp"
 #include <cmath>
 
-
-
 using namespace exotica;
 
 
@@ -19,17 +17,17 @@ using namespace exotica;
 
     //Class constructor
     MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
-                                action_name(actionName), dt(1), rate(1),
+                                action_name(actionName), dt(0.02), rate(50),
                                 base_dof(6),start_tolerance(5e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
-                                counter_limit(10), t_limit(10.0), self_tolerance(5e-2),
+                                counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
         {   
             //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
-            solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic" + action_name + "_dynamic.xml");
+            solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic/" + action_name + "_dynamic.xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();
             problem = std::dynamic_pointer_cast<DynamicTimeIndexedShootingProblem>(planning_problem);
 
@@ -64,14 +62,13 @@ using namespace exotica;
                 double alpha = 0.8;
                 double rho;
                 for (int t = 0; t < T; ++t) {
-                    rho = pow(alpha,t) * 1e5;
                     problem->cost.SetGoal("Position", goal_ref, t);
                     problem->cost.SetGoal("JointLimit", joint_limit,t);
-                    problem->cost.SetRho("Position",rho,t);
-                    problem->cost.SetRho("JointLimit",1e2,t);
+                    problem->cost.SetRho("Position",1e1,t);
+                    problem->cost.SetRho("JointLimit",1e3,t);
                 }
-                //problem->cost.SetGoal("Position", goal_ref,T-1);
-                //problem->cost.SetRho("Position",1e3,T-1);
+                problem->cost.SetGoal("Position", goal_ref,T-1);
+                problem->cost.SetRho("Position",1e3,T-1);
         
                 solver->debug_ = false;
                 solver->SetNumberOfMaxIterations(1);
@@ -81,13 +78,13 @@ using namespace exotica;
                 q = robot_state;
                 scene->GetKinematicTree().PublishFrames();
                 
-                std::string filePath = "/home/emirkocak/Documents/position_comparison.txt";
-                outFile = std::ofstream(filePath.c_str());  
+                //std::string filePath = "/home/emirkocak/Documents/position_comparison.txt";
+                //outFile = std::ofstream(filePath.c_str());  
             }
         }
 
     MotionPlannerBaseClass::~MotionPlannerBaseClass(){
-        outFile.close();
+        //outFile.close();
         solver.reset();
         Setup::Destroy();   //Destroy all the exotica related objects
     }

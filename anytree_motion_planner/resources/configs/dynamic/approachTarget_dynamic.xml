@@ -17,7 +17,7 @@
                     <DoubleIntegratorDynamicsSolver Name="MyDynamicsSolver">
                         <ControlLimitsLow>-5</ControlLimitsLow>
                         <ControlLimitsHigh>5</ControlLimitsHigh>
-                        <dt>1</dt>
+                        <dt>0.02</dt>
                     </DoubleIntegratorDynamicsSolver>
                 </DynamicsSolver>
                 <Links>
@@ -65,10 +65,10 @@
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
-        <T>100</T>
+        <T>30</T>
 
         <!-- Time interval between forward-iterations -->
-        <tau>1</tau>
+        <tau>0.02</tau>
 
     </DynamicTimeIndexedShootingProblem>
 </PlannerDemoConfig>

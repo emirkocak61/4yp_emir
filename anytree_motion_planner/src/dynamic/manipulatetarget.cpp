@@ -5,17 +5,17 @@
 #include <bt_drs_msgs/manipulateTargetFeedback.h>
 #include <bt_drs_msgs/manipulateTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
-#include <anytree_motion_planner/MPCKinematicPlanner.hpp>
+#include <anytree_motion_planner/MotionPlannerBaseClass.hpp>
 
-class ManipulateTargetActionServer : public MPCKinematicPlanner {
+class ManipulateTargetActionServer : public MotionPlannerBaseClass {
 public:
     
     ManipulateTargetActionServer() 
-    : MPCKinematicPlanner("manipulateTarget"),
+    : MotionPlannerBaseClass("manipulateTarget"),
     robot_name("anytree"),
     as_(nh_,action_name + "_as", boost::bind(&ManipulateTargetActionServer::execute_cb,this, _1), false) {
+        gripper_pub = nh_.advertise<std_msgs::Bool>("/gripper_command",10);
         as_.start();
-        tolerance_ = 1e-2;
     }
 
     void execute_cb(const bt_drs_msgs::manipulateTargetGoalConstPtr &goal) {
@@ -23,8 +23,8 @@ public:
         KDL::Frame T_approach;
         T_approach = GetFrameFromPose(goal->target);
 
-        //Setup Goal
-        SetupGoal(T_approach);
+        //Attach object in the absolute world frame
+        scene->AttachObjectLocal("Target","",T_approach);
         ROS_INFO("Manipulating target"); 
         std::shared_ptr<Trajectory> trajectory = std::make_shared<Trajectory>(DefineTrajectory(goal));
         PerformTrajectory(trajectory);
@@ -32,18 +32,19 @@ public:
 
     void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override {
         result_.result = true;
+        std_msgs::Bool gripper_command;
         InitRobotPose();
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0) + 15; //Add a constant as an error margin
+        t_limit = data(data.rows()-1,0) + 5; //Add a constant as a safety margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
         Iterate();
         double error = GetManipulationError(); //Calculates error
         
-        if (error > tolerance_) {
+        if (error > start_tolerance) {
             result_.result = false;
             ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
             as_.setAborted(result_);
@@ -58,7 +59,6 @@ public:
                     as_.setPreempted();
                     break;
                 }
-
                 Iterate();
                 PublishToRobot();
                 error = GetManipulationError();
@@ -107,16 +107,14 @@ public:
                     Eigen::VectorXd point(7);
                     point << time_stamp, 0.0, 0.0, -0.097, 0.0, 0.0, manipulation_done - 1.5708;
                     trajectoryPoints.push_back(point);
-                    
                 }
             }
         }
         //Now convert the std::vector into Eigen Matrix
         size_t n = trajectoryPoints.size();
-        double m = 7;
+        int m = 7;
         trajectory = Eigen::MatrixXd::Zero(n,m);
         
-
         //Copy the manipulation trajectory
         for (size_t i = 0; i < n; i++) {
             trajectory.row(i) = trajectoryPoints[i];
@@ -136,25 +134,12 @@ public:
         return error;
     }
 
-    void SetupGoal(const KDL::Frame target_frame) override {
-        scene->AttachObjectLocal("Target","", target_frame);
-        int T = problem->GetT();
-        Eigen::VectorXd goal(6);
-        goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
-        double alpha = 0.999;
-        double rho = 1e3;
-        for (int t(0); t < T; t++) {
-            rho = pow(alpha,t) * 1e4;
-            problem->SetGoal("Position", goal, t);
-            problem->SetRho("Position",rho,t);
-        }
-    }
-
 protected:
     std::string robot_name;
     actionlib::SimpleActionServer<bt_drs_msgs::manipulateTargetAction> as_;
     bt_drs_msgs::manipulateTargetFeedback feedback_;
     bt_drs_msgs::manipulateTargetResult result_;
+    ros::Publisher gripper_pub;
 
     //Objects related to manipulation
     double manipulation_todo;
@@ -166,7 +151,5 @@ protected:
 int main(int argc,char** argv) {
     ros::init(argc,argv,"manipulateTarget");
     ManipulateTargetActionServer s; //Construct action server
-    ros::AsyncSpinner spinner(2);
-    spinner.start();
-    ros::waitForShutdown();
+    ros::spin();
 }

@@ -58,15 +58,15 @@ include_directories(
   include
  ${catkin_INCLUDE_DIRS}
  )
-function(Compile name)
-  add_executable(${name} src/${name}.cpp)
+function(CompileKinematic name)
+  add_executable(${name} src/kinematic/${name}.cpp)
   add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})    
-endfunction(Compile name)
+endfunction(CompileKinematic name)
 
-Compile(approachtarget_as)
-Compile(grasptarget_as)
-Compile(manipulatetarget_as)
+CompileKinematic(approachtarget_as)
+CompileKinematic(grasptarget_as)
+CompileKinematic(manipulatetarget_as)
 
 function(CompileExample name)
   add_executable(${name} src/examples/${name}.cpp)
@@ -77,9 +77,18 @@ endfunction()
 CompileExample(example_motion_aico)
 CompileExample(example_motion_ddp)
 
-#add_executable(MPCPlanner src/MPCPlanner.cpp)
-#add_dependencies(MPCPlanner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(MPCPlanner PUBLIC ${catkin_LIBRARIES})  
+function(CompileDynamic name)
+  add_executable(${name}_dynamic src/dynamic/${name}.cpp src/dynamic/MotionPlannerBaseClass.cpp)
+  add_dependencies(${name}_dynamic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name}_dynamic PUBLIC ${catkin_LIBRARIES})    
+endfunction(CompileDynamic name)
+
+CompileDynamic(approachtarget)
+CompileDynamic(grasptarget)
+CompileDynamic(manipulatetarget)
+
+
+
 
 ## Add cmake target dependencies of the executable
 ## Specify libraries to link a library or executable target against

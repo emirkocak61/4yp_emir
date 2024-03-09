@@ -65,7 +65,7 @@
         </Cost>
 
         <!-- Number of forward-iterations in finite horizon -->
-        <T>150</T>
+        <T>30</T>
 
         <!-- Time interval between forward-iterations -->
         <tau>0.02</tau>

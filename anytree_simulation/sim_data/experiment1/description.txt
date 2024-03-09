@@ -1,0 +1,4 @@
+This experiment was conducted using the motion planner that uses the dynamics of the model.
+Several different data were recorded. 
+    - Evolution of the cost as a function of time (exotica model)
+    - Evolution of the cost as a function of time (as in the simulation)
