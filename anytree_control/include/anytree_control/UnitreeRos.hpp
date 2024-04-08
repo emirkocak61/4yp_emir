@@ -15,13 +15,19 @@ class UnitreeRos {
 public:
     UnitreeRos() : 
     arm(true), 
-    dt(0.05),
+    dt(0.01),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false) {
+        std::string topic_name; //Variable that stores the name of the topic fpr publishing joint states
         SetupArm();
+        SetJointStateMsg();
         reset_arm_sub = nh_.subscribe("/z1_gazebo/reset_arm_pose",10,&UnitreeRos::ResetArmPoseCb,this);
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRos::MotionPlanCb, this);
-        gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this);
-        state_publisher = nh_.advertise<sensor_msgs::JointState>("/z1_gazebo/joint_states_filtered",10);   //z1_gazebo/joint_states/filtered  
+        gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this); 
+        if (nh_.getParam("topic_to_publish",topic_name)){ 
+            state_publisher = nh_.advertise<sensor_msgs::JointState>(topic_name,10); 
+        } else {
+            ROS_WARN("Failed to get parameter 'topic_to_publish',not publishing joint states");
+        }
     }
     ~UnitreeRos() {
         // Stop the publishing thread if it's running
@@ -105,11 +111,11 @@ public:
     void sendArmCommand(const Eigen::VectorXd& targetQ,const double duration) {
         arm.sendRecvThread->shutdown();
         Vec6 initQ = arm.lowstate->getQ();
-        UNITREE_ARM::Timer timer(0.002);
+        UNITREE_ARM::Timer timer(dt);
         //Timer timer(control_frequency);
         for(int i(0); i<duration; i++){
             arm.q =  initQ * (1-i/duration) + targetQ * (i/duration);
-            arm.qd = (targetQ - initQ) / (duration * 0.01);
+            arm.qd = (targetQ - initQ) / (duration * dt);
             arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
             //gripperQ = -0.001;
             arm.setArmCmd(arm.q, arm.qd, arm.tau);
@@ -148,12 +154,15 @@ public:
         }
     }
 
+    void SetJointStateMsg() {
+        joint_state_msg.position.resize(6);
+        joint_state_msg.velocity.resize(6);
+        joint_state_msg.name = {"joint1","joint2","joint3","joint4","joint5","joint6"};
+    }
+
 private:
     void publishLoop() {
         ros::Rate rate(50); //50Hz
-        sensor_msgs::JointState joint_state_msg;
-        joint_state_msg.position.resize(6);
-        joint_state_msg.velocity.resize(6);
         while (ros::ok() && isPublishing) {
             //std::unique_lock<std::mutex> lock(lowstate_mutex);
             Vec6 arm_position = arm.lowstate->getQ();
@@ -186,5 +195,7 @@ private:
     std::thread publisher_thread;
     bool isPublishing;
     std::mutex lowstate_mutex;
+
+    sensor_msgs::JointState joint_state_msg;
 
 };
