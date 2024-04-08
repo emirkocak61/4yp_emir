@@ -6,6 +6,6 @@ This project involves motion and task planning solutions for a loco-manipulation
 
 In order to simulate the a full manipulation sequence:
 * Run `roslaunch anytree_simulation anytree_test_environment.launch`. (This launches the simulation environment)
-* Run the sim_ctrl executable under you unitree_ros/z1_controller package.
+* Run the `sim_ctrl` executable under your unitree_ros/z1_controller package.
 * Run `roslaunch anytree_simulation test.launch` (This launched the necessary action servers and controllers)
-* `rosrun anytree_bt manioulate` (Runs the behaviour tree for manipulation)
+* `rosrun anytree_bt manipulate` (Runs the behaviour tree for manipulation)

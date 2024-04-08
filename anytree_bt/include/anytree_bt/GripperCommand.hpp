@@ -24,6 +24,8 @@ public:
         if (gripper_command.value() == "open") {gripper_msg.data = true;}
         //If not open it probably wants to clos the gripper
         else {gripper_msg.data = false;}
+        while (pub.getNumSubscribers() < 1) {
+        }
         pub.publish(gripper_msg);
         ros::Duration(1.0).sleep();
         return BT::NodeStatus::SUCCESS;
