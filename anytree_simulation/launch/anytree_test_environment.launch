@@ -20,6 +20,8 @@
         <arg name="Y" value="3.1419"/>
         <arg name="P" value="0.0"/>
         <arg name="R" value="-1.5707"/>
+        <arg name="dynamics" value="none"/>
+        <arg name="continuous" value="true"/>
     </include> 
    </group>
 
