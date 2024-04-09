@@ -22,7 +22,9 @@ public:
         SetJointStateMsg();
         reset_arm_sub = nh_.subscribe("/z1_gazebo/reset_arm_pose",10,&UnitreeRos::ResetArmPoseCb,this);
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRos::MotionPlanCb, this);
-        gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this); 
+        gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this);
+        cartesian_control_sub = nh_.subscribe("/arm_pose_command",10,&UnitreeRos::CartesianControl,this); 
+
         if (nh_.getParam("topic_to_publish",topic_name)){ 
             state_publisher = nh_.advertise<sensor_msgs::JointState>(topic_name,10); 
         } else {
@@ -126,6 +128,33 @@ public:
         arm.sendRecvThread->start();
     }
 
+    void CartesianControl(const trajectory_msgs::JointTrajectoryPoint& msg) {
+        Vec6 posture; //Vector to store posture data
+        double joint_speed = 2.0; //Max joint speed while moving
+        double gripperPos = 0.0;
+        //Set fsm state the joint control
+        arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
+        arm.setFsm(UNITREE_ARM::ArmFSMState::CARTESIAN);
+        //Check if the incoming message includes gripper pos
+        if (static_cast<int>(msg.positions.size()) == arm_dof) {
+            posture << msg.positions[0],msg.positions[1],msg.positions[2],msg.positions[3],msg.positions[4],msg.positions[5];
+            std::cout << posture.transpose() << std::endl;
+            arm.MoveJ(posture, gripperPos, joint_speed);
+        } else{
+            if(static_cast<int>(msg.positions.size()) == arm_dof+1){
+                Eigen::Map<const Vec6> posture(msg.positions.data(), arm_dof);
+                gripperPos = msg.positions[arm_dof];
+                arm.MoveJ(posture,gripperPos,joint_speed);
+            }
+            else {
+                ROS_WARN("Invalid message type, can't move arm");
+            }
+        }
+        //Return to lowcmd mode
+        arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
+        arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
+    }
+
     void SetupArm() {
         //Start communications with arm controller
         arm.sendRecvThread->start();
@@ -172,6 +201,7 @@ private:
             // Directly assign values using Eigen::Map
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_position;
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.velocity.data(), arm_dof) = v_filtered;
+            joint_state_msg.header.stamp = ros::Time::now();
 
             //Publish message
             state_publisher.publish(joint_state_msg);
@@ -183,6 +213,7 @@ private:
     ros::Subscriber motion_plan_sub;
     ros::Subscriber gripper_sub;
     ros::Subscriber reset_arm_sub;
+    ros::Subscriber cartesian_control_sub;
     ros::Publisher state_publisher;
     int arm_dof = 6;
     double dt;
