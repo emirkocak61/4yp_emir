@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="use_gui" default="true" />
-    <param name="robot_description" textfile="$(find anytree_description)/urdf/z1_gripper.urdf"/>
+
+    <arg name="unitree_gripper" default="true"/>
+    <arg name="unitree_realsense" default="true"/>
+    <arg name="unitree_ns" default="z1_gazebo"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(find anymal_coyote_drs)/urdf/modules/unitree_z1/robot_standalone.xacro arm_root:=unitree_mount arm_ns:=$(arg unitree_ns) unitree_gripper:=$(arg unitree_gripper) unitree_realsense:=$(arg unitree_realsense)"/>
     <param name="topic_to_publish" value="/joint_states"/>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    
     <!-- Node that interfaces the arm with rest of the ROS ecosystem-->
-    <!--node name="unitree" pkg="anytree_control" type="unitree" output="screen" -->
-
-    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" unless="$(arg use_gui)"/>
-    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher" if="$(arg use_gui)"/>
+    <node name="unitree" pkg="anytree_control" type="unitree" output="screen"/>
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/unitree.rviz" />
 </launch>
