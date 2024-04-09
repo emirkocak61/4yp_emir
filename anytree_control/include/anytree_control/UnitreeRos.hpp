@@ -151,6 +151,8 @@ public:
             }
         }
         //Return to lowcmd mode
+        arm.setFsm(UNITREE_ARM::ArmFSMState::JOINTCTRL);
+        arm.backToStart();
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
     }
@@ -160,11 +162,14 @@ public:
         arm.sendRecvThread->start();
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
-        std::vector<double> KP = {100,150,150,100,75,50};
-        std::vector<double> KD = {500,500,500,500,500,500};
+        // SIM PDs, does not work in HW
+        // std::vector<double> KP = {100,150,150,100,75,50};
+        // std::vector<double> KD = {500,500,500,500,500,500};
 
         //Set control gains
-        arm.lowcmd->setControlGain(KP,KD);
+        // arm.lowcmd->setControlGain(KP,KD);
+        // HW PDs
+        arm.lowcmd->setControlGain();
     }
 
     void startPublishing() {
