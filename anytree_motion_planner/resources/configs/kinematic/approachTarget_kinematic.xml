@@ -19,12 +19,12 @@
                 </Links>
                 
                 <!-- <JointVelocityLimits>0.0 0.0 0.02 0.02 0.02 0.02 0.628 0.628 0.628 0.837 0.837 0.837</JointVelocityLimits> -->
-                <JointVelocityLimits>0.0 0.0 0.01 0.002 0.002 0.002 3.1415 3.1415 3.1415 3.1415 3.1415 3.1415</JointVelocityLimits>
+                <JointVelocityLimits>0.0 0.0 0.01 0.002 0.002 0.002 1.0 1.0 1.0 1.0 1.0 1.0</JointVelocityLimits>
 
-               <JointPositionLimitsLower> -0.0 -0.0 -0.045 -0.01 -0.01 -0.01 -2.62 0.0 -2.88 -1.52 -1.34 -2.79 </JointPositionLimitsLower>
+               <JointPositionLimitsLower> -0.0 -0.0 -0.045 -0.001 -0.001 -0.001 -2.62 0.0 -2.88 -1.52 -1.34 -2.79 </JointPositionLimitsLower>
 
                 <!-- <JointPositionLimitsUpper> 0.0 0.0 0.05 0.02 0.02 0.02 3.14 5.46 5.95 3.14 3.14 3.14 </JointPositionLimitsUpper> -->
-                <JointPositionLimitsUpper> 0.0 0.0 0.045 0.01 0.01 0.01 2.62 2.967 0 1.52 1.34 2.79 </JointPositionLimitsUpper>
+                <JointPositionLimitsUpper> 0.0 0.0 0.045 0.001 0.001 0.001 2.62 2.967 0 1.52 1.34 2.79 </JointPositionLimitsUpper>
             </Scene>
         </PlanningScene>
 
@@ -36,13 +36,13 @@
                 </EndEffector>
             </EffFrame>
             <JointLimit Name="JointLimit" />
-            <JointVelocityLimit Name="JointVelocityLimit" dt="0.1" SafePercentage="0.01" MaximumJointVelocity="1.0" Debug="0" />
+            <JointVelocityLimit Name="JointVelocityLimit" dt="0.02" SafePercentage="0.01" MaximumJointVelocity="0.1" Debug="0" />
         </Maps>
         
         <Cost>
             <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e2"/>
+            <Task Task="JointLimit" Rho="1e4"/>
             <Task Task="JointVelocityLimit" Rho="1"/>
         </Cost>
 
@@ -53,7 +53,7 @@
         <W>1e3 1e3 1e2 1e2 1e3 1e3 6 5 4 3 2 1</W>
         <Wrate>1e3</Wrate>
         <!-- Time interval between forward-iterations -->
-        <tau>0.1</tau>
+        <tau>0.02</tau>
 
     </UnconstrainedTimeIndexedProblem>
 </PlannerDemoConfig>

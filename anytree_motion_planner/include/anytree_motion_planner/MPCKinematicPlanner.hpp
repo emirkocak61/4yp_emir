@@ -12,7 +12,7 @@ using namespace exotica;
 
 class MPCKinematicPlanner {
 public:
-    MPCKinematicPlanner(const std::string& actionName) : action_name(actionName),dt(0.1), t(0.0), rate(10) {
+    MPCKinematicPlanner(const std::string& actionName) : action_name(actionName),dt(0.02), t(0.0), rate(50) {
         q = Eigen::VectorXd::Zero(robot_dof);
         qd = Eigen::VectorXd::Zero(robot_dof);
         arm_state = Eigen::VectorXd::Zero(arm_dof);
@@ -60,10 +60,10 @@ public:
         int T = problem->GetT();
         Eigen::VectorXd goal(6);
         goal << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
-        double alpha = 0.85;
-        double rho;
+        double alpha = 0.99;
+        double rho = 1e3;
         for (int t(0); t < T; t++) {
-            rho = pow(alpha,t) * 1e4; //Rho decreses with each time step
+            rho = pow(alpha,t) * 1e3; //Rho decreses with each time step
             problem->cost.SetGoal("Position", goal, t);
             problem->cost.SetRho("Position",rho,t);
         }
@@ -136,7 +136,7 @@ public:
 
     void ArmStateCb(const sensor_msgs::JointStateConstPtr &state) {
         std::lock_guard<std::mutex> lock(arm_mutex);
-        Eigen::Map<const Eigen::VectorXd> tempMap(state->position.data(), state->position.size());
+        Eigen::Map<const Eigen::VectorXd> tempMap(state->position.data(), arm_dof);
         arm_state = tempMap;
     }
 

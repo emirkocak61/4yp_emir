@@ -17,7 +17,7 @@ public:
     //Instantiate the action server
     as_(nh_,action_name + "_as", boost::bind(&GraspTargetActionServer::execute_cb,this, _1), false) {
         as_.start();
-        tolerance_ = 1e-2;
+        tolerance_ = 2e-2;
     }
 
 void execute_cb(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
