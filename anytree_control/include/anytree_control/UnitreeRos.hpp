@@ -15,7 +15,7 @@ class UnitreeRos {
 public:
     UnitreeRos() : 
     arm(true), 
-    dt(0.01),
+    dt(0.002),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false) {
         std::string topic_name; //Variable that stores the name of the topic fpr publishing joint states
         SetupArm();
@@ -163,13 +163,13 @@ public:
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
         // SIM PDs, does not work in HW
-        // std::vector<double> KP = {100,150,150,100,75,50};
-        // std::vector<double> KD = {500,500,500,500,500,500};
+        std::vector<double> KP = {100,150,150,100,75,50};
+        std::vector<double> KD = {500,500,500,500,500,500};
 
         //Set control gains
-        // arm.lowcmd->setControlGain(KP,KD);
+        arm.lowcmd->setControlGain(KP,KD);
         // HW PDs
-        arm.lowcmd->setControlGain();
+        //arm.lowcmd->setControlGain();
     }
 
     void startPublishing() {
@@ -189,9 +189,10 @@ public:
     }
 
     void SetJointStateMsg() {
-        joint_state_msg.position.resize(6);
-        joint_state_msg.velocity.resize(6);
-        joint_state_msg.name = {"joint1","joint2","joint3","joint4","joint5","joint6"};
+        joint_state_msg.position.resize(arm_dof+1);
+        joint_state_msg.velocity.resize(arm_dof+1);
+        joint_state_msg.effort.resize(arm_dof+1);
+        joint_state_msg.name = {"joint1","joint2","joint3","joint4","joint5","joint6","jointGripper"};
     }
 
 private:
@@ -199,13 +200,21 @@ private:
         ros::Rate rate(50); //50Hz
         while (ros::ok() && isPublishing) {
             //std::unique_lock<std::mutex> lock(lowstate_mutex);
+            //Get the state values for the arm
             Vec6 arm_position = arm.lowstate->getQ();
             Vec6 arm_velocity = arm.lowstate->getQd();
+            Vec6 arm_torques = arm.lowstate->getTau();
             //lock.unlock();
             Vec6 v_filtered = velocity_filter.filter(arm_velocity);
             // Directly assign values using Eigen::Map
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_position;
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.velocity.data(), arm_dof) = v_filtered;
+            Eigen::Map<Eigen::VectorXd>(joint_state_msg.effort.data(),arm_dof) = arm_torques;
+            //Get the state values for the gripper
+            joint_state_msg.position[arm_dof] = arm.lowstate->getGripperQ();
+            joint_state_msg.velocity[arm_dof] = arm.lowstate->getGripperQd();
+            joint_state_msg.effort[arm_dof] = arm.lowstate->getGripperTau();
+            //Set message time stamp
             joint_state_msg.header.stamp = ros::Time::now();
 
             //Publish message
