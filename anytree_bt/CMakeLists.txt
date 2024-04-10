@@ -66,6 +66,14 @@ endfunction()
 CompileExample(manipulate)
 CompileExample(example_tree_anymal)
 
+function(Compile name)
+  add_executable(${name} src/${name}.cpp)
+  add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})
+endfunction()
+
+Compile(bt_standalone_arm_test)
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
