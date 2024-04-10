@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- This arg enables to choose between kinematic or dynamic planners -->
+    <arg name="planner_type" default="dynamic" />
+    
+    <!-- Motion Planner-->
+    <!-- <group if="$(eval planner_type == 'kinematic')">
+        <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_standalone_arm_as" output="screen" />
+        <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_standalone_arm_as" output="screen" />
+        <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_standalone_arm_as" output="screen" />
+    </group>     -->
+
+    <group if="$(eval planner_type == 'dynamic')">
+        <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_standalone_arm_dynamic" output="screen" />
+        <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_standalone_arm_dynamic" output="screen" />
+        <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_standalone_arm_dynamic" output="screen" />
+    </group>    
+</launch>
