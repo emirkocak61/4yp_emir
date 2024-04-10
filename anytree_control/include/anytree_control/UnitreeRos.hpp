@@ -130,11 +130,11 @@ public:
 
     void CartesianControl(const trajectory_msgs::JointTrajectoryPoint& msg) {
         Vec6 posture; //Vector to store posture data
-        double joint_speed = 2.0; //Max joint speed while moving
+        double joint_speed = 1.0; //Max joint speed while moving
         double gripperPos = 0.0;
         //Set fsm state the joint control
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
-        arm.setFsm(UNITREE_ARM::ArmFSMState::CARTESIAN);
+        arm.setFsm(UNITREE_ARM::ArmFSMState::JOINTCTRL);
         //Check if the incoming message includes gripper pos
         if (static_cast<int>(msg.positions.size()) == arm_dof) {
             posture << msg.positions[0],msg.positions[1],msg.positions[2],msg.positions[3],msg.positions[4],msg.positions[5];
