@@ -6,6 +6,7 @@
             <Script code="direction:=-1" />
             <Script code="device_id:='0'" />
             <Script code="manipulation_todo:=1.5707" />
+            <Script code="strategy:=0" />
 
             <!-- LookupDevicePose -->
 
