@@ -5,6 +5,7 @@
   <!-- Robot -->
   <include file="$(find unitree_gazebo)/launch/z1.launch">
     <arg name="wname" value="empty"/>
+    <arg name="gui" value="false"/>
   </include>
 
   <arg name="device" default="needle_valve" />
@@ -30,12 +31,12 @@
   <group if="$(eval device == 'needle_valve')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/needle_valve/launch/spawn_needle_valve.launch">
       <arg name="needle_valve_ID" value="0"/>
-      <arg name="x" value="0.7"/>
+      <arg name="x" value="0.6"/>
       <arg name="y" value="0.0"/>
-      <arg name="z" value="0.2"/>
-      <arg name="Y" value="1.5708"/>
+      <arg name="z" value="0.3"/>
+      <arg name="Y" value="-1.5708"/>
       <arg name="P" value="0.0"/>
-      <arg name="R" value="-1.5708"/>
+      <arg name="R" value="1.5708"/>
     </include>
   </group>
 
@@ -54,6 +55,13 @@
 
 <!--Connect odom and exotica/world_frame-->
   <node pkg="tf2_ros" type="static_transform_publisher" name="exotica_world_frame_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 odom exotica/world_frame"/>
+
+<!--Connect odom and world-->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_odom_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 world odom"/>
+
+<!-- Visualise in RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/standalone_arm_sim.rviz" />
+
 
 </launch> 
 
