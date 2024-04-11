@@ -1,7 +1,7 @@
 #pragma once
 
 #include <actionlib/client/simple_action_client.h>
-#include <behaviortree_cpp/bt_factory.h>
+#include <behaviortree_cpp/behavior_tree.h>
 #include <ros/ros.h>
 
 /**

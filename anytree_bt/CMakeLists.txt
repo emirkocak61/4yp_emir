@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   behaviortree_cpp
   bt_drs_msgs
+  anytree_msgs
   tf2_ros
   controller_manager_msgs
   trajectory_msgs
@@ -45,6 +46,11 @@ catkin_package(
     motion_transitioner_msgs
     operational_mode_manager_msgs
 )
+
+
+
+
+
 
 ###########
 ## Build ##

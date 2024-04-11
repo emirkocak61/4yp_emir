@@ -3,11 +3,11 @@
         <Sequence name="manipulation_sequence">
             <GoToMotionState goal_motion_state="torso_control"/>
             <SaySomething message="Transitioned to torso control, setting target..."/>
-            <ApproachTarget position="0.7 0.0 1.0" orientation_3D="-1.5708 0.0 1.5708"/>
-            <GripperCommand name="openGripper" command="open" />
-            <GraspTarget position="0.7 0.0 1.0" orientation_3D="-1.5708 0.0 1.5708" device_type="needle_valve" strategy="0"/>
+            <ApproachTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708"/>
+            <UnitreeGripperCommand name="openGripper" targetQ="-0.50" />
+            <GraspTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708" device_type="needle_valve" strategy="0"/>
             <GripperCommand name="closeGripper" command="close" />
-            <ManipulateTarget position="0.7 0.0 1.0" orientation_3D="-1.5708 0.0 1.5708" device_type="needle_valve" strategy="0"
+            <ManipulateTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708" device_type="needle_valve" strategy="0"
                               direction="1" manipulation_todo="1.5708" />
             <GripperCommand name="openGripper" command="open" /> 
             <ResetArmPose/> 

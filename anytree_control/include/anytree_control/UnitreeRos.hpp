@@ -8,16 +8,20 @@
 #include <ros/ros.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <sensor_msgs/JointState.h>
+#include "actionlib/server/simple_action_server.h"
 #include <std_msgs/Bool.h>
 #include <unitree_arm_sdk/control/unitreeArm.h>
 #include <anytree_control/LowPassFilter.hpp>
+#include <anytree_msgs/gripperCommandAction.h>
+#include <anytree_msgs/gripperCommandResult.h>
 #include <mutex>
 
 class UnitreeRos {
 public:
     UnitreeRos(bool isSim): 
     arm(true), 
-    dt(0.002), 
+    dt(0.002),
+    gripper_as(nh_as,"gripperCommand_as",boost::bind(&UnitreeRos::GripperMotionCb,this,_1),false),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false), isSim(isSim) {
         if (isSim) {
             SetupArmSim();
@@ -27,10 +31,10 @@ public:
         SetJointStateMsg();
         reset_arm_sub = nh_.subscribe("/z1_gazebo/reset_arm_pose",10,&UnitreeRos::ResetArmPoseCb,this);
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRos::MotionPlanCb, this);
-        gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this);
         cartesian_control_sub = nh_.subscribe("/arm_pose_command",10,&UnitreeRos::CartesianControl,this); 
-
+        gripper_as.start();
     }
+
     ~UnitreeRos() {
         // Stop the publishing thread if it's running
         if (publisher_thread.joinable()) {
@@ -39,34 +43,23 @@ public:
         }
     }
 
-    void GripperMotionCb(const std_msgs::Bool& msg) {
-        double targetQ;
-        if (msg.data == true) {
-            //Check if the gripper is closed
-            if (isGripperOpen_ == true) {
-                ROS_WARN("Gripper is already open");
-                return;
-            }
-            else {
-                //Open the gripper
-                isGripperOpen_ = true;
-                targetQ = -0.50; 
-                sendGripperCommand(targetQ);
-                return; 
-            }
-        }
-        else {
-            //Check if the gripper is open
-            if (isGripperOpen_ == false) {
-                ROS_WARN("Gripper is already closed");
-                return;
-            }
-            else {
-                isGripperOpen_ = false;
-                targetQ = -0.001;
-                sendGripperCommand(targetQ);
-                return;
-            }
+    void GripperMotionCb(const anytree_msgs::gripperCommandGoalConstPtr &goal) {
+        //Get the targetQ
+        std::cout << "Received action goal" << std::endl;
+        double targetQ = goal->targetQ;
+        //Check if the targetQ is within limits -1.57 ??
+
+        //Send the targetQ to gripper
+        sendGripperCommand(targetQ);
+        //Check if the gripper reached target with some tolerance
+        double tolerance = 0.4; //This is currenly not working as intended
+        double Q = arm.lowstate->getGripperQ();
+        if (Q > targetQ - tolerance && Q < targetQ + tolerance) {
+            result_.result = true;
+            gripper_as.setSucceeded(result_);
+        } else {
+            result_.result = false;
+            gripper_as.setAborted(result_);
         }
     }
 
@@ -93,8 +86,8 @@ public:
     void MotionPlanCb(const trajectory_msgs::JointTrajectory& msg) {
         motion_plan = msg.points[0];
         // Use Eigen::Map to directly map the positions to an Eigen::VectorXd
-        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data(), arm_dof);
-        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data(), arm_dof);
+        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data()+6, arm_dof);
+        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data()+6, arm_dof);
         double duration = 10;
         arm.q = positions_map;
         arm.qd = velocities_map;
@@ -243,15 +236,17 @@ private:
     }
 
     ros::NodeHandle nh_;
+    ros::NodeHandle nh_as;
     ros::Publisher state_pub;
     ros::Publisher filtered_state_pub;
     ros::Subscriber motion_plan_sub;
-    ros::Subscriber gripper_sub;
-    ros::Subscriber reset_arm_sub;
     ros::Subscriber cartesian_control_sub;
+    ros::Subscriber reset_arm_sub;
+    actionlib::SimpleActionServer<anytree_msgs::gripperCommandAction> gripper_as;
+    anytree_msgs::gripperCommandResult result_;
+
     int arm_dof = 6;
     double dt;
-    bool isGripperOpen_ = false;
 
     LowPassFilter<Eigen::VectorXd> velocity_filter; //LowPassFilter for velocity readings
     UNITREE_ARM::unitreeArm arm;

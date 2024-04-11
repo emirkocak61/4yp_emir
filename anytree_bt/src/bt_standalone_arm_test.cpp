@@ -2,7 +2,7 @@
 #include <ros/package.h>
 #include <ros/ros.h>
 
-#include <anytree_bt/UnitreeGripperCommand.hpp>
+//#include <anytree_bt/UnitreeGripperCommand.hpp>
 
 //===========================================================================================================================================//
 
@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   // To use compiled shared libraries
   factory.registerFromROSPlugins();
 
-  factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
+  //factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
 
   std::cout << "Loading Behavior Tree..." << std::endl;
 
