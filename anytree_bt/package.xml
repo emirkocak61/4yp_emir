@@ -61,8 +61,5 @@
 
   <exec_depend>control_unit_msgs</exec_depend>
   <exec_depend>motion_transitioner_msgs</exec_depend>
-
-  <export>
-    <behaviortree_cpp bt_lib_plugin="libbt_nodes_drs" />
-  </export>
+  
 </package>

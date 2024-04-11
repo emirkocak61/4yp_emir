@@ -87,6 +87,16 @@ CompileDynamic(approachtarget)
 CompileDynamic(grasptarget)
 CompileDynamic(manipulatetarget)
 
+function(CompileDynamicStandaloneArm name)
+  add_executable(${name}_dynamic src/dynamic/${name}.cpp src/dynamic/MotionPlannerStandaloneArmBaseClass.cpp)
+  add_dependencies(${name}_dynamic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+  target_link_libraries(${name}_dynamic PUBLIC ${catkin_LIBRARIES})    
+endfunction(CompileDynamicStandaloneArm name)
+
+CompileDynamicStandaloneArm(approachtargetStandaloneArm)
+CompileDynamicStandaloneArm(grasptargetStandaloneArm)
+CompileDynamicStandaloneArm(manipulatetargetStandaloneArm)
+
 
 
 
