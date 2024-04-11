@@ -111,4 +111,4 @@ protected:
 
 };
 
-#endif // MOTION_PLANNER_BASE_H
+#endif // MOTION_PLANNER_STANDALONE_ARM_BASE_CLASS_H
