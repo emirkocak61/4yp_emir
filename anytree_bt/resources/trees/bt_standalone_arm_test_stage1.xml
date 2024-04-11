@@ -1,0 +1,37 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <!-- Manipulation Task Arguments -->
+            <Script code="device_type:='needle_valve'" />
+            <Script code="direction:=-1" />
+            <Script code="device_id:='0'" />
+            <Script code="manipulation_todo:=1.5707" />
+            <Script code="strategy:=0" />
+
+            <Script code="sweep_angle:=3.1415" />
+            <Script code="min_angle:=-3.1415" />
+            <Script code="max_angle:=3.1415" />
+
+            <!-- LookupDevicePose -->
+
+            <!-- Get Pose of (Unrotated) Handle -->
+            <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
+
+            <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/>
+            <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
+
+            <!-- Approach -->
+
+            <!-- Open Gripper -->
+            <!-- <SaySomething message="Opening Gripper" />
+            <UnitreeGripperCommand name="openGripper" command="open" /> -->
+
+            <!-- Tick approachTarget Action-->
+            <SaySomething message="Moving to Pre-Grasp Pose..." />
+            <approachTargetNode target="{handle_pose}"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+</root>

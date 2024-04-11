@@ -6,7 +6,9 @@
     <arg name="unitree_ns" default="z1_gazebo"/>
 
     <param name="robot_description" command="$(find xacro)/xacro $(find anymal_coyote_drs)/urdf/modules/unitree_z1/robot_standalone.xacro arm_root:=unitree_mount arm_ns:=$(arg unitree_ns) unitree_gripper:=$(arg unitree_gripper) unitree_realsense:=$(arg unitree_realsense)"/>
-    <param name="topic_to_publish" value="/joint_states"/>
+    <param name="topic_to_publish" value="z1_gazebo/joint_states"/>
+
+    <node name="joint_states_relay" pkg="topic_tools" type="relay" args="z1_gazebo/joint_states joint_states" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
     
@@ -20,5 +22,8 @@
 
     <!-- Place needle_valve relative to apriltag -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_base_broadcaster" args="0.003 -0.147 0.025 0.0 0.0 0.0 tag_3 needle_valve/0/base"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_handle_broadcaster" args="0.0 0.0 0.071 0.0 0.0 0.0 needle_valve/0/base needle_valve/0/handle"/>
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_handle_broadcaster" args="0.0 0.0 0.071 0.0 0.0 0.0 needle_valve/0/base needle_valve/0/handle"/> -->
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_handle_broadcaster" args="0.3 0.3 0.0 0.0 0.0 0.0 needle_valve/0/base needle_valve/0/handle"/>
+
 </launch>

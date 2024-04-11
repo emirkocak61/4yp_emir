@@ -15,7 +15,7 @@ class UnitreeRos {
 public:
     UnitreeRos() : 
     arm(true), 
-    dt(0.01),
+    dt(0.002),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false) {
         std::string topic_name; //Variable that stores the name of the topic fpr publishing joint states
         SetupArm();
@@ -93,8 +93,8 @@ public:
     void MotionPlanCb(const trajectory_msgs::JointTrajectory& msg) {
         motion_plan = msg.points[0];
         // Use Eigen::Map to directly map the positions to an Eigen::VectorXd
-        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data()+6, arm_dof);
-        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data()+6, arm_dof);
+        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data(), arm_dof);
+        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data(), arm_dof);
         double duration = 10;
         arm.q = positions_map;
         arm.qd = velocities_map;
