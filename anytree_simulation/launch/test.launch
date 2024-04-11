@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- This arg enables to choose between kinematic or dynamic planners -->
-    <arg name="planner_type" default="kinematic" />
+    <arg name="planner_type" default="dynamic" />
     
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />

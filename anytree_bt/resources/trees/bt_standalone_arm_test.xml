@@ -8,24 +8,62 @@
             <Script code="manipulation_todo:=1.5707" />
             <Script code="strategy:=0" />
 
+            <Script code="sweep_angle:=3.1415" />
+            <Script code="min_angle:=-3.1415" />
+            <Script code="max_angle:=3.1415" />
+
             <!-- LookupDevicePose -->
 
             <!-- Get Pose of (Unrotated) Handle -->
             <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
 
-            <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre -->
-            <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0.06 0" link_offset_rotation="0 0 0 1"/> -->
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+            <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/>
+            <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
 
             <!-- Approach -->
 
             <!-- Open Gripper -->
-            <SaySomething message="Opening Gripper" />
-            <UnitreeGripperCommand name="openGripper" command="open" />
+            <!-- <SaySomething message="Opening Gripper" />
+            <UnitreeGripperCommand name="openGripper" command="open" /> -->
 
             <!-- Tick approachTarget Action-->
             <SaySomething message="Moving to Pre-Grasp Pose..." />
             <approachTargetNode target="{handle_pose}"/>
+
+
+            <Script code="handle_angle_rad:=0.0" />
+
+
+            <!-- Ignore if button -->
+            <Precondition if="device_type != 'button'" else="SUCCESS">
+                <Sequence>
+                    <!-- For pre-grasp, some devices and strategies benefit from applying a relative rotation to the pre-grasp pose -->
+                    <Precondition if="device_type != 'DN40_globe_valve'" else="SUCCESS">
+                        <Script code="pre_grasp_relative_rotation:=0.0" />
+                    </Precondition>
+
+                    <Precondition if="device_type == 'DN40_globe_valve'" else="SUCCESS">
+                        <Script code="pre_grasp_relative_rotation:=-1.5708" />
+                    </Precondition>
+
+                    <Precondition if="device_type == 'needle_valve'" else="SUCCESS">
+                        <Script code="pre_grasp_relative_rotation:=1.5708" />
+                    </Precondition>
+
+                    <!-- Get Handle Angle (in radians and quaternions)-->
+                    <SubTree ID="GetHandleAngle" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" pre_grasp_relative_rotation="{pre_grasp_relative_rotation}" handle_angle_rad="{handle_angle_rad}" handle_angle_quaternion="{handle_angle_quaternion}" handle_angle_pre_grasp_quaternion="{handle_angle_pre_grasp_quaternion}" max_angle="{max_angle}" min_angle="{min_angle}" sweep_angle="{sweep_angle}"/>
+
+                    <!-- Get Pose of (Rotated) Handle -->
+                    <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
+
+                    <!-- Tick approachTarget Action-->
+                    <SaySomething message="Moving to Adjusted Pre-Grasp Pose..." />
+                    <approachTargetNode target="{handle_pose_pre_grasp}"/>
+                </Sequence>
+            </Precondition>
 
 
             <Precondition if="device_type == 'button'" else="SUCCESS">
@@ -44,14 +82,53 @@
             <!-- Grasp -->
 
             <!-- Tick graspTarget Action-->
-            <SaySomething message="Moving to Grasp Pose..." />
-            <graspTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <!-- <SaySomething message="Moving to Grasp Pose..." />
+            <graspTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/> -->
 
             <!-- Close Gripper -->
-            <SaySomething message="Closing Gripper" />
-            <UnitreeGripperCommand name="closeGripper" command="close" />
+            <!-- <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand name="closeGripper" command="close" /> -->
 
 
         </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="GetHandleAngle">
+
+        <Sequence>
+
+            <!-- Call getHandleAngle Service -->
+            <SaySomething message="Retrieving Device Handle Angle" />
+            <getHandleAngleNode device_type="{device_type}" device_id="{device_id}" angle="{handle_angle}"/>
+
+            <!-- Convert to Radians -->
+            <Script code="handle_angle_rad:=2*3.14159*handle_angle/360"/>
+
+            <!-- Ensure Hangle Angle is within Max/Min Limits -->
+            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - sweep_angle : handle_angle_rad" />
+            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - sweep_angle : handle_angle_rad" />
+            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - sweep_angle : handle_angle_rad" />
+
+            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + sweep_angle : handle_angle_rad" />
+            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + sweep_angle : handle_angle_rad" />
+            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + sweep_angle : handle_angle_rad" />
+
+            <DoubleToString double="{handle_angle_rad}" string="{handle_angle_rad_str}"/>
+            <Script code="rpy_angle:='0 0 ' + handle_angle_rad_str"/>
+
+            <!-- Get Quarternion of Handle Angle -->
+            <QuaternionFromEuler rpy="{rpy_angle}" quaternion="{handle_angle_quaternion}"/>
+
+            <Script code="handle_angle_pre_grasp:= handle_angle_rad + pre_grasp_relative_rotation"/>
+
+            <!-- For pre-grasp -->
+            <DoubleToString double="{handle_angle_pre_grasp}" string="{handle_angle_pre_grasp_str}"/>
+            <Script code="rpy_angle_pre_grasp:='0 0 ' + handle_angle_pre_grasp_str"/>
+
+            <!-- Get Quarternion of Handle Angle -->
+            <QuaternionFromEuler rpy="{rpy_angle_pre_grasp}" quaternion="{handle_angle_pre_grasp_quaternion}"/>
+
+        </Sequence>
+
     </BehaviorTree>
 </root>
