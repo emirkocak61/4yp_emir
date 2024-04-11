@@ -2,11 +2,12 @@
 <launch>
     <!-- This arg enables to choose between kinematic or dynamic planners -->
     <arg name="planner_type" default="kinematic" />
-    
+    <arg name="isSim" default="true" />
+    <param name="isSim" value="$(arg isSim)"/>
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />
     <node name="unitree" pkg="anytree_control" type="unitree" output="screen" />
-    <param name="topic_to_publish" value="/z1_gazebo/joint_states_filtered"/>
+
     
     <!-- Motion Planner-->
     <group if="$(eval planner_type == 'kinematic')">
