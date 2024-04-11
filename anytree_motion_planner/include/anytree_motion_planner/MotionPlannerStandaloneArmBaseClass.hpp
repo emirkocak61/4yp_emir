@@ -1,5 +1,5 @@
-#ifndef MOTION_PLANNER_BASE_CLASS_STANDALONE_ARM_H
-#define MOTION_PLANNER_BASE_CLASS_STANDALONE_ARM_H
+#ifndef MOTION_PLANNER_STANDALONE_ARM_BASE_CLASS_H
+#define MOTION_PLANNER_STANDALONE_ARM_BASE_CLASS_H
 
 #include "exotica_core/exotica_core.h" //Include exotica
 #include "ros/ros.h"
