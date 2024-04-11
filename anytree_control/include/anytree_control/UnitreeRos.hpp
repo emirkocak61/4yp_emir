@@ -2,6 +2,8 @@
 /*
     The class that interfaces the unitree arm with ROS. It includes the feedforward control function and publisher that
     continuously publishes state information into a topic. The velocity state is low-pass filtered. 
+    We need different pd gains and state subscribers for HW and Sim. Accordingly, the setup function has two implementations
+    depending on hardware or sim. 
 */
 #include <ros/ros.h>
 #include <trajectory_msgs/JointTrajectory.h>
@@ -13,23 +15,21 @@
 
 class UnitreeRos {
 public:
-    UnitreeRos() : 
+    UnitreeRos(bool isSim): 
     arm(true), 
-    dt(0.002),
-    velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false) {
-        std::string topic_name; //Variable that stores the name of the topic fpr publishing joint states
-        SetupArm();
+    dt(0.002), 
+    velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)), isPublishing(false), isSim(isSim) {
+        if (isSim) {
+            SetupArmSim();
+        } else {
+            SetupArmHW();
+        }
         SetJointStateMsg();
         reset_arm_sub = nh_.subscribe("/z1_gazebo/reset_arm_pose",10,&UnitreeRos::ResetArmPoseCb,this);
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRos::MotionPlanCb, this);
         gripper_sub = nh_.subscribe("/z1_gazebo/gripper_command",10,&UnitreeRos::GripperMotionCb,this);
         cartesian_control_sub = nh_.subscribe("/arm_pose_command",10,&UnitreeRos::CartesianControl,this); 
 
-        if (nh_.getParam("topic_to_publish",topic_name)){ 
-            state_publisher = nh_.advertise<sensor_msgs::JointState>(topic_name,10); 
-        } else {
-            ROS_WARN("Failed to get parameter 'topic_to_publish',not publishing joint states");
-        }
     }
     ~UnitreeRos() {
         // Stop the publishing thread if it's running
@@ -157,19 +157,33 @@ public:
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
     }
 
-    void SetupArm() {
+    void SetupArmSim() {
         //Start communications with arm controller
         arm.sendRecvThread->start();
         arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
         arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
         // SIM PDs, does not work in HW
-        // std::vector<double> KP = {100,150,150,100,75,50};
-        // std::vector<double> KD = {500,500,500,500,500,500};
+        std::vector<double> KP = {100,150,150,100,75,50};
+        std::vector<double> KD = {500,500,500,500,500,500};
 
         //Set control gains
-        // arm.lowcmd->setControlGain(KP,KD);
+        arm.lowcmd->setControlGain(KP,KD);
+        //Sets up the publishers
+        filtered_state_pub = nh_.advertise<sensor_msgs::JointState>("z1_gazebo/joint_states_filtered",10); 
         // HW PDs
+        //arm.lowcmd->setControlGain();
+    }
+
+    void SetupArmHW() {
+        //Start communications with the controller
+        arm.sendRecvThread->start();
+        arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
+        arm.setFsm(UNITREE_ARM::ArmFSMState::LOWCMD);
+        //Set PD gains for HW
         arm.lowcmd->setControlGain();
+        //Set the publishers
+        filtered_state_pub = nh_.advertise<sensor_msgs::JointState>("z1_gazebo/joint_states_filtered",10); //For motion planner
+        state_pub = nh_.advertise<sensor_msgs::JointState>("z1_gazebo/joint_states",10);   
     }
 
     void startPublishing() {
@@ -189,9 +203,10 @@ public:
     }
 
     void SetJointStateMsg() {
-        joint_state_msg.position.resize(6);
-        joint_state_msg.velocity.resize(6);
-        joint_state_msg.name = {"joint1","joint2","joint3","joint4","joint5","joint6"};
+        joint_state_msg.position.resize(arm_dof+1);
+        joint_state_msg.velocity.resize(arm_dof+1);
+        joint_state_msg.effort.resize(arm_dof+1);
+        joint_state_msg.name = {"joint1","joint2","joint3","joint4","joint5","joint6","jointGripper"};
     }
 
 private:
@@ -199,27 +214,41 @@ private:
         ros::Rate rate(50); //50Hz
         while (ros::ok() && isPublishing) {
             //std::unique_lock<std::mutex> lock(lowstate_mutex);
+            //Get the state values for the arm
             Vec6 arm_position = arm.lowstate->getQ();
             Vec6 arm_velocity = arm.lowstate->getQd();
+            Vec6 arm_torques = arm.lowstate->getTau();
             //lock.unlock();
             Vec6 v_filtered = velocity_filter.filter(arm_velocity);
             // Directly assign values using Eigen::Map
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_position;
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.velocity.data(), arm_dof) = v_filtered;
+            Eigen::Map<Eigen::VectorXd>(joint_state_msg.effort.data(),arm_dof) = arm_torques;
+            //Get the state values for the gripper
+            joint_state_msg.position[arm_dof] = arm.lowstate->getGripperQ();
+            joint_state_msg.velocity[arm_dof] = arm.lowstate->getGripperQd();
+            joint_state_msg.effort[arm_dof] = arm.lowstate->getGripperTau();
+            //Set message time stamp
             joint_state_msg.header.stamp = ros::Time::now();
 
-            //Publish message
-            state_publisher.publish(joint_state_msg);
+            //Publish message 
+            if (isSim) {
+                filtered_state_pub.publish(joint_state_msg);
+            } else {
+                state_pub.publish(joint_state_msg);
+                filtered_state_pub.publish(joint_state_msg);
+            }
             rate.sleep();
         }
     }
 
     ros::NodeHandle nh_;
+    ros::Publisher state_pub;
+    ros::Publisher filtered_state_pub;
     ros::Subscriber motion_plan_sub;
     ros::Subscriber gripper_sub;
     ros::Subscriber reset_arm_sub;
     ros::Subscriber cartesian_control_sub;
-    ros::Publisher state_publisher;
     int arm_dof = 6;
     double dt;
     bool isGripperOpen_ = false;
@@ -230,6 +259,7 @@ private:
 
     std::thread publisher_thread;
     bool isPublishing;
+    bool isSim;
     std::mutex lowstate_mutex;
 
     sensor_msgs::JointState joint_state_msg;

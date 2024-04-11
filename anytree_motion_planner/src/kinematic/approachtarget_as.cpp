@@ -16,7 +16,7 @@ public:
     {
         //Initialize(); //Initialize ROS-time dependent objects. 
         as_.start();
-        tolerance_ = 1e-2;
+        tolerance_ = 2e-2;
         
     }
     

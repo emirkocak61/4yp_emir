@@ -4,9 +4,10 @@
     <arg name="unitree_gripper" default="true"/>
     <arg name="unitree_realsense" default="true"/>
     <arg name="unitree_ns" default="z1_gazebo"/>
+    <arg name="isSim" default="false"/>
 
     <param name="robot_description" command="$(find xacro)/xacro $(find anymal_coyote_drs)/urdf/modules/unitree_z1/robot_standalone.xacro arm_root:=unitree_mount arm_ns:=$(arg unitree_ns) unitree_gripper:=$(arg unitree_gripper) unitree_realsense:=$(arg unitree_realsense)"/>
-    <param name="topic_to_publish" value="z1_gazebo/joint_states"/>
+    <param name="isSim" value="${arg isSim}"/>
 
     <node name="joint_states_relay" pkg="topic_tools" type="relay" args="z1_gazebo/joint_states joint_states" />
 
