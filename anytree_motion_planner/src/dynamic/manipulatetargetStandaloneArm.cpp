@@ -105,7 +105,7 @@ public:
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, 0.0, 0.0, -0.097, 0.0, 0.0, manipulation_done - 1.5708;
+                    point << time_stamp, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708 + manipulation_done;
                     trajectoryPoints.push_back(point);
                 }
             }

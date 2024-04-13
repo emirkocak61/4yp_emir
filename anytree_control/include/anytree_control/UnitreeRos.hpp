@@ -86,8 +86,8 @@ public:
     void MotionPlanCb(const trajectory_msgs::JointTrajectory& msg) {
         motion_plan = msg.points[0];
         // Use Eigen::Map to directly map the positions to an Eigen::VectorXd
-        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data()+6, arm_dof);
-        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data()+6, arm_dof);
+        Eigen::Map<const Eigen::VectorXd> positions_map(motion_plan.positions.data(), arm_dof);
+        Eigen::Map<const Eigen::VectorXd> velocities_map(motion_plan.velocities.data(), arm_dof);
         double duration = 10;
         arm.q = positions_map;
         arm.qd = velocities_map;
