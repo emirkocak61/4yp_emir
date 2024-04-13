@@ -39,7 +39,7 @@
         <Maps>
             <EffFrame Name="Position">
                 <EndEffector>
-                    <Frame Link="gripperStator" LinkOffset="0.3 0 0 1.5708 0 -1.5708" Base="TargetRelative"/>
+                    <Frame Link="gripperStator" LinkOffset="0 0 0 1.5708 0 -1.5708" Base="TargetRelative"/>
                 </EndEffector>
             </EffFrame>
             <JointLimit Name="JointLimit"/>
