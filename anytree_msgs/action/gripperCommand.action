@@ -1,0 +1,6 @@
+#Request type
+float64 targetQ
+---
+bool result
+---
+float64 Q

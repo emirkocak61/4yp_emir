@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   tf2_ros
+  anytree_msgs
 )
 # NOTE: Also relies on z1_controller and z1_sdk, but these can't be built like normal packages...
 #       (Hence the strange unitree-related includes below)

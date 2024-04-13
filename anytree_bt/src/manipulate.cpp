@@ -9,6 +9,7 @@
 #include <anytree_bt/ManipulateTarget.hpp>
 #include <anytree_bt/ResetArmPose.hpp>
 #include <anytree_bt/GripperCommand.hpp>
+#include <anytree_bt/UnitreeGripperCommand.hpp>
 
 
 int main(int argc,char** argv) {
@@ -24,6 +25,7 @@ int main(int argc,char** argv) {
     factory.registerNodeType<GraspTarget>("GraspTarget");
     factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
     factory.registerNodeType<GripperCommand>("GripperCommand");
+    factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
     factory.registerNodeType<ResetArmPose>("ResetArmPose");
 
     
