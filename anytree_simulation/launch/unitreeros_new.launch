@@ -2,7 +2,7 @@
 <launch>
 
     <arg name="isSim" default="true"/>
-    <arg name="base_dof" default="6" />
+    <arg name="base_dof" default="0" />
     <param name="base_dof" value="$(arg base_dof)" />
     <!-- Control Nodes-->
     <node name="unitree" pkg="anytree_control" type="UnitreeSim" output="screen" if="$(arg isSim)"/>

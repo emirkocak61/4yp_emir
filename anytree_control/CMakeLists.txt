@@ -95,11 +95,6 @@ target_link_libraries(z1_control_interface
   ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so
 )
 
-add_executable(armMotion src/tests/armMotion.cpp)
-target_link_libraries(armMotion
-  ${catkin_LIBRARIES}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so
-)
 
 add_executable(state_thread_test src/state_thread_test.cpp)
 target_link_libraries(state_thread_test

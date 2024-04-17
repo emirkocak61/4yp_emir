@@ -73,7 +73,7 @@ public:
     }
 
     void MoveArmCb(const anytree_msgs::moveArmGoalConstPtr &goal) {
-        std::cout << "Received action request" << std::endl;
+
         //Create  a result object
         anytree_msgs::moveArmResult result_;
         //Create necessary objects
@@ -94,11 +94,8 @@ public:
         } else if (!goal->posture.empty()) {
             duration = goal->duration;
             Eigen::Map<const Vec6> posture(goal->posture.data(),goal->posture.size());
-            std::cout << "Posture: " << posture.transpose() << std::endl;
             //Convert the posture vector into a homomat
             HomoMat mat = UNITREE_ARM::postureToHomo(posture);
-            Vec6 posture_test = UNITREE_ARM::homoToPosture(mat);
-            std::cout << "Posture: " << posture_test.transpose() << std::endl;
             //Create the solution object
             Vec6 solution;
             //Solve inverse kinematics to get desired joint configuration
