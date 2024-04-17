@@ -35,6 +35,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_action_files(
    FILES
    gripperCommand.action
+   moveArm.action
 
 )
 
