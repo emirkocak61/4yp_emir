@@ -25,7 +25,7 @@ using namespace exotica;
         {   
             //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
-            state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerStandaloneArmBaseClass::RobotStateCb,this);
+            state_subscriber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MotionPlannerStandaloneArmBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
             solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic/" + action_name + "StandaloneArm_dynamic.xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();
@@ -172,10 +172,11 @@ using namespace exotica;
         return frame;
     }
 
-    void MotionPlannerStandaloneArmBaseClass::RobotStateCb(const std_msgs::Float64MultiArrayConstPtr &state) {
+    void MotionPlannerStandaloneArmBaseClass::RobotStateCb(const sensor_msgs::JointStateConstPtr &state) {
         std::lock_guard<std::mutex> lock(state_mutex);
-        Eigen::Map<const Eigen::VectorXd> tempMap(&state->data[0], state->data.size());
-        robot_state = tempMap;
+        Eigen::Map<const Eigen::VectorXd> positionMap(state->position.data(), 6);
+        Eigen::Map<const Eigen::VectorXd> velocityMap(state->position.data(),6);
+        robot_state << positionMap , velocityMap;    
     }
         
 
