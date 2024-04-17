@@ -22,7 +22,8 @@ public:
     }
 
     static BT::PortsList providedPorts() {
-        return {BT::InputPort<double>("targetQ")};
+        return {BT::InputPort<double>("targetQ"),
+                BT::InputPort<double>("duration")};
     }
 
     void sendStartRequest() override {
@@ -30,12 +31,14 @@ public:
         anytree_msgs::gripperCommandGoal goal;
 
         auto targetQ_bt = getInput<double>("targetQ");
+        auto duration_bt = getInput<double>("duration");
 
         if (!targetQ_bt) {
             throw BT::RuntimeError("Missing required inputs");
         }
 
         goal.targetQ = targetQ_bt.value();
+        goal.duration = duration_bt.value();
         ROS_INFO("Sending gripper goal");
 
         client_ptr->sendGoal(goal);

@@ -44,7 +44,7 @@
   <exec_depend>anytree_msgs</exec_depend>
 
   <depend>exotica_core</depend>
-  <depend>exotica_python</depend>
+  <depend>pinocchio</depend>
   <depend>exotica_core_task_maps</depend>
   <depend>anytree_motion_planner</depend>
   <depend>unitree_ros</depend>
