@@ -14,5 +14,6 @@
         <node name="approachtarget" pkg="anytree_motion_planner" type="approachtargetStandaloneArm_dynamic" output="screen" />
         <node name="grasptarget" pkg="anytree_motion_planner" type="grasptargetStandaloneArm_dynamic" output="screen" />
         <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetargetStandaloneArm_dynamic" output="screen" />
+        <node name="retracttarget" pkg="anytree_motion_planner" type="retracttargetStandaloneArm_dynamic" output="screen" />
     </group>    
 </launch>

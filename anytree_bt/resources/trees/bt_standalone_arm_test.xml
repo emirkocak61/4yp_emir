@@ -105,13 +105,11 @@
 
             <!-- Retract -->
 
-            <!-- Tick approachTarget Action -->
+            <!-- Tick retractTarget Action -->
             <SaySomething message="Retracting..." />
             <Script code="source_frame:='gripperStator'" />
-            <QuaternionFromEuler rpy="1.5708 -1.5708 0" quaternion="{eef_retract_quaternion}"/>
-            <!-- We would expect [1.5708 0 -1.5708], but link_offset_rotation applies sequential rotations in a weird way (each rotation is applied about the axes of the frame we're rotating, not the global frame...) -->
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="{eef_retract_quaternion}"/>
-            <approachTargetNode target="{eef_retract_pose}"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0"/>
+            <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <!-- Close Gripper -->
             <SaySomething message="Closing Gripper" />
