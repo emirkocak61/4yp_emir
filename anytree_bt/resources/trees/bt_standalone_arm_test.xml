@@ -108,7 +108,7 @@
             <!-- Tick retractTarget Action -->
             <SaySomething message="Retracting..." />
             <Script code="source_frame:='gripperStator'" />
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
             <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <!-- Close Gripper -->

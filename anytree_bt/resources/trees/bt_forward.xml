@@ -1,0 +1,11 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+
+            <!-- Move to Forward State -->
+            <SaySomething message="Moving to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/>
+
+        </Sequence>
+    </BehaviorTree>
+</root>
