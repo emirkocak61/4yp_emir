@@ -37,7 +37,7 @@ public:
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0) + 5; //Add a constant as a safety margin
+        t_limit = data(data.rows()-1,0) + 2; //Add a constant as a safety margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
