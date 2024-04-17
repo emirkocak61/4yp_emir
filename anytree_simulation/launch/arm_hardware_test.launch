@@ -4,17 +4,17 @@
     <arg name="unitree_gripper" default="true"/>
     <arg name="unitree_realsense" default="true"/>
     <arg name="unitree_ns" default="z1_gazebo"/>
-    <arg name="isSim" default="false"/>
+    <arg name="base_dof" default="0" />
+    <param name="base_dof" value="$(arg base_dof)" />
 
     <param name="robot_description" command="$(find xacro)/xacro $(find anymal_coyote_drs)/urdf/modules/unitree_z1/robot_standalone.xacro arm_root:=unitree_mount arm_ns:=$(arg unitree_ns) unitree_gripper:=$(arg unitree_gripper) unitree_realsense:=$(arg unitree_realsense)"/>
-    <param name="isSim" value="$(arg isSim)"/>
 
     <node name="joint_states_relay" pkg="topic_tools" type="relay" args="z1_gazebo/joint_states joint_states" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
     
     <!-- Node that interfaces the arm with rest of the ROS ecosystem-->
-    <node name="unitree" pkg="anytree_control" type="unitree" output="screen"/>
+    <node name="unitree" pkg="anytree_control" type="UnitreeHw" output="screen"/>
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/unitree.rviz" />
 

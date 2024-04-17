@@ -3,6 +3,7 @@
 #include <ros/ros.h>
 
 #include <anytree_bt/UnitreeGripperCommand.hpp>
+#include <anytree_bt/UnitreeMoveArm.hpp>
 
 //===========================================================================================================================================//
 
@@ -19,6 +20,7 @@ int main(int argc, char **argv) {
   factory.registerFromROSPlugins();
 
   factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
+  factory.registerNodeType<UnitreeMoveArm>("UnitreeMoveArm");
 
   std::cout << "Loading Behavior Tree..." << std::endl;
 
