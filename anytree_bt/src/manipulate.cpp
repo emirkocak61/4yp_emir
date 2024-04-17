@@ -7,9 +7,8 @@
 #include <anytree_bt/ExampleNodes.hpp>
 #include <anytree_bt/GraspTarget.hpp>
 #include <anytree_bt/ManipulateTarget.hpp>
-#include <anytree_bt/ResetArmPose.hpp>
-#include <anytree_bt/GripperCommand.hpp>
 #include <anytree_bt/UnitreeGripperCommand.hpp>
+#include <anytree_bt/UnitreeMoveArm.hpp>
 
 
 int main(int argc,char** argv) {
@@ -24,9 +23,8 @@ int main(int argc,char** argv) {
     factory.registerNodeType<ApproachTarget>("ApproachTarget");
     factory.registerNodeType<GraspTarget>("GraspTarget");
     factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
-    factory.registerNodeType<GripperCommand>("GripperCommand");
     factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
-    factory.registerNodeType<ResetArmPose>("ResetArmPose");
+    factory.registerNodeType<UnitreeMoveArm>("UnitreeMoveArm");
 
     
     //Load tree from xml file

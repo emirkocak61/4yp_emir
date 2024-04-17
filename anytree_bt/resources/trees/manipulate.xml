@@ -1,16 +1,19 @@
 <root BTCPP_format="4">
     <BehaviorTree ID="MainTree">
         <Sequence name="manipulation_sequence">
+            <UnitreeMoveArm duration="1000" label="forward" />
+            <UnitreeMoveArm duration="1000" label="startFlat"/>
+            <UnitreeMoveArm duration="1000" orientation="0.1 0.1 0.1" position="0.5 -0.2 0.3" label="" />
+            <UnitreeMoveArm duration="1000" label="startFlat"/>
             <GoToMotionState goal_motion_state="torso_control"/>
             <SaySomething message="Transitioned to torso control, setting target..."/>
             <ApproachTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708"/>
-            <UnitreeGripperCommand name="openGripper" targetQ="-0.50" />
+            <UnitreeGripperCommand name="openGripper" targetQ="-0.50" duration="1000"/>
             <GraspTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708" device_type="needle_valve" strategy="0"/>
-            <GripperCommand name="closeGripper" command="close" />
+            <UnitreeGripperCommand name="closeGripper" targetQ="-0.001" />
             <ManipulateTarget position="0.7 0.0 1.0" orientation_3D="1.5708 0.0 -1.5708" device_type="needle_valve" strategy="0"
                               direction="1" manipulation_todo="1.5708" />
-            <GripperCommand name="openGripper" command="open" /> 
-            <ResetArmPose/> 
+            <UnitreeGripperCommand name="openGripper" targetQ="-0.50" />
         </Sequence>
     </BehaviorTree>
 </root>
