@@ -64,9 +64,13 @@ function(CompileKinematic name)
   target_link_libraries(${name} PUBLIC ${catkin_LIBRARIES})    
 endfunction(CompileKinematic name)
 
+
 CompileKinematic(approachtarget_as)
 CompileKinematic(grasptarget_as)
 CompileKinematic(manipulatetarget_as)
+CompileKinematic(approachtargetStandaloneArm_as)
+CompileKinematic(grasptargetStandaloneArm_as)
+CompileKinematic(manipulatetargetStandaloneArm_as)
 
 function(CompileExample name)
   add_executable(${name} src/examples/${name}.cpp)
