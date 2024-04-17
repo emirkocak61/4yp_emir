@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-    <arg name="isSim" default="false"/>
+    <arg name="isSim" default="true"/>
     <arg name="base_dof" default="6" />
     <param name="base_dof" value="$(arg base_dof)" />
     <!-- Control Nodes-->
