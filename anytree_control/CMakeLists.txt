@@ -22,6 +22,9 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   anytree_msgs
 )
+
+find_package(pinocchio REQUIRED)
+
 # NOTE: Also relies on z1_controller and z1_sdk, but these can't be built like normal packages...
 #       (Hence the strange unitree-related includes below)
 
@@ -55,10 +58,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES z1_interface
 #  CATKIN_DEPENDS actionlib actionlib_msgs geometry_msgs roscpp sensor_msgs std_msgs tf2_ros
-#  DEPENDS system_lib
+  DEPENDS pinocchio
 )
 
 include_directories(
@@ -83,6 +86,8 @@ endfunction()
 #Compile(armMotion)
 #Compile(state_thread_test)
 Compile(unitree)
+Compile(UnitreeSim)
+Compile(UnitreeHw)
 
 add_executable(z1_control_interface src/z1_lowcmd_ros.cpp)
 target_link_libraries(z1_control_interface 
@@ -106,4 +111,7 @@ add_executable(robot_interface_test src/robot_interface_test.cpp)
 target_link_libraries(robot_interface_test
   ${catkin_LIBRARIES}
 )
+
+add_executable(pin src/tests/pin.cpp)
+target_link_libraries(pin ${catkin_LIBRARIES} ${PINOCCHIO_LIBRARIES})
 
