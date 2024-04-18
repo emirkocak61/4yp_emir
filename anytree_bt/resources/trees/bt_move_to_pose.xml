@@ -3,7 +3,7 @@
         <Sequence>
 
             <!-- Move to Pose -->
-            <SaySomething message="Moving to Forward State" />
+            <SaySomething message="Moving to Pose" />
             <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.5" label="" />
 
         </Sequence>

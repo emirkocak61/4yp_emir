@@ -9,7 +9,7 @@
 
             <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
             <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0.015 0" link_offset_rotation="0 0 0 1"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/>
             <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
 
             <!-- Tick approachTarget Action-->
