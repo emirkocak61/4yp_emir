@@ -36,11 +36,12 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
     Eigen::MatrixXd trajectory;
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
-        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on
-        trajectory.row(2) << 6.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp
-        trajectory.row(3) << 8.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //hold
+        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 6.0, 0.015, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 7.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 9.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //hold 
        } 
     }
     Trajectory traj_exotica(trajectory,1.0);
