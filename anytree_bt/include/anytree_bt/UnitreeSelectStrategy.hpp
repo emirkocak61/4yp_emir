@@ -12,11 +12,11 @@ using namespace BT;
 
 //===========================================================================================================================================//
 
-class selectStrategyNode : public BT::SyncActionNode {
+class UnitreeSelectStrategy : public BT::SyncActionNode {
   typedef ros::ServiceClient Client;
 
 public:
-  selectStrategyNode(const std::string &name,
+  UnitreeSelectStrategy(const std::string &name,
                                 const BT::NodeConfig &config,
                                 ros::NodeHandle nh)
       : BT::SyncActionNode(name, config) {
