@@ -35,14 +35,13 @@ public:
       throw BT::RuntimeError("missing required input [device_id]");
     }
     auto input_strategy = getInput<int>("input_strategy");
-    if (!input_strategy) {
-      throw BT::RuntimeError("missing required input [input_strategy]");
-    }
 
     anytree_msgs::selectStrategy srv;
     srv.request.device_type = device_type.value();
     srv.request.device_id = device_id.value();
-    srv.request.input_strategy = input_strategy.value();
+    if (input_strategy) {
+      srv.request.input_strategy = input_strategy.value();
+    }
 
     if (client.call(srv)) {
       std::cout << "Selected Strategy: "

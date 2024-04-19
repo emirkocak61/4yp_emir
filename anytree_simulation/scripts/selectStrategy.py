@@ -69,6 +69,7 @@ class selectStrategyServer:
 
         self.device_type = req.device_type
         self.device_id = req.device_id
+        self.input_strategy = req.input_strategy
 
         with open(
             PACKAGE_PATH
@@ -84,6 +85,14 @@ class selectStrategyServer:
             rospy.logerr("selectStrategy: Unknown Device")
             response = self.error_case()
             return response
+        
+        elif self.input_strategy is True:
+            if self.input_strategy not in self.strategy_effort_limits[self.device_type]:
+                rospy.logerr("selectStrategy: Unknown Strategy")
+                response = self.error_case()
+                return response
+            else:
+                selected_strategy = self.input_strategy
 
         elif self.device_type not in manipulation_database:
             # Choose lowest-F/T strategy
@@ -95,6 +104,7 @@ class selectStrategyServer:
 
         else:
             # Choose lowest-strength strategy that permits measured efforts for device
+
             max_effort = np.array(
                 [
                     manipulation_database[self.device_type][self.device_id][
