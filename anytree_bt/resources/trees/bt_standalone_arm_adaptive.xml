@@ -204,7 +204,7 @@
 
             <!-- Manipulate -->
 
-            <SubTree ID="Manipulate" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" direction="{direction}" strategy_ft_limit="{strategy_ft_limit}" max_angle="{max_angle}" min_angle="{min_angle}" handle_angle_rad="{handle_angle_rad}" ignore_device_ft_limit="{ignore_device_ft_limit}" device_ft_limit="{device_ft_limit}" sim="{sim}"/>
+            <SubTree ID="Manipulate" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" direction="{direction}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" handle_angle_rad="{handle_angle_rad}" ignore_device_effort_limit="{ignore_device_effort_limit}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
 
         </Sequence>
 
@@ -366,7 +366,7 @@
                         </Precondition>
 
                         <!-- Retract Arm -->
-                        <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}"/>
+                        <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}" direction="{direction}"/>
 
                     </Sequence>
 
@@ -394,7 +394,7 @@
                 </Precondition>
 
                 <!-- Retract Arm -->
-                <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}"/>
+                <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}" direction="{direction}"/>
 
             </Sequence>
 

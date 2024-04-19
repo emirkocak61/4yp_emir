@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <arg name="isSim" default="true"/>
+
+    <!-- getHandleAngle-->
+    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle.py" output="screen" unless="$(arg isSim)"/>
+    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_sim.py" output="screen" if="$(arg isSim)"/>
+
+    <!-- manipulationDataRecorder-->
+    <node name="manipulationDataRecorder" pkg="anytree_simulation" type="manipulationDataRecorder.py" output="screen"/>
+
+    <!-- selectStrategy-->
+    <node name="selectStrategy" pkg="anytree_simulation" type="selectStrategy.py" output="screen"/>
+</launch>

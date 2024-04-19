@@ -140,7 +140,7 @@ class selectStrategyServer:
                 ]
             )
             max_effort[np.isnan(max_effort)] = 0.0
-            rospy.loginfo("Manipulation Data Max Efforts: \n", max_effort)
+            rospy.loginfo("Manipulation Data Max Efforts: \n [%f , %f , %f , %f , %f , %f ]", max_effort[0], max_effort[1], max_effort[2], max_effort[3], max_effort[4], max_effort[5])
             for trial_strategy in self.strategy_effort_limits[self.device_type]:
                 if all(
                     self.strategy_effort_limits[self.device_type][trial_strategy] >= max_effort
@@ -154,7 +154,7 @@ class selectStrategyServer:
                 response = self.error_case()
                 return response
         
-        rospy.loginfo("Selected Strategy: ", selected_strategy)
+        rospy.loginfo("Selected Strategy: %d", selected_strategy)
         response = selectStrategyResponse()
         response.selected_strategy = selected_strategy
         response.strategy_effort_limit = self.strategy_effort_limits[self.device_type][selected_strategy]
