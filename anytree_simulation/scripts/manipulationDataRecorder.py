@@ -33,8 +33,6 @@ class ManipulationDataRecorder:
 
         self.timer = rospy.Timer(rospy.Duration(0.01), self.timer_callback)
 
-
-
     def handle_recordManipulationData(self, req):
         self.device_type = req.device_type
         self.device_id = req.device_id
