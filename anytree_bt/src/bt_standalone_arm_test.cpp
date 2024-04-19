@@ -5,6 +5,7 @@
 #include <anytree_bt/UnitreeGripperCommand.hpp>
 #include <anytree_bt/UnitreeMoveArm.hpp>
 #include <anytree_bt/UnitreeMonitorEffort.hpp>
+#include <anytree_bt/UnitreeSelectStrategy.hpp>
 
 //===========================================================================================================================================//
 
@@ -23,6 +24,7 @@ int main(int argc, char **argv) {
   factory.registerNodeType<UnitreeGripperCommand>("UnitreeGripperCommand");
   factory.registerNodeType<UnitreeMoveArm>("UnitreeMoveArm");
   factory.registerNodeType<UnitreeMonitorEffort>("UnitreeMonitorEffort", nh);
+  factory.registerNodeType<UnitreeSelectStrategy>("UnitreeSelectStrategy", nh);
 
   std::cout << "Loading Behavior Tree..." << std::endl;
 

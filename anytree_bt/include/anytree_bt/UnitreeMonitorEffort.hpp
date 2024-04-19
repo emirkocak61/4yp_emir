@@ -60,7 +60,7 @@ public:
   virtual ~UnitreeMonitorEffort() override = default;
 
   static BT::PortsList providedPorts() {
-    return {BT::InputPort<UnitreeJointEfforts>("effort_threshold")};
+    return {BT::InputPort<UnitreeJointEfforts>("effort_limit")};
   }
 
 private:
@@ -70,21 +70,21 @@ private:
   UnitreeJointEfforts last_effort_measurement_;
 
   virtual BT::NodeStatus tick() override {
-    auto effort_threshold = getInput<UnitreeJointEfforts>("effort_threshold");
-    if (!effort_threshold) {
+    auto effort_limit = getInput<UnitreeJointEfforts>("effort_limit");
+    if (!effort_limit) {
       throw BT::RuntimeError(
-          "Missing parameter [effort_threshold] in UnitreeMonitorEffort");
+          "Missing parameter [effort_limit] in UnitreeMonitorEffort");
     }
 
     mutex_.lock();
-    bool is_effort_below_threshold = last_effort_measurement_ < effort_threshold.value();
+    bool is_effort_below_limit = last_effort_measurement_ < effort_limit.value();
     mutex_.unlock();
 
-    if (is_effort_below_threshold) {
+    if (is_effort_below_limit) {
       return BT::NodeStatus::SUCCESS;
     } else {
-      ROS_ERROR_STREAM("[UnitreeMonitorEffort] Effort Threshold exceeded: "
-                       << last_effort_measurement_ << " > " << effort_threshold.value());
+      ROS_ERROR_STREAM("[UnitreeMonitorEffort] Effort Limit exceeded: "
+                       << last_effort_measurement_ << " > " << effort_limit.value());
       return BT::NodeStatus::FAILURE;
     }
   }

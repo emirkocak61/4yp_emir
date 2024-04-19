@@ -1,0 +1,10 @@
+string device_type
+string device_id
+int8 input_strategy
+---
+int8 selected_strategy
+float64[] strategy_effort_limit
+float64 min_angle
+float64 max_angle
+float64 rot_sym_angle
+float64[] device_effort_limit

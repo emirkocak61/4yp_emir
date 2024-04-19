@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import rospy
-import numpy
 from bt_drs_msgs.srv import recordManipulationData, recordManipulationDataResponse
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
 import pickle
 import rospkg
-import pandas
+import pandas as pd
 import os
 
 rp = rospkg.RosPack()
@@ -41,7 +40,7 @@ class ManipulationDataRecorder:
             self.start_time = rospy.Time.now()
             self.record_data = req.record_data
             self.new_data = [
-                pandas.DataFrame(
+                pd.DataFrame(
                     columns=[
                         "direction",
                         "duration",
@@ -88,7 +87,7 @@ class ManipulationDataRecorder:
     def timer_callback(self, event):
         if self.record_data:
             self.new_data.append(
-                pandas.DataFrame(
+                pd.DataFrame(
                     {
                         "direction": self.direction,
                         "duration": rospy.Time.now() - self.start_time,
@@ -110,7 +109,7 @@ class ManipulationDataRecorder:
         if self.device_id not in manipulation_database[self.device_type]:
             manipulation_database[self.device_type][
                 self.device_id
-            ] = pandas.DataFrame(
+            ] = pd.DataFrame(
                 columns=[
                     "direction",
                     "duration",
@@ -123,10 +122,10 @@ class ManipulationDataRecorder:
                     "j6_effort",
                 ]
             )
-        manipulation_database[self.device_type][self.device_id] = pandas.concat(
+        manipulation_database[self.device_type][self.device_id] = pd.concat(
             [
                 manipulation_database[self.device_type][self.device_id],
-                pandas.concat(self.new_data),
+                pd.concat(self.new_data),
             ]
         )
         return manipulation_database
