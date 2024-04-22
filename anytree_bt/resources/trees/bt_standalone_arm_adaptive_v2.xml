@@ -207,13 +207,20 @@
             <Script code="handle_angle_rad:=2*3.14159*handle_angle/360"/>
 
             <!-- Ensure Hangle Angle is within Max/Min Limits -->
-            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - rot_sym_angle : handle_angle_rad" />
-            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - rot_sym_angle : handle_angle_rad" />
-            <Script code="handle_angle_rad = (handle_angle_rad &gt;= max_angle) ? handle_angle_rad - rot_sym_angle : handle_angle_rad" />
-
-            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + rot_sym_angle : handle_angle_rad" />
-            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + rot_sym_angle : handle_angle_rad" />
-            <Script code="handle_angle_rad = (handle_angle_rad &lt;= min_angle) ? handle_angle_rad + rot_sym_angle : handle_angle_rad" />
+            <RetryUntilSuccessful num_attempts="100">
+                <Sequence>
+                    <Precondition if="handle_angle_rad &gt;= max_angle" else="SUCCESS">
+                        <ForceFailure>
+                            <Script code="handle_angle_rad = handle_angle_rad - rot_sym_angle"/>
+                        </ForceFailure>
+                    </Precondition>
+                    <Precondition if="handle_angle_rad &lt;= min_angle" else="SUCCESS">
+                        <ForceFailure>
+                            <Script code="handle_angle_rad = handle_angle_rad + rot_sym_angle"/>
+                        </ForceFailure>
+                    </Precondition>
+                </Sequence>
+            </RetryUntilSuccessful>
 
             <!-- Update device state -->
             <UnitreePublishDeviceState device_state="{handle_angle_rad}"/>
