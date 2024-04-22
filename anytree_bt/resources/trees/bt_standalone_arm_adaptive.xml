@@ -15,7 +15,7 @@
             <Script code="direction:=-1" />
 
             <!-- Set to -1 for adaptive behavior -->
-            <Script code="input_strategy:=0" />
+            <Script code="input_strategy:=-1" />
 
             <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as none for test A, and normal for test B) -->
@@ -52,7 +52,7 @@
                 <Sequence>
 
                     <!-- Select Strategy -->
-                    <UnitreeSelectStrategy device_type="{device_type}" device_id="{device_id}" input_strategy="{input_strategy}" selected_strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}"/>
+                    <UnitreeSelectStrategy device_type="{device_type}" device_id="{device_id}" manipulation_todo="{manipulation_todo}" direction="{direction}" input_strategy="{input_strategy}" selected_strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}"/>
 
                     <!-- StrategySwitchStatement -->
                     <Sequence>

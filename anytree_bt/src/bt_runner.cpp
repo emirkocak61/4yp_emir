@@ -6,6 +6,7 @@
 #include <anytree_bt/UnitreeMoveArm.hpp>
 #include <anytree_bt/UnitreeMonitorEffort.hpp>
 #include <anytree_bt/UnitreeSelectStrategy.hpp>
+#include <anytree_bt/UnitreePublishDeviceState.hpp>
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "behavior_tree");
@@ -30,6 +31,7 @@ int main(int argc, char **argv) {
   factory.registerNodeType<UnitreeMoveArm>("UnitreeMoveArm");
   factory.registerNodeType<UnitreeMonitorEffort>("UnitreeMonitorEffort", nh);
   factory.registerNodeType<UnitreeSelectStrategy>("UnitreeSelectStrategy", nh);
+  factory.registerNodeType<UnitreePublishDeviceState>("UnitreePublishDeviceState", nh);
 
   std::cout << "Loading Behavior Tree..." << std::endl;
   factory.registerBehaviorTreeFromFile(ros::package::getPath("anytree_bt") + "/resources/trees/" + argv[1] + ".xml");

@@ -34,11 +34,21 @@ public:
     if (!device_id) {
       throw BT::RuntimeError("missing required input [device_id]");
     }
+    auto manipulation_todo = getInput<double>("manipulation_todo");
+    if (!manipulation_todo) {
+      throw BT::RuntimeError("missing required input [manipulation_todo]");
+    }
+    auto direction = getInput<int8_t>("direction");
+    if (!direction) {
+      throw BT::RuntimeError("missing required input [direction]");
+    }
     auto input_strategy = getInput<int>("input_strategy");
 
     anytree_msgs::selectStrategy srv;
     srv.request.device_type = device_type.value();
     srv.request.device_id = device_id.value();
+    srv.request.manipulation_todo = manipulation_todo.value();
+    srv.request.direction = direction.value();
     // Since input_strategy is an int and defaults to 0, we must make choosing 'no input' distinct from 'strategy 0'
     // To do this, let's use -1 (ie the error case, which selectStrategy will attempt to replace with a feasible strategy)
     if (input_strategy) {
@@ -86,6 +96,8 @@ public:
   static BT::PortsList providedPorts() {
     return {BT::InputPort<std::string>("device_type"),
             BT::InputPort<std::string>("device_id"),
+            BT::InputPort<double>("manipulation_todo"),
+            BT::InputPort<int8_t>("direction"),
             BT::InputPort<int>("input_strategy"),
             BT::OutputPort<int>("selected_strategy"),
             BT::OutputPort<UnitreeJointEfforts>("strategy_effort_limit"),

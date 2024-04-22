@@ -1,5 +1,9 @@
 string device_type
 string device_id
+float64 manipulation_todo
+int8 ANTICLOCKWISE=1
+int8 CLOCKWISE=-1
+int8 direction
 int8 input_strategy
 ---
 int8 selected_strategy
