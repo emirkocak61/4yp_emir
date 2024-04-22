@@ -78,29 +78,35 @@ class selectStrategyServer:
         ) as f:
             manipulation_database = pickle.load(f)
 
-        selected_strategy = None
-
         if self.device_type not in self.strategy_effort_limits:
             # Error - unknown device
-            rospy.logerr("selectStrategy: Unknown Device")
+            rospy.logerr("selectStrategy: Unknown Device (%s)", self.device_type)
             response = self.error_case()
             return response
-        
-        elif self.input_strategy is True:
-            if self.input_strategy not in self.strategy_effort_limits[self.device_type]:
-                rospy.logerr("selectStrategy: Unknown Strategy")
-                response = self.error_case()
-                return response
-            else:
-                selected_strategy = self.input_strategy
 
         elif self.device_type not in manipulation_database:
-            # Choose lowest-F/T strategy
-            selected_strategy = next(iter(self.strategy_effort_limits[self.device_type]))
+            if self.input_strategy != -1:
+                if self.input_strategy not in self.strategy_effort_limits[self.device_type]:
+                    rospy.logerr("selectStrategy: Unknown Strategy (%d) Requested", self.input_strategy)
+                    response = self.error_case()
+                    return response
+                else:
+                    selected_strategy = self.input_strategy
+            else:
+                # Choose lowest-F/T strategy
+                selected_strategy = next(iter(self.strategy_effort_limits[self.device_type]))
 
         elif self.device_id not in manipulation_database[self.device_type]:
-            # Choose lowest-F/T strategy
-            selected_strategy = next(iter(self.strategy_effort_limits[self.device_type]))
+            if self.input_strategy != -1:
+                if self.input_strategy not in self.strategy_effort_limits[self.device_type]:
+                    rospy.logerr("selectStrategy: Unknown Strategy (%d) Requested", self.input_strategy)
+                    response = self.error_case()
+                    return response
+                else:
+                    selected_strategy = self.input_strategy
+            else:
+                # Choose lowest-F/T strategy
+                selected_strategy = next(iter(self.strategy_effort_limits[self.device_type]))
 
         else:
             # Choose lowest-strength strategy that permits measured efforts for device
@@ -140,14 +146,31 @@ class selectStrategyServer:
                 ]
             )
             max_effort[np.isnan(max_effort)] = 0.0
-            rospy.loginfo("Manipulation Data Max Efforts: \n [%f , %f , %f , %f , %f , %f ]", max_effort[0], max_effort[1], max_effort[2], max_effort[3], max_effort[4], max_effort[5])
-            for trial_strategy in self.strategy_effort_limits[self.device_type]:
-                if all(
-                    self.strategy_effort_limits[self.device_type][trial_strategy] >= max_effort
+            rospy.loginfo("Manipulation Data Max Efforts: \n [%f, %f, %f, %f, %f, %f]", max_effort[0], max_effort[1], max_effort[2], max_effort[3], max_effort[4], max_effort[5])
+            # If input_strategy == -1 (or "" in the BT interface), selectStrategy will attempt to select a feasible strategy
+            # If input_strategy != -1, selectStrategy will simply pass it through to the output (if it exists and is feasible)        
+            if self.input_strategy != -1:
+                if self.input_strategy not in self.strategy_effort_limits[self.device_type]:
+                    rospy.logerr("selectStrategy: Unknown Strategy (%d) Requested", self.input_strategy)
+                    response = self.error_case()
+                    return response
+                elif all(
+                    self.strategy_effort_limits[self.device_type][self.input_strategy] >= max_effort
                 ):
-                    selected_strategy = trial_strategy
-                    break
-            if selected_strategy == None:
+                    selected_strategy = self.input_strategy
+                else:
+                    rospy.logerr("selectStrategy: Requested Strategy (%d) Does Not Permit Efforts in Manipulation Data", self.input_strategy)
+                    response = self.error_case()
+                    return response
+            else:
+                selected_strategy = self.input_strategy # -1
+                for trial_strategy in self.strategy_effort_limits[self.device_type]:
+                    if all(
+                        self.strategy_effort_limits[self.device_type][trial_strategy] >= max_effort
+                    ):
+                        selected_strategy = trial_strategy
+                        break
+            if selected_strategy == -1:
                 rospy.logwarn(
                     "selectStrategy: Manipulation Data Contains Efforts Not Permitted by any Known Strategies"
                 )

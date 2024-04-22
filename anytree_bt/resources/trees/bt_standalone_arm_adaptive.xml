@@ -14,10 +14,13 @@
             <Script code="device_type:='needle_valve'" />
             <Script code="direction:=-1" />
 
+            <!-- Set to -1 for adaptive behavior -->
+            <Script code="input_strategy:=0" />
+
             <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as none for test A, and normal for test B) -->
             <Script code="device_id:='0'" />
-            <Script code="manipulation_todo:=7.0" />
+            <Script code="manipulation_todo:=10.0" />
 
             <!-- Test C: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as normal for device 0, and stiff for device 1) -->
@@ -30,7 +33,7 @@
             <UnitreeMoveArm label="forward" duration="3000"/>
 
             <!-- Manipulation Task -->
-            <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}"/>
+            <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
 
         </Sequence>
 
@@ -49,7 +52,7 @@
                 <Sequence>
 
                     <!-- Select Strategy -->
-                    <UnitreeSelectStrategy device_type="{device_type}" device_id="{device_id}" input_strategy="" selected_strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}"/>
+                    <UnitreeSelectStrategy device_type="{device_type}" device_id="{device_id}" input_strategy="{input_strategy}" selected_strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}"/>
 
                     <!-- StrategySwitchStatement -->
                     <Sequence>

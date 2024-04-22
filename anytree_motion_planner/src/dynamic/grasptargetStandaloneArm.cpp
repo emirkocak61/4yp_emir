@@ -64,6 +64,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     
     if (error > start_tolerance) {
         result_.result = false;
+        ROS_WARN("%f > %f", error, start_tolerance);
         ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
         as_.setAborted(result_);
     } 

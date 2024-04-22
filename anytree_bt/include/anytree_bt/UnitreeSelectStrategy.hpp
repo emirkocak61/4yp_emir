@@ -39,8 +39,13 @@ public:
     anytree_msgs::selectStrategy srv;
     srv.request.device_type = device_type.value();
     srv.request.device_id = device_id.value();
+    // Since input_strategy is an int and defaults to 0, we must make choosing 'no input' distinct from 'strategy 0'
+    // To do this, let's use -1 (ie the error case, which selectStrategy will attempt to replace with a feasible strategy)
     if (input_strategy) {
       srv.request.input_strategy = input_strategy.value();
+    }
+    else {
+      srv.request.input_strategy = -1;
     }
 
     if (client.call(srv)) {

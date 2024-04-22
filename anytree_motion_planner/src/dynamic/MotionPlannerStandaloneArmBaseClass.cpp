@@ -18,7 +18,7 @@ using namespace exotica;
     //Class constructor
     MotionPlannerStandaloneArmBaseClass::MotionPlannerStandaloneArmBaseClass(const std::string& actionName) : 
                                                                             action_name(actionName), dt(0.02), rate(50),
-                                                                            start_tolerance(5e-2),
+                                                                            start_tolerance(7.5e-2),
                                                                             error_metric("Position"),tolerance_(1e-2),
                                                                             counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                                                             self_counter(10), listener(tfBuffer)
