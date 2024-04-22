@@ -249,7 +249,14 @@ class selectStrategyServer:
             t = self.strategy_speed_params[self.device_type][strategy][1] # always start with a grasp
             manipulation_done = 0.0
             device_state = self.device_state
+            # First rotate device_state until within device angle limits (as is done in the BT)
+            while device_state < self.strategy_angle_limits[self.device_type][strategy][0]:
+                device_state += self.strategy_angle_limits[self.device_type][strategy][2]
 
+            while device_state > self.strategy_angle_limits[self.device_type][strategy][1]:
+                device_state -= self.strategy_angle_limits[self.device_type][strategy][2]
+
+            # Estimate duration for manipulation using this strategy
             while manipulation_done < self.manipulation_todo:
                 # Regrasp (smart twisting)
                 if device_state < self.strategy_angle_limits[self.device_type][strategy][0]:
