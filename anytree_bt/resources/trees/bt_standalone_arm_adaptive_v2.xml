@@ -252,7 +252,7 @@
 
             <!-- Initialise Angle Rotated and Tolerance -->
             <Script code="angle_rotated := 0.0"/>
-            <Script code="tolerance_angle := 0.2" />
+            <Script code="tolerance_angle := 0.1" />
 
             <!-- Initialise Counters -->
             <Script code="strategy_effort_limit_counter := 0" />
