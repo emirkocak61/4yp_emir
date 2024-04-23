@@ -42,6 +42,13 @@ Trajectory DefineTrajectory(const bt_drs_msgs::retractTargetGoalConstPtr &goal) 
         trajectory.row(2) << 4.0, -0.15, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
         trajectory.row(3) << 6.0, -0.15, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
        } 
+       else if(goal->strategy == 1) {
+        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 4.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
+        trajectory.row(3) << 6.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
+       } 
     }
     Trajectory traj_exotica(trajectory,1.0);
     return traj_exotica;

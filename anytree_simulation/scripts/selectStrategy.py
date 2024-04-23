@@ -58,7 +58,7 @@ class selectStrategyServer:
         self.strategy_angle_limits = {
             "needle_valve": {
                 0: [-3.6652, 0.5236, 3.1415],
-                1: [-1.5707, 1.5708, 3.1415],
+                1: [-1.8849, 1.2566, 3.1415],
             },
             "button": {
                 0: [-1.0000, 1.0000, 6.2831],
@@ -72,7 +72,7 @@ class selectStrategyServer:
         self.strategy_speed_params = {
             "needle_valve": {
                 0: [0.005, 9.0],
-                1: [0.002, 20.0],
+                1: [0.002, 13.0],
             },
             "button": {
                 0: [0.25, 9.0],
