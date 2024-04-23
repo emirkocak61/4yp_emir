@@ -49,7 +49,6 @@ public:
             Iterate(); //Generate motion plan via EXOTica
             PublishToRobot(); //Send motion plan to the robot
             error = GetError(); //Calculate error
-            std::cout << "Error: " << error << std::endl;
             //Publish feedback to client
             feedback_.error = error;
             as_.publishFeedback(feedback_); 

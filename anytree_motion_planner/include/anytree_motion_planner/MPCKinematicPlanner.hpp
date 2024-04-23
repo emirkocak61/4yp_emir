@@ -107,7 +107,6 @@ public:
         //Calculate velocities
         Eigen::VectorXd qnew(12);
         qnew = solution->row(1);
-        std::cout << "q: " << qnew.transpose() << std::endl;
         qd = (qnew-q)/(dt);
         q = qnew;
         //Update problem
