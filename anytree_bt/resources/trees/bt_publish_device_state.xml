@@ -1,0 +1,18 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+
+            <!-- Give some time to set the publisher up -->
+            <SleepNode msec="1000" />
+
+            <!-- Publish Device State -->
+            <SaySomething message="Moving to Forward State" />
+            <Script code="device_state:=0.0"/>
+            <DoubleToString double="{device_state}" string="{device_state_str}"/>
+            <Script code="message:='Publishing Device State: ' + device_state_str"/>
+            <SaySomething message="{message}" />
+            <UnitreePublishDeviceState device_state="{device_state}"/>
+
+        </Sequence>
+    </BehaviorTree>
+</root>

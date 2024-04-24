@@ -1,0 +1,11 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+
+            <!-- Return to StartFlat State -->
+            <SaySomething message="Returning to StartFlat State" />
+            <UnitreeMoveArm label="startFlat" duration="3000"/>
+
+        </Sequence>
+    </BehaviorTree>
+</root>

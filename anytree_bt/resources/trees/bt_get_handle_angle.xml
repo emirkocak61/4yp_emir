@@ -1,0 +1,17 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+
+            <Script code="device_type:='needle_valve'" />
+            <Script code="device_id:='0'" />
+
+            <!-- Call getHandleAngle Service -->
+            <SaySomething message="Retrieving Device Handle Angle" />
+            <getHandleAngleNode device_type="{device_type}" device_id="{device_id}" angle="{handle_angle}"/>
+            <DoubleToString double="{handle_angle}" string="{handle_angle_str}"/>
+            <Script code="message:='Handle Angle (Degrees): ' + handle_angle_str"/>
+            <SaySomething message="{message}" />
+
+        </Sequence>
+    </BehaviorTree>
+</root>

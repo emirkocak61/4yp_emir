@@ -1,0 +1,428 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree" BTCPP_format="4">
+
+
+
+    <BehaviorTree ID="MainTree">
+
+        <Sequence>
+
+            <!-- Set Sim Flag -->
+            <Script code="sim:=true" />
+
+            <!-- Manipulation Task Arguments -->
+            <Script code="device_type:='needle_valve'" />
+            <Script code="direction:=-1" />
+
+            <!-- Set to -1 for adaptive behavior -->
+            <Script code="input_strategy:=-1" />
+
+            <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
+            <!-- (Load device dynamics as none for test A, and normal for test B) -->
+            <Script code="device_id:='0'" />
+            <Script code="manipulation_todo:=10.0" />
+
+            <!-- Test C: Adaptive Behavior Between Two Strategies -->
+            <!-- (Load device dynamics as normal for device 0, and stiff for device 1) -->
+            <!-- <Script code="device_id:='0'" /> -->
+            <!-- <Script code="device_id:='1'" /> -->
+            <!-- <Script code="manipulation_todo:=1.5708" /> -->
+
+            <!-- Move to Forward State -->
+            <SaySomething message="Moving to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/>
+
+            <!-- Manipulation Task -->
+            <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="AdaptiveBehavior">
+
+        <Sequence>
+
+            <SaySomething message="Starting Manipulation Task..." />
+
+            <RetryUntilSuccessful num_attempts="20">
+
+                <Sequence>
+
+                    <!-- SIM - Ensure Device Controller Command is OFF -->
+                    <Precondition if="sim == true" else="SUCCESS">
+                        <Sequence>
+                            <SaySomething message="Device Dynamic Properties Deactivated" />
+                            <setControllerCommandNode device_type="{device_type}" device_id="{device_id}" controller_command="false" />
+                        </Sequence>
+                    </Precondition>
+
+                    <!-- Ensure Manipulation Data Recorder has Stopped -->
+                    <recordManipulationDataNode record_data="false" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
+
+                    <!-- Close Gripper (if not already closed)-->
+                    <SaySomething message="Closing Gripper" />
+                    <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+
+                    <!-- Move to Raised Pose (to see the apriltag) -->
+                    <SaySomething message="Moving to Pose" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.5" label="" />
+
+                    <!-- LookupDevicePose -->
+
+                    <!-- Get Pose of (Unrotated) Handle -->
+                    <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
+
+                    <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/>
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
+
+                    <!-- Approach -->
+
+                    <!-- Tick approachTarget Action-->
+                    <SaySomething message="Moving to Pre-Grasp Pose..." />
+                    <approachTargetNode target="{handle_pose}"/>
+
+                    <!-- Update device state for SelectStrategy (don't worry about pre-grasp or angle limits here - already handled within SelectStrategy)-->
+                    <getHandleAngleNode device_type="{device_type}" device_id="{device_id}" angle="{handle_angle}"/>
+                    <Script code="handle_angle_rad:=2*3.14159*handle_angle/360"/>
+                    <UnitreePublishDeviceState device_state="{handle_angle_rad}"/>
+
+                    <!-- Select Strategy -->
+                    <UnitreeSelectStrategy device_type="{device_type}" device_id="{device_id}" manipulation_todo="{manipulation_todo}" direction="{direction}" input_strategy="{input_strategy}" selected_strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}"/>
+
+                    <!-- StrategySwitchStatement -->
+                    <Sequence>
+
+                        <SubTree _skipIf="strategy != 0" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+
+                        <SubTree _skipIf="strategy != 1" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+
+                        <Script _skipIf="strategy != -1" code="DUMMY:=1"/>
+
+                    </Sequence>
+
+                </Sequence>
+
+            </RetryUntilSuccessful>
+
+            <!-- Check Whether Final Strategy is Valid-->
+            <Precondition if="strategy == -1" else="SUCCESS">
+
+                <ForceFailure>
+
+                    <Sequence>
+
+                        <SaySomething message="Manipulation Task Failed" />
+
+                        <!-- Return to Forward State -->
+                        <SaySomething message="Returning to Forward State" />
+                        <UnitreeMoveArm label="forward" duration="3000"/>
+
+                        <!-- Return to StartFlat State -->
+                        <SaySomething message="Returning to StartFlat State" />
+                        <UnitreeMoveArm label="startFlat" duration="3000"/>
+
+                    </Sequence>
+
+                </ForceFailure>
+
+            </Precondition>
+
+            <SaySomething message="Manipulation Task Complete" />
+
+            <!-- Return to Forward State -->
+            <SaySomething message="Returning to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/>
+
+            <!-- Return to StartFlat State -->
+            <SaySomething message="Returning to StartFlat State" />
+            <UnitreeMoveArm label="startFlat" duration="3000"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="StrategySubtree">
+
+        <Sequence>
+
+            <Script code="handle_angle_rad:=0.0" />
+
+            <!-- For pre-grasp, some devices and strategies benefit from applying a relative rotation to the pre-grasp pose -->
+            <Precondition if="device_type == 'needle_valve'" else="SUCCESS">
+                <Script code="pre_grasp_relative_rotation:=1.5708" />
+            </Precondition>
+
+            <!-- Get Handle Angle (in radians and quaternions)-->
+            <SubTree ID="GetHandleAngle" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" pre_grasp_relative_rotation="{pre_grasp_relative_rotation}" handle_angle_rad="{handle_angle_rad}" handle_angle_quaternion="{handle_angle_quaternion}" handle_angle_pre_grasp_quaternion="{handle_angle_pre_grasp_quaternion}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}"/>
+
+            <!-- Get Pose of (Rotated) Handle -->
+            <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
+
+            <!-- Tick approachTarget Action-->
+            <SaySomething message="Moving to Adjusted Pre-Grasp Pose..." />
+            <approachTargetNode target="{handle_pose_pre_grasp}"/>
+
+            <!-- Open Gripper -->
+            <SaySomething message="Opening Gripper" />
+            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+
+            <!-- Grasp -->
+
+            <!-- Tick graspTarget Action-->
+            <SaySomething message="Moving to Grasp Pose..." />
+            <graspTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+
+            <!-- Close Gripper -->
+            <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand targetQ="-0.18" duration="1000"/>
+
+            <!-- Manipulate -->
+
+            <SubTree ID="Manipulate" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" direction="{direction}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" handle_angle_rad="{handle_angle_rad}" ignore_device_effort_limit="{ignore_device_effort_limit}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="GetHandleAngle">
+
+        <Sequence>
+
+            <!-- Call getHandleAngle Service -->
+            <SaySomething message="Retrieving Device Handle Angle" />
+            <getHandleAngleNode device_type="{device_type}" device_id="{device_id}" angle="{handle_angle}"/>
+
+            <!-- Convert to Radians -->
+            <Script code="handle_angle_rad:=2*3.14159*handle_angle/360"/>
+
+            <!-- Ensure Hangle Angle is within Max/Min Limits -->
+            <RetryUntilSuccessful num_attempts="100">
+                <Sequence>
+                    <Precondition if="handle_angle_rad &gt;= max_angle" else="SUCCESS">
+                        <ForceFailure>
+                            <Script code="handle_angle_rad = handle_angle_rad - rot_sym_angle"/>
+                        </ForceFailure>
+                    </Precondition>
+                    <Precondition if="handle_angle_rad &lt;= min_angle" else="SUCCESS">
+                        <ForceFailure>
+                            <Script code="handle_angle_rad = handle_angle_rad + rot_sym_angle"/>
+                        </ForceFailure>
+                    </Precondition>
+                </Sequence>
+            </RetryUntilSuccessful>
+
+            <!-- Update device state -->
+            <UnitreePublishDeviceState device_state="{handle_angle_rad}"/>
+
+            <DoubleToString double="{handle_angle_rad}" string="{handle_angle_rad_str}"/>
+            <Script code="rpy_angle:='0 0 ' + handle_angle_rad_str"/>
+
+            <!-- Get Quarternion of Handle Angle -->
+            <QuaternionFromEuler rpy="{rpy_angle}" quaternion="{handle_angle_quaternion}"/>
+
+            <Script code="handle_angle_pre_grasp:= handle_angle_rad + pre_grasp_relative_rotation"/>
+
+            <!-- For pre-grasp -->
+            <DoubleToString double="{handle_angle_pre_grasp}" string="{handle_angle_pre_grasp_str}"/>
+            <Script code="rpy_angle_pre_grasp:='0 0 ' + handle_angle_pre_grasp_str"/>
+
+            <!-- Get Quarternion of Handle Angle -->
+            <QuaternionFromEuler rpy="{rpy_angle_pre_grasp}" quaternion="{handle_angle_pre_grasp_quaternion}"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="Manipulate">
+
+        <Sequence>
+
+            <!-- Initialise Angle Rotated and Tolerance -->
+            <Script code="angle_rotated := 0.0"/>
+            <Script code="tolerance_angle := 0.1" />
+
+            <!-- Initialise Counters -->
+            <Script code="strategy_effort_limit_counter := 0" />
+            <Script code="strategy_effort_limit_max_counter := 3" />
+
+            <Script code="device_effort_limit_counter := 0" />
+            <Script code="device_effort_limit_max_counter := 3" />
+
+            <!-- SIM - Set Device Controller Command ON -->
+            <Precondition if="sim == true" else="SUCCESS">
+                <Sequence>
+                    <SaySomething message="Device Dynamic Properties Activated" />
+                    <setControllerCommandNode device_type="{device_type}" device_id="{device_id}" controller_command="true" />
+                </Sequence>
+            </Precondition>
+
+            <SleepNode msec="1000" />
+
+            <!-- Start Manipulation Data Recorder -->
+            <recordManipulationDataNode record_data="true" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
+
+            <SaySomething message="Manipulating..." />
+
+            <!-- Fallback with ForceFailure is used to allow an exit procedure for controlled retraction -->
+            <Fallback>
+
+                <ReactiveFallback>
+
+                    <!-- Check Whether Device is Tightened -->
+                    <!-- Increment counter if effort limit is exceeded, return failure when max_counter is met/exceeded -->
+                    <!-- <Inverter>
+
+                        <Fallback>
+
+                            <UnitreeMonitorEffort effort_limit="{device_effort_limit}"/>
+
+                            <Precondition if="device_effort_limit_counter &lt; device_effort_limit_max_counter" else="FAILURE">
+
+                                <Script code="device_effort_limit_counter = device_effort_limit_counter + 1" />
+
+                            </Precondition>
+
+                        </Fallback>
+
+                    </Inverter> -->
+                    <Inverter>
+
+                        <UnitreeMonitorEffort effort_limit="{device_effort_limit}"/>
+
+                    </Inverter>
+
+                    <!-- Manipulate until Interrupt is Triggered -->
+                    <ReactiveSequence>
+
+                        <!-- Check Whether Strategy effort limit is exceeded -->
+                        <!-- Increment counter if effort limit is exceeded, return failure when max_counter is met/exceeded -->
+                        <!-- <Fallback>
+
+                            <UnitreeMonitorEffort effort_limit="{strategy_effort_limit}"/>
+
+                            <Precondition if="strategy_effort_limit_counter &lt; strategy_effort_limit_max_counter" else="FAILURE">
+
+                                <Script code="strategy_effort_limit_counter = strategy_effort_limit_counter + 1" />
+
+                            </Precondition>
+
+                        </Fallback> -->
+                        <UnitreeMonitorEffort effort_limit="{strategy_effort_limit}"/>
+
+                        <!-- Update device state -->
+                        <Script code="device_state:=handle_angle_rad + angle_rotated"/>
+                        <UnitreePublishDeviceState device_state="{device_state}"/>
+
+                        <!-- Check Whether Max/Min Device Hangle Angle is Exceeded-->
+                        <Precondition if="(handle_angle_rad + angle_rotated &gt;= min_angle - tolerance_angle) &amp;&amp; (handle_angle_rad + angle_rotated &lt;= max_angle + tolerance_angle)" else="FAILURE">
+
+                            <!-- Preconditions are decorators and thus require a node inside them... -->
+                            <Script code="DUMMY:=1"/>
+
+                        </Precondition>
+
+                        <!-- Tick manipulateTarget Action -->
+                        <manipulateTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" manipulation_todo="{manipulation_todo}" manipulation_remaining="{manipulation_todo}" angle_rotated="{angle_rotated}" direction="{direction}"/>
+
+                    </ReactiveSequence>
+
+                </ReactiveFallback>
+
+                <ForceFailure>
+
+                    <!-- Retract -->
+
+                    <Sequence>
+
+                        <SaySomething message="Manipulation Interrupted" />
+
+                        <SleepNode msec="100"/>
+
+                        <!-- Stop Manipulation Data Recorder -->
+                        <recordManipulationDataNode record_data="false" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
+
+                        <!-- SIM - Set Device Controller Command OFF -->
+                        <Precondition if="sim == true" else="SUCCESS">
+                            <Sequence>
+                                <SaySomething message="Device Dynamic Properties Deactivated" />
+                                <setControllerCommandNode device_type="{device_type}" device_id="{device_id}" controller_command="false" />
+                            </Sequence>
+                        </Precondition>
+
+                        <!-- Retract Arm -->
+                        <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}" direction="{direction}"/>
+
+                    </Sequence>
+
+                </ForceFailure>
+
+            </Fallback>
+
+
+
+            <!-- Retract -->
+
+            <Sequence>
+
+                <SaySomething message="Manipulation Successful" />
+
+                <!-- Stop Manipulation Data Recorder -->
+                <recordManipulationDataNode record_data="false" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
+
+                <!-- SIM - Set Device Controller Command OFF -->
+                <Precondition if="sim == true" else="SUCCESS">
+                    <Sequence>
+                        <SaySomething message="Device Dynamic Properties Deactivated" />
+                        <setControllerCommandNode device_type="{device_type}" device_id="{device_id}" controller_command="false" />
+                    </Sequence>
+                </Precondition>
+
+                <!-- Retract Arm -->
+                <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}" direction="{direction}"/>
+
+            </Sequence>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="Retract">
+
+        <Sequence>
+
+            <SaySomething message="Retracting..." />
+
+            <!-- Open Gripper -->
+            <SaySomething message="Opening Gripper" />
+            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+
+            <!-- Tick retractTarget Action -->
+            <SaySomething message="Retracting..." />
+            <Script code="source_frame:='gripperStator'" />
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+            <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+
+            <!-- Close Gripper -->
+            <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+</root>

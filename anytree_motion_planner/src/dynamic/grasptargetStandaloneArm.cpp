@@ -36,11 +36,22 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
     Eigen::MatrixXd trajectory;
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
-        trajectory = Eigen::MatrixXd::Zero(3,7); //time + xyz + rpy
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on
-        trajectory.row(2) << 6.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp
+        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 6.0, 0.015, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 7.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 9.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //hold 
        } 
+       else if(goal->strategy == 1){
+        double phi = pi/5;
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
+        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 10.0, 0.015, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 11.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 13.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //hold 
+       }
     }
     Trajectory traj_exotica(trajectory,1.0);
     return traj_exotica;
@@ -62,6 +73,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     
     if (error > start_tolerance) {
         result_.result = false;
+        ROS_WARN("%f > %f", error, start_tolerance);
         ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
         as_.setAborted(result_);
     } 

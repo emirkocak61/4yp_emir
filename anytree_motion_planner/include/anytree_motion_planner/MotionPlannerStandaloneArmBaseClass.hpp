@@ -70,7 +70,7 @@ public:
     */
     virtual void PerformMotion() {};
     virtual void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) {};
-    void RobotStateCb(const std_msgs::Float64MultiArrayConstPtr &state);
+    void RobotStateCb(const sensor_msgs::JointStateConstPtr &state);
    
 
 protected:

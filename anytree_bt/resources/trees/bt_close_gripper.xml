@@ -1,0 +1,11 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+
+            <!-- Close Gripper -->
+            <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+
+        </Sequence>
+    </BehaviorTree>
+</root>
