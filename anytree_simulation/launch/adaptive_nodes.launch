@@ -4,7 +4,7 @@
     <arg name="isSim" default="true"/>
 
     <!-- getHandleAngle-->
-    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle.py" output="screen" unless="$(arg isSim)"/>
+    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_precise.py" output="screen" unless="$(arg isSim)"/>
     <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_sim.py" output="screen" if="$(arg isSim)"/>
 
     <!-- manipulationDataRecorder-->
