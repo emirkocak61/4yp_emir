@@ -79,7 +79,8 @@ function(Compile name)
   add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${name} 
   ${catkin_LIBRARIES}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so)
+  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so
+  ${PINOCCHIO_LIBRARIES})
 endfunction()
 
 #Compile(z1_lowcmd_ros)

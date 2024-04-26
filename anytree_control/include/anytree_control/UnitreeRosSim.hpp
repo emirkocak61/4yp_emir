@@ -1,4 +1,3 @@
-#pragma once
 /*
     The child class of UnitreeRosBaseClass specific for simulation implementation. 
 */
@@ -10,9 +9,12 @@
 class UnitreeRosSim : public UnitreeRosBaseClass {
 public:
     UnitreeRosSim() : UnitreeRosBaseClass(),
-    velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)) {
+    velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)),
+    torque_filter(0.167,Eigen::VectorXd::Zero(arm_dof)){
         SetupArm();
     };
+
+    ~UnitreeRosSim() {}
 
     //Sets up the arm with sim specific parameters
     void SetupArm() override {
@@ -30,17 +32,26 @@ public:
     }
 
     void publishLoop() override {
-        ros::Rate rate(50); //50Hz
+        ros::Rate rate(100); //50Hz
+        Eigen::VectorXd arm_state_measurement = Eigen::VectorXd::Zero(12);
+        Eigen::VectorXd arm_state = Eigen::VectorXd::Zero(12);
+        Eigen::VectorXd arm_torques = Eigen::VectorXd::Zero(6);
         while (ros::ok() && isPublishing) {
             //std::unique_lock<std::mutex> lock(lowstate_mutex);
+            //Predict 
+            //ekf.predict(arm_torques);
             //Get the state values for the arm
-            Vec6 arm_position = arm.lowstate->getQ();
-            Vec6 arm_velocity = arm.lowstate->getQd();
-            Vec6 arm_torques = arm.lowstate->getTau();
+            arm_state_measurement.head(6) = arm.lowstate->getQ();
+            arm_state_measurement.tail(6) = arm.lowstate->getQd();
+            arm_torques = arm.lowstate->getTau();
+           
             //lock.unlock();
-            Vec6 v_filtered = velocity_filter.filter(arm_velocity);
+            Vec6 v_filtered = velocity_filter.filter(arm_state_measurement.tail(6));
+            //Correct
+            //arm_state = ekf.correct(arm_state_measurement);
+
             // Directly assign values using Eigen::Map
-            Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_position;
+            Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_state_measurement.head(6);
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.velocity.data(), arm_dof) = v_filtered;
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.effort.data(),arm_dof) = arm_torques;
             //Get the state values for the gripper
@@ -59,6 +70,7 @@ public:
 private:
     
     LowPassFilter<Eigen::VectorXd> velocity_filter; //LowPassFilter for velocity readings
+    LowPassFilter<Eigen::VectorXd> torque_filter;
     ros::Publisher state_pub;
 
 };
