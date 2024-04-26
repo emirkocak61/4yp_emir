@@ -44,7 +44,6 @@ public:
         scene->SetModelState(robot_state);
         problem->Update(scene->GetControlledState(),0);
         relative_joint_limits = scene->GetKinematicTree().GetJointLimits();
-        std::cout << "Joint limits loaded" << std::endl;
         SetJointLimits();
     }
 
@@ -92,8 +91,6 @@ public:
         scene->GetKinematicTree().SetJointLimitsUpper(global_joint_limits_upper);
         scene->GetKinematicTree().SetJointLimitsLower(global_joint_limits_lower);
 
-        std::cout << "Upper limits: " << scene->GetKinematicTree().GetJointLimits().col(1) << std::endl;
-        std::cout << "Lower limits: " << scene->GetKinematicTree().GetJointLimits().col(0) << std::endl;
     }
 
     void Iterate() {

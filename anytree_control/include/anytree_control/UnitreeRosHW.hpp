@@ -1,4 +1,4 @@
-#pragma once
+
 /*
     The child class of UnitreeRosBase specific for hardware use
 */
@@ -6,11 +6,13 @@
 #include <anytree_control/UnitreeRosBaseClass.hpp>
 #include <anytree_control/LowPassFilter.hpp>
 
+
 class UnitreeRosHW : public UnitreeRosBaseClass {
 public:
     UnitreeRosHW() : UnitreeRosBaseClass(),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)) {
         SetupArm();
+
     }
 
     void SetupArm() override {
@@ -54,4 +56,5 @@ private:
     LowPassFilter<Eigen::VectorXd> velocity_filter; //LowPassFilter for velocity readings
     ros::Publisher state_pub;
     ros::Publisher filtered_state_pub;
+
 };

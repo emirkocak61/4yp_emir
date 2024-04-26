@@ -21,7 +21,6 @@ public:
     }
 
 void execute_cb(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
-    ros::Duration(1.0).sleep(); //Give time to open gripper
     //Define target frame
     KDL::Frame T_approach;
     T_approach = GetFrameFromPose(goal->target);
@@ -78,7 +77,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     scene->AddTrajectory("TargetRelative",trajectory);
     t = 0.0;
     Eigen::MatrixXd data = trajectory->GetData();
-    t_limit = data(data.rows()-1,0) + 10; //Add a constant as an error margin;
+    t_limit = data(data.rows()-1,0) + 3; //Add a constant as an error margin;
 
     //Check that EEF is within tolerance of the start waypoint
     problem->SetStartTime(t);
