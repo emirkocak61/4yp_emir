@@ -21,7 +21,6 @@ public:
     }
 
 void execute_cb(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
-    ros::Duration(1.0).sleep(); //Give time to open gripper
     //Define target frame
     KDL::Frame T_approach;
     T_approach = GetFrameFromPose(goal->target);
@@ -39,11 +38,20 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
         trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
-        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-        trajectory.row(1) << 3.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0; //head on
-        trajectory.row(2) << 6.0, 0.0, -0.0, 0.0, 0.0, 0.0, -1.5708; //rotate gripper
-        trajectory.row(3) << 9.0, 0.0, -0.0, -0.097, 0.0, 0.0, -1.5708; //grasp
+        trajectory.row(0) << 0.0, -0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 3.0, -0.0, -0.0, 0.3, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 6.0, 0.0, -0.0, 0.3, 0.0, 0.0, 1.5708; //rotate gripper
+        trajectory.row(3) << 9.0, 0.0, -0.0, 0.190, 0.0, 0.0, 1.5708; //grasp
        } 
+       else if (goal->strategy == 1) {  //Work in progress
+        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 3.0, 0.0, -0.0, 0.3, 0.0, 0.0, 1.5708; //
+        trajectory.row(2) << 6.0, 0.0, 0.2, 0.190, 0.0, 0.0, 1.5708; // 
+        trajectory.row(3) << 9.0, 0.0, 0.2, 0.190,0.0, 1.5708, 1.5708;
+
+       }
+       
     }
     Trajectory traj_exotica(trajectory,0.1);
     return traj_exotica;
@@ -69,7 +77,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     scene->AddTrajectory("TargetRelative",trajectory);
     t = 0.0;
     Eigen::MatrixXd data = trajectory->GetData();
-    t_limit = data(data.rows()-1,0) + 10; //Add a constant as an error margin;
+    t_limit = data(data.rows()-1,0) + 3; //Add a constant as an error margin;
 
     //Check that EEF is within tolerance of the start waypoint
     problem->SetStartTime(t);

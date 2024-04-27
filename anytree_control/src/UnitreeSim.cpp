@@ -5,6 +5,6 @@ int main(int argc,char** argv) {
     UnitreeRosSim unitree_interface;
     unitree_interface.startPublishing();
     ros::spin();
-    unitree_interface.startPublishing();
+    unitree_interface.stopPublishing();
     return 0;
 }

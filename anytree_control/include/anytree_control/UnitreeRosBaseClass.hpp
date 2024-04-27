@@ -5,6 +5,7 @@
     for hardware and simulation. The base functions include the gripper and arm feedforward 
     control. The interface is designed to keep things in lowcmd mode
 */
+#include <anytree_control/ExtendedKalmanFilter.hpp>
 #include <ros/ros.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <sensor_msgs/JointState.h>
@@ -15,6 +16,7 @@
 #include <anytree_msgs/moveArmAction.h>
 #include <anytree_msgs/moveArmResult.h>
 #include <mutex>
+#include <random>
 
 class UnitreeRosBaseClass {
 public:
@@ -33,6 +35,7 @@ public:
         motion_plan_sub = nh_.subscribe("/motion_plan", 10, &UnitreeRosBaseClass::MotionPlanCb, this);
         gripper_as.start();
         arm_as.start();
+        distribution = std::normal_distribution<double>(0.0,0.01);
     }
 
     ~UnitreeRosBaseClass() {
@@ -145,8 +148,9 @@ public:
         Vec6 initQ = arm.lowstate->getQ();
         UNITREE_ARM::Timer timer(dt);
         //Timer timer(control_frequency);
+        Eigen::VectorXd noise = Eigen::VectorXd::Ones(6);
         for(int i(0); i<duration; i++){
-            arm.q =  initQ * (1-i/duration) + targetQ * (i/duration);
+            arm.q =  initQ * (1-i/duration) + targetQ * (i/duration); //+ distribution(generator) * noise;
             arm.qd = (targetQ - initQ) / (duration * dt);
             arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
             //gripperQ = -0.001;
@@ -225,4 +229,8 @@ protected:
     sensor_msgs::JointState joint_state_msg;
     std::map<std::string,Vec6> arm_states;
 
+    EKF ekf; //Kalman filter
+
+    std::default_random_engine generator; //Random endgine
+    std::normal_distribution<double> distribution;
 };

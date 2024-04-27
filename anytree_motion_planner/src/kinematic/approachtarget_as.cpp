@@ -16,7 +16,7 @@ public:
     {
         //Initialize(); //Initialize ROS-time dependent objects. 
         as_.start();
-        tolerance_ = 2e-2;
+        tolerance_ = 1e-2;
         
     }
     
@@ -49,7 +49,6 @@ public:
             Iterate(); //Generate motion plan via EXOTica
             PublishToRobot(); //Send motion plan to the robot
             error = GetError(); //Calculate error
-            std::cout << "Error: " << error << std::endl;
             //Publish feedback to client
             feedback_.error = error;
             as_.publishFeedback(feedback_); 
