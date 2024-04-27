@@ -37,7 +37,7 @@ public:
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0) + 5; //Add a constant as a safety margin
+        t_limit = data(data.rows()-1,0) + 2; //Add a constant as a safety margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
@@ -46,6 +46,7 @@ public:
         
         if (error > start_tolerance) {
             result_.result = false;
+            ROS_WARN("%f > %f", error, start_tolerance);
             ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
             as_.setAborted(result_);
         } 
@@ -94,10 +95,10 @@ public:
         std::vector<Eigen::VectorXd> trajectoryPoints;
         Eigen::MatrixXd trajectory;
         if (goal->device_type == "needle_valve") {
-            max_increment = 0.005;
             manipulation_todo = goal->manipulation_todo;
             direction = goal->direction;
             if (goal->strategy == 0) {
+                max_increment = 0.005;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
                 //Now define the manipulation trajectory
@@ -106,6 +107,20 @@ public:
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
                     point << time_stamp, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708 + manipulation_done;
+                    trajectoryPoints.push_back(point);
+                }
+            }
+            else if (goal->strategy == 1) {
+                max_increment = 0.001;
+                double phi = pi/5;
+                double time_stamp = 0.0;
+                double manipulation_done = 0.0;
+                //Now define the manipulation trajectory
+                while (std::abs(manipulation_done) < std::abs(manipulation_todo)) {
+                    time_stamp += dt;
+                    manipulation_done += max_increment * direction;
+                    Eigen::VectorXd point(7);
+                    point << time_stamp, 0.138*sin(phi)*sin(manipulation_done), -0.138*sin(phi)*cos(manipulation_done), 0.138*cos(phi), 0.0, -phi, 1.5708 + manipulation_done;
                     trajectoryPoints.push_back(point);
                 }
             }

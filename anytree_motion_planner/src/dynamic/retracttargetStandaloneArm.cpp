@@ -1,57 +1,54 @@
 //Action server to grasp the target 
 #include <ros/ros.h>
 #include <exotica_core/trajectory.h>
-#include <bt_drs_msgs/graspTargetAction.h>
-#include <bt_drs_msgs/graspTargetFeedback.h>
-#include <bt_drs_msgs/graspTargetResult.h>
+#include <bt_drs_msgs/retractTargetAction.h>
+#include <bt_drs_msgs/retractTargetFeedback.h>
+#include <bt_drs_msgs/retractTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
 #include <anytree_motion_planner/MotionPlannerStandaloneArmBaseClass.hpp>
 
-class GraspTargetStandaloneArmActionServer : public MotionPlannerStandaloneArmBaseClass {
+class RetractTargetStandaloneArmActionServer : public MotionPlannerStandaloneArmBaseClass {
 public:
-    GraspTargetStandaloneArmActionServer()
+    RetractTargetStandaloneArmActionServer()
     //Call the constructor of the base class
-    : MotionPlannerStandaloneArmBaseClass("graspTarget"),
+    : MotionPlannerStandaloneArmBaseClass("retractTarget"),
     robot_name("unitree"),
     //Instantiate the action server
-    as_(nh_,action_name + "_as", boost::bind(&GraspTargetStandaloneArmActionServer::execute_cb,this, _1), false) {
+    as_(nh_,action_name + "_as", boost::bind(&RetractTargetStandaloneArmActionServer::execute_cb,this, _1), false) {
         gripper_command_publisher = nh_.advertise<std_msgs::Bool>("/gripper_command",10);
         as_.start();
     }
 
-void execute_cb(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
+void execute_cb(const bt_drs_msgs::retractTargetGoalConstPtr &goal) {
     //Define target frame
     KDL::Frame T_approach;
     T_approach = GetFrameFromPose(goal->target);
 
     //Attach object in the absolute world frame
     scene->AttachObjectLocal("Target","",T_approach);
-    ROS_INFO("Grasping target"); 
+    ROS_INFO("Retracting from target"); 
     std::shared_ptr<Trajectory> trajectory = std::make_shared<Trajectory>(DefineTrajectory(goal));
     PerformTrajectory(trajectory);
 }
 
-Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
+Trajectory DefineTrajectory(const bt_drs_msgs::retractTargetGoalConstPtr &goal) {
     
     Eigen::MatrixXd trajectory;
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
-        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
-        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
-        trajectory.row(2) << 6.0, 0.015, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
-        trajectory.row(3) << 7.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
-        trajectory.row(4) << 9.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //hold 
+        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 4.0, -0.15, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
+        trajectory.row(3) << 6.0, -0.15, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
        } 
-       else if(goal->strategy == 1){
-        double phi = pi/5;
-        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
-        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
-        trajectory.row(2) << 10.0, 0.015, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (distances stator finger from handle)
-        trajectory.row(3) << 11.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (moves stator finger to handle)
-        trajectory.row(4) << 13.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //hold 
-       }
+       else if(goal->strategy == 1) {
+        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 4.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
+        trajectory.row(3) << 6.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
+       } 
     }
     Trajectory traj_exotica(trajectory,1.0);
     return traj_exotica;
@@ -120,15 +117,15 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
 }
 protected:
     std::string robot_name;
-    actionlib::SimpleActionServer<bt_drs_msgs::graspTargetAction> as_;
-    bt_drs_msgs::graspTargetFeedback feedback_;
-    bt_drs_msgs::graspTargetResult result_;
+    actionlib::SimpleActionServer<bt_drs_msgs::retractTargetAction> as_;
+    bt_drs_msgs::retractTargetFeedback feedback_;
+    bt_drs_msgs::retractTargetResult result_;
     ros::Publisher gripper_command_publisher;
 };
 
 int main(int argc,char** argv) {
 
     ros::init(argc,argv,"graspTarget");
-    GraspTargetStandaloneArmActionServer s; //Construct action server
+    RetractTargetStandaloneArmActionServer s; //Construct action server
     ros::spin();
 }

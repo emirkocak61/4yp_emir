@@ -100,6 +100,7 @@ endfunction(CompileDynamicStandaloneArm name)
 CompileDynamicStandaloneArm(approachtargetStandaloneArm)
 CompileDynamicStandaloneArm(grasptargetStandaloneArm)
 CompileDynamicStandaloneArm(manipulatetargetStandaloneArm)
+CompileDynamicStandaloneArm(retracttargetStandaloneArm)
 
 
 

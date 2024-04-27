@@ -79,6 +79,7 @@ function(Compile name)
 endfunction()
 
 Compile(bt_standalone_arm_test)
+Compile(bt_runner)
 
 
 ## Declare a C++ library

@@ -10,7 +10,7 @@ class UnitreeRosSim : public UnitreeRosBaseClass {
 public:
     UnitreeRosSim() : UnitreeRosBaseClass(),
     velocity_filter(0.167,Eigen::VectorXd::Zero(arm_dof)),
-    torque_filter(0.167,Eigen::VectorXd::Zero(arm_dof)){
+    torque_filter(0.167,Eigen::VectorXd::Zero(arm_dof)) {
         SetupArm();
     };
 
@@ -46,14 +46,18 @@ public:
             arm_torques = arm.lowstate->getTau();
            
             //lock.unlock();
+
             Vec6 v_filtered = velocity_filter.filter(arm_state_measurement.tail(6));
+            Vec6 tau_filtered = torque_filter.filter(arm_torques);
+
+          
             //Correct
             //arm_state = ekf.correct(arm_state_measurement);
-
+  
             // Directly assign values using Eigen::Map
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.position.data(), arm_dof) = arm_state_measurement.head(6);
             Eigen::Map<Eigen::VectorXd>(joint_state_msg.velocity.data(), arm_dof) = v_filtered;
-            Eigen::Map<Eigen::VectorXd>(joint_state_msg.effort.data(),arm_dof) = arm_torques;
+            Eigen::Map<Eigen::VectorXd>(joint_state_msg.effort.data(),arm_dof) = tau_filtered;
             //Get the state values for the gripper
             joint_state_msg.position[arm_dof] = arm.lowstate->getGripperQ();
             joint_state_msg.velocity[arm_dof] = arm.lowstate->getGripperQd();
@@ -70,7 +74,8 @@ public:
 private:
     
     LowPassFilter<Eigen::VectorXd> velocity_filter; //LowPassFilter for velocity readings
-    LowPassFilter<Eigen::VectorXd> torque_filter;
+    LowPassFilter<Eigen::VectorXd> torque_filter; //LowPassFilter for torque readings
+
     ros::Publisher state_pub;
 
 };
