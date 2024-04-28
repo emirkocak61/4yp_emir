@@ -5,6 +5,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/JointState.h"
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include "tf2_ros/transform_listener.h"
 #include "actionlib/client/simple_action_client.h"
 #include "actionlib/server/simple_action_server.h"
@@ -40,10 +41,10 @@ public:
     virtual ~MotionPlannerBaseClass();
 
     /**
-     * @brief Looks up the current tf transform for the base pose and converts  it to XYZ+RPY
-     * @return std::vector<double> Base pose described in the 'odom' frame
+     * @brief Callback for the base pose of the robot based on the ANYmal state estimator
+     * @param pose_msg ROS message containing the base pose
     */
-    std::vector<double> LookupBasePose();
+    void BasePoseCb(const geometry_msgs::PoseWithCovarianceStampedConstPtr& pose_msg);
     /**
      * @brief Sets the joint limits in the EXOTica scene based on the current rest pose
     */
@@ -105,6 +106,7 @@ protected:
     double t; //Time in exotica planning problem
     Eigen::VectorXd q; //Joint states of the robot
     Eigen::VectorXd robot_state;
+    std::vector<double> base_pose;
     //If the real arm can't follow the motion plans for manipulation, the motion plan should be stopped
     double self_tolerance;
     double self_counter; //No of consecutive iterations for which real EEF is outside tolerance
@@ -112,7 +114,8 @@ protected:
     //ROS related members
     ros::Publisher motion_plan_publisher; //ROS Publisher to  /motion_plan topic
     ros::Subscriber state_subscriber;
-    ros::Subscriber reset_rest_pose_sub; //ROS Subscriber to /reset_rest_pose_topic
+    ros::Subscriber reset_rest_pose_sub; //ROS Subscriber to /reset_rest_pose topic
+    ros::Subscriber base_pose_sub; // ROS Subscriber to state_estimator/pose_in_odom topic
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener listener; //Listens to published transforms from the robot sim
 
@@ -129,7 +132,6 @@ protected:
     Eigen::MatrixXd joint_velocities;
 
     std::unique_ptr<Eigen::MatrixXd> prevU; //Matrix to store previous control inputs
-    std::mutex state_mutex;
     std::ofstream outFile; //This will be used to log the outputs of certain operations (testing)
 
 };

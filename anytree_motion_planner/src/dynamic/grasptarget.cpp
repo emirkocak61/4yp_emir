@@ -36,11 +36,12 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
     Eigen::MatrixXd trajectory;
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
-        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
-        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-        trajectory.row(1) << 2.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0; //head on
-        trajectory.row(2) << 4.0, 0.0, -0.0, 0.0, 0.0, 0.0, -1.5708; //rotate gripper
-        trajectory.row(3) << 6.0, 0.0, -0.0, -0.097, 0.0, 0.0, -1.5708; //grasp
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
+        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 6.0, 0.015, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 7.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 9.0, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708; //hold 
        } 
     }
     Trajectory traj_exotica(trajectory,1.0);
@@ -63,6 +64,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     
     if (error > start_tolerance) {
         result_.result = false;
+        ROS_WARN("%f > %f", error, start_tolerance);
         ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
         as_.setAborted(result_);
     } 
@@ -119,5 +121,6 @@ int main(int argc,char** argv) {
 
     ros::init(argc,argv,"graspTarget");
     GraspTargetActionServer s; //Construct action server
-    ros::spin();
+    ros::MultiThreadedSpinner spinner(2); // Use 2 threads (1 for action client, 1 for subscriber callbacks)
+    spinner.spin();
 }

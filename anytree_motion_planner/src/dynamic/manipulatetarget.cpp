@@ -46,6 +46,7 @@ public:
         
         if (error > start_tolerance) {
             result_.result = false;
+            ROS_WARN("%f > %f", error, start_tolerance);
             ROS_WARN("%s, ABORTED (EEF Start Pose beyond tolerance)", action_name.c_str());
             as_.setAborted(result_);
         } 
@@ -94,10 +95,10 @@ public:
         std::vector<Eigen::VectorXd> trajectoryPoints;
         Eigen::MatrixXd trajectory;
         if (goal->device_type == "needle_valve") {
-            max_increment = 0.005;
             manipulation_todo = goal->manipulation_todo;
             direction = goal->direction;
             if (goal->strategy == 0) {
+                max_increment = 0.005;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
                 //Now define the manipulation trajectory
@@ -105,7 +106,7 @@ public:
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, 0.0, 0.0, -0.097, 0.0, 0.0, manipulation_done - 1.5708;
+                    point << time_stamp, 0.0, 0.0, 0.135, 0.0, 0.0, 1.5708 + manipulation_done;
                     trajectoryPoints.push_back(point);
                 }
             }
@@ -151,5 +152,6 @@ protected:
 int main(int argc,char** argv) {
     ros::init(argc,argv,"manipulateTarget");
     ManipulateTargetActionServer s; //Construct action server
-    ros::spin();
+    ros::MultiThreadedSpinner spinner(2); // Use 2 threads (1 for action client, 1 for subscriber callbacks)
+    spinner.spin();
 }

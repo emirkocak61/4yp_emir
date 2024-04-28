@@ -87,5 +87,6 @@ int main(int argc,char** argv) {
 
     ros::init(argc,argv,"ApproachTarget");
     ApproachTargetActionServer s; //Construct action server
-    ros::spin();
+    ros::MultiThreadedSpinner spinner(2); // Use 2 threads (1 for action client, 1 for subscriber callbacks)
+    spinner.spin();
 }

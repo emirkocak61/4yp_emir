@@ -1,0 +1,26 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <SequenceWithMemory>
+
+            <Script code="device_type:='needle_valve'" />
+            <Script code="device_id:='0'" />
+
+            <Script code="target_device:=device_type + '/' + device_id + '/handle'"/>
+
+            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 1.0" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
+
+            <!-- <GoToMotionStateAnymal goal_motion_state="perceptive_walk"/> -->
+            <GoToMotionStateAnymal goal_motion_state="walk"/>
+
+            <!-- NB: walking in dynamic gaits mode causes a crash on hardware -->
+            <!-- <SwitchControllerAndSetOperationModeAnymal motion_controller="dynamic_gaits" reference_type="2" operation_mode="walk"/> -->
+            <NavigateToGoalAnymal target="{target}"/>
+            <GoToMotionStateAnymal goal_motion_state="square_up"/>
+            <GoToMotionStateAnymal goal_motion_state="stand"/>
+            <SleepNode msec="2000" />
+            <GoToMotionStateAnymal goal_motion_state="torso_control"/>
+            <SleepNode msec="2000" />
+
+        </SequenceWithMemory>
+    </BehaviorTree>
+</root>

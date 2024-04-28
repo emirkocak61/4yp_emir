@@ -18,7 +18,7 @@ using namespace exotica;
     //Class constructor
     MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
                                 action_name(actionName), dt(0.02), rate(50),
-                                base_dof(6),start_tolerance(5e-2),
+                                base_dof(6),start_tolerance(15.0e-2),
                                 error_metric("Position"),tolerance_(2.5e-2),
                                 counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
@@ -26,6 +26,7 @@ using namespace exotica;
             //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
+            base_pose_sub = nh_.subscribe("state_estimator/pose_in_odom",1,&MotionPlannerBaseClass::BasePoseCb,this);
             std::cout << "Action name: " << action_name << std::endl;
             solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic/" + action_name + "_dynamic.xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();
@@ -40,8 +41,12 @@ using namespace exotica;
             else {
                 scene = problem->GetScene();
                 joint_names = scene->GetControlledJointNames();
-                rest_pose = LookupBasePose();
-                 
+
+                // Wait for base_pose to have assignment
+                boost::shared_ptr<const geometry_msgs::PoseWithCovarianceStamped> base_pose_msg_ptr;
+                base_pose_msg_ptr = ros::topic::waitForMessage<geometry_msgs::PoseWithCovarianceStamped>("state_estimator/pose_in_odom");
+                BasePoseCb(base_pose_msg_ptr);
+                rest_pose = base_pose;
                 kinematic_tree = &(scene->GetKinematicTree());
                 Eigen::MatrixXd joint_limits = kinematic_tree->GetJointLimits();
                 relative_joint_limits_lower = joint_limits.col(0);
@@ -89,33 +94,26 @@ using namespace exotica;
         Setup::Destroy();   //Destroy all the exotica related objects
     }
 
-    //Finds the current tf transform for the base and converts that to XYZ+RPY
-    std::vector<double> MotionPlannerBaseClass::LookupBasePose() {
-         geometry_msgs::TransformStamped base_transform;
-         base_transform = tfBuffer.lookupTransform("odom","base",ros::Time(0),ros::Duration(3.0));
-         std::vector<double> base_pose(6,0.0);
-
-         //Extract translation components
-         base_pose[0] = base_transform.transform.translation.x; 
-         base_pose[1] = base_transform.transform.translation.y;
-         base_pose[2] = base_transform.transform.translation.z;
-
-         //Convert rotation components into RPY
-         tf2::Quaternion q(
-            base_transform.transform.rotation.x,
-            base_transform.transform.rotation.y,
-            base_transform.transform.rotation.z,
-            base_transform.transform.rotation.w
-         );
-         tf2::Matrix3x3 m(q);
-         double roll, pitch, yaw;
-         m.getRPY(roll,pitch,yaw);
-
-         //Set rotation components
-         base_pose[3] = roll;
-         base_pose[4] = pitch;
-         base_pose [5] = yaw;
-         return base_pose; //This vector effectively describes the base pose in terms of the 'odom' frame
+    void MotionPlannerBaseClass::BasePoseCb(const geometry_msgs::PoseWithCovarianceStampedConstPtr& pose_msg) {
+        // Map the first three elements of new base_pose to the position
+        std::vector<double> new_base_pose(6,0.0);
+        new_base_pose[0] = pose_msg->pose.pose.position.x;
+        new_base_pose[1] = pose_msg->pose.pose.position.y;
+        new_base_pose[2] = pose_msg->pose.pose.position.z;
+        // Convert Quaternion to Roll-Pitch-Yaw and map to the last three elements of new base_pose
+        tf2::Quaternion q(
+            pose_msg->pose.pose.orientation.x,
+            pose_msg->pose.pose.orientation.y,
+            pose_msg->pose.pose.orientation.z,
+            pose_msg->pose.pose.orientation.w
+        );
+        tf2::Matrix3x3 m(q);
+        double roll, pitch, yaw;
+        m.getRPY(roll, pitch, yaw);
+        new_base_pose[3] = roll;
+        new_base_pose[4] = pitch;
+        new_base_pose[5] = yaw;
+        base_pose = new_base_pose;
     }
 
     void MotionPlannerBaseClass::SetJointLimits() {
@@ -146,7 +144,7 @@ using namespace exotica;
 
     void MotionPlannerBaseClass::ResetRestPoseCb(const std_msgs::Bool::ConstPtr &msg) {
         if (msg->data == true) {
-            rest_pose = LookupBasePose(); //Resets the rest pose
+            rest_pose = base_pose; //Resets the rest pose
             SetJointLimits(); //Resets the joint limits according to new rest pose
         }
     }
@@ -162,7 +160,6 @@ using namespace exotica;
 
             //If base DOF is not zero, update the base pose in q
             if (base_dof != 0) {
-                std::vector<double> base_pose = LookupBasePose();
                 for (size_t i = 0; i < base_dof; i++) {
                     q(i) = base_pose[i];
                 }
@@ -227,7 +224,7 @@ using namespace exotica;
     }
 
     void MotionPlannerBaseClass::InteractiveServoing() {
-        std::vector<double> update_xy = LookupBasePose();
+        std::vector<double> update_xy = base_pose;
         std::map<std::string, double> model_state_xy;
         model_state_xy["world_joint/trans_x"] = update_xy[0];
         model_state_xy["world_joint/trans_y"] = update_xy[1];
@@ -294,7 +291,6 @@ using namespace exotica;
     }
 
     void MotionPlannerBaseClass::RobotStateCb(const std_msgs::Float64MultiArrayConstPtr &state) {
-        std::lock_guard<std::mutex> lock(state_mutex);
         Eigen::Map<const Eigen::VectorXd> tempMap(&state->data[0], state->data.size());
         robot_state = tempMap;
     }

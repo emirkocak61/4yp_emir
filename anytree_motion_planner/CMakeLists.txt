@@ -90,6 +90,7 @@ endfunction(CompileDynamic name)
 CompileDynamic(approachtarget)
 CompileDynamic(grasptarget)
 CompileDynamic(manipulatetarget)
+CompileDynamic(retracttarget)
 
 function(CompileDynamicStandaloneArm name)
   add_executable(${name}_dynamic src/dynamic/${name}.cpp src/dynamic/MotionPlannerStandaloneArmBaseClass.cpp)

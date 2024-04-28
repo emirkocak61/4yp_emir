@@ -5,16 +5,16 @@
 #include <bt_drs_msgs/retractTargetFeedback.h>
 #include <bt_drs_msgs/retractTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
-#include <anytree_motion_planner/MotionPlannerStandaloneArmBaseClass.hpp>
+#include <anytree_motion_planner/MotionPlannerBaseClass.hpp>
 
-class RetractTargetStandaloneArmActionServer : public MotionPlannerStandaloneArmBaseClass {
+class RetractTargetActionServer : public MotionPlannerBaseClass {
 public:
-    RetractTargetStandaloneArmActionServer()
+    RetractTargetActionServer()
     //Call the constructor of the base class
-    : MotionPlannerStandaloneArmBaseClass("retractTarget"),
-    robot_name("unitree"),
+    : MotionPlannerBaseClass("retractTarget"),
+    robot_name("anytree"),
     //Instantiate the action server
-    as_(nh_,action_name + "_as", boost::bind(&RetractTargetStandaloneArmActionServer::execute_cb,this, _1), false) {
+    as_(nh_,action_name + "_as", boost::bind(&RetractTargetActionServer::execute_cb,this, _1), false) {
         gripper_command_publisher = nh_.advertise<std_msgs::Bool>("/gripper_command",10);
         as_.start();
     }
@@ -126,6 +126,7 @@ protected:
 int main(int argc,char** argv) {
 
     ros::init(argc,argv,"retractTarget");
-    RetractTargetStandaloneArmActionServer s; //Construct action server
-    ros::spin();
+    RetractTargetActionServer s; //Construct action server
+    ros::MultiThreadedSpinner spinner(2); // Use 2 threads (1 for action client, 1 for subscriber callbacks)
+    spinner.spin();
 }
