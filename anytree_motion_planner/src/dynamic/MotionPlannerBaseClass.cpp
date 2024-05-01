@@ -19,7 +19,11 @@ using namespace exotica;
     MotionPlannerBaseClass::MotionPlannerBaseClass(const std::string& actionName) : 
                                 action_name(actionName), dt(0.02), rate(50),
                                 base_dof(6),start_tolerance(15.0e-2),
-                                error_metric("Position"),tolerance_(2.5e-2),
+                                gradient_tolerance(1.0e-4),
+                                gradient_counter_limit(10),
+                                convergence_tolerance(5.0e-2),
+                                previous_error(0.0),
+                                error_metric("Position"),tolerance_(1.0e-2),
                                 counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
         {   

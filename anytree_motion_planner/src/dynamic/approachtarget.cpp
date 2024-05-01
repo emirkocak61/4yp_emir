@@ -35,6 +35,7 @@ public:
         InitRobotPose();
         t = 0.0;
         int counter = 0;
+        int gradient_counter = 0;
 
         while (counter < counter_limit && t < t_limit){
             if (as_.isPreemptRequested()) {
@@ -55,6 +56,14 @@ public:
             //Check whether to increment the counter
             if (error < tolerance_) {counter++;}
 
+            //Check whether to increment the gradient counter
+            if (abs(error - previous_error) < gradient_tolerance) {gradient_counter++;}
+            else {gradient_counter = 0;}
+
+            previous_error = error;
+
+            if (gradient_counter >= gradient_counter_limit) {break;}
+
             //Sleep and increment time
             rate.sleep();
             t = t + dt;  
@@ -67,9 +76,17 @@ public:
                 ROS_INFO("%s: SUCCESS (Approached Target)", action_name.c_str());
                 as_.setSucceeded(result_);
             }
+            else if (gradient_counter >= gradient_counter_limit && error < convergence_tolerance){
+                ROS_INFO("%s: SUCCESS (Converged within tolerance of Target", action_name.c_str());
+                as_.setSucceeded(result_);
+            }
+            else if (gradient_counter >= gradient_counter_limit && error >= convergence_tolerance){
+                ROS_WARN("%s: FAILURE (Converged outside tolerance of Target", action_name.c_str());
+                as_.setAborted(result_);
+            }
             else {
                 result_.result = false;
-                ROS_WARN("%s ABORTED (Did not reached target within time limit)", action_name.c_str());
+                ROS_WARN("%s ABORTED (Did not reach Target within time limit)", action_name.c_str());
                 as_.setAborted(result_);
             }
         }
