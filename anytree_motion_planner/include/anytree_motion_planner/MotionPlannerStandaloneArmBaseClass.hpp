@@ -9,6 +9,7 @@
 #include "actionlib/client/simple_action_client.h"
 #include "actionlib/server/simple_action_server.h"
 #include "control_msgs/GripperCommandAction.h"
+#include "std_msgs/Float64.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "std_msgs/Bool.h"
 #include "trajectory_msgs/JointTrajectory.h"
@@ -92,6 +93,7 @@ protected:
 
     //ROS related members
     ros::Publisher motion_plan_publisher; //ROS Publisher to  /motion_plan topic
+    ros::Publisher error_publisher; //ROS Publisher to  /motion_plan topic
     ros::Subscriber state_subscriber;
     tf2_ros::Buffer tfBuffer;
     tf2_ros::TransformListener listener; //Listens to published transforms from the robot sim

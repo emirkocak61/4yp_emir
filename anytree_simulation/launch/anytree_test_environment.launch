@@ -30,7 +30,7 @@
   <group if="$(eval device == 'needle_valve')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/needle_valve/launch/spawn_needle_valve.launch">
       <arg name="needle_valve_ID" value="0"/>
-      <arg name="x" value="0.7"/>
+      <arg name="x" value="0.85"/>
       <arg name="y" value="0.0"/>
       <arg name="z" value="1.0"/>
       <arg name="Y" value="-1.5708"/>

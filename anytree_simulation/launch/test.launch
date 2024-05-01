@@ -4,10 +4,13 @@
     <arg name="planner_type" default="dynamic" />
     <arg name="isSim" default="true" />
     <param name="isSim" value="$(arg isSim)"/>
+    <arg name="base_dof" default="6" />
+    <param name="base_dof" value="$(arg base_dof)" />
 
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />
-    <node name="unitree" pkg="anytree_control" type="unitree" output="screen" />
+    <node name="unitree" pkg="anytree_control" type="UnitreeSim" output="screen" if="$(arg isSim)"/>
+    <node name="unitree" pkg="anytree_control" type="UnitreeHw" output="screen" unless="$(arg isSim)" />
 
     
     <!-- Motion Planner-->

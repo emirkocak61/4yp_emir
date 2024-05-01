@@ -1,0 +1,11 @@
+<root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <SequenceWithMemory>
+
+            <!-- Clear Base Command-->
+            <clearBaseCommandNode clear_base_command="true" />
+            <SleepNode msec="5000" />
+
+        </SequenceWithMemory>
+    </BehaviorTree>
+</root>

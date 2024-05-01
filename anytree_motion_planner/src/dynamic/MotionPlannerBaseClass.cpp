@@ -25,6 +25,7 @@ using namespace exotica;
         {   
             //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
+            error_publisher = nh_.advertise<std_msgs::Float64>("/motion_plan_error", 10);
             state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             base_pose_sub = nh_.subscribe("state_estimator/pose_in_odom",1,&MotionPlannerBaseClass::BasePoseCb,this);
             std::cout << "Action name: " << action_name << std::endl;
@@ -197,8 +198,11 @@ using namespace exotica;
 
     double MotionPlannerBaseClass::GetError() {
         //A weird implementation going on here...
+        std_msgs::Float64 error_msg;
         double state_cost = problem->GetStateCost(0);
         double square_error = state_cost * state_cost;
+        error_msg.data = std::sqrt(square_error);
+        error_publisher.publish(error_msg);
         return std::sqrt(square_error);
 
     }
