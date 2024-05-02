@@ -51,8 +51,8 @@
 
         <!-- Penalties on terminal joint positions and velocities -->
         <!-- Note high penalty on terminal velocities to encourage motion at earlier iterations -->
-        <Qf>0 0 0 0 0 0 0 0 0 0 0 0 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5 1e5</Qf>
-        <Qf_rate>1</Qf_rate> <!-- Relative scaling on Qf matrix -->
+        <Qf>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1</Qf>
+        <Qf_rate>1e5</Qf_rate> <!-- Relative scaling on Qf matrix -->
 
         <!-- Weights on joint accelerations -->
         <R>1 1 1 1 1 1 1 1 1 1 1 1</R>
