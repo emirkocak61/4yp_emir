@@ -47,6 +47,11 @@ public:
     */
     void BasePoseCb(const geometry_msgs::PoseWithCovarianceStampedConstPtr& pose_msg);
     /**
+     * @brief Looks up the current tf transform for the base pose and converts  it to XYZ+RPY
+     * @return std::vector<double> Base pose described in the 'odom' frame
+    */
+    std::vector<double> LookupBasePose();
+    /**
      * @brief Sets the joint limits in the EXOTica scene based on the current rest pose
     */
     void SetJointLimits();
@@ -101,14 +106,14 @@ protected:
     size_t base_dof; //Degree of freedom of the base, 6 in the case of virtual floating base
     double start_tolerance; //Tolerance between the End Effector Frame and Target at the start of motion plan
     double gradient_tolerance; //Tolerance between previous and current error, used for stopping upon convergence
+    int gradient_counter_limit; //No of consecutive iterations for which gradient is within tolerance
     double convergence_tolerance; //Tolerance between End Effector Frame and Target once having stopped upon convergence
+    double previous_error; //Records previous planning error (for computation of error gradient)
     std::string error_metric;
     double tolerance_; //Tolerance between EEF and Target
     int counter_limit; //No of consecutive iterations for which EEF is within tolerance
-    int gradient_counter_limit; //No of consecutive iterations for which gradient is within tolerance
     double t_limit; //Time limit to achieve goal 
     double t; //Time in exotica planning problem
-    double previous_error; //Records previous planning error (for computation of error gradient)
     Eigen::VectorXd q; //Joint states of the robot
     Eigen::VectorXd robot_state;
     std::vector<double> base_pose;

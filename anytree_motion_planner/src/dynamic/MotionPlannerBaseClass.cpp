@@ -121,6 +121,34 @@ using namespace exotica;
         base_pose = new_base_pose;
     }
 
+    std::vector<double> MotionPlannerBaseClass::LookupBasePose() {
+         geometry_msgs::TransformStamped base_transform;
+         base_transform = tfBuffer.lookupTransform("odom","base",ros::Time(0),ros::Duration(3.0));
+         std::vector<double> new_base_pose(6,0.0);
+
+         //Extract translation components
+         new_base_pose[0] = base_transform.transform.translation.x; 
+         new_base_pose[1] = base_transform.transform.translation.y;
+         new_base_pose[2] = base_transform.transform.translation.z;
+
+         //Convert rotation components into RPY
+         tf2::Quaternion q(
+            base_transform.transform.rotation.x,
+            base_transform.transform.rotation.y,
+            base_transform.transform.rotation.z,
+            base_transform.transform.rotation.w
+         );
+         tf2::Matrix3x3 m(q);
+         double roll, pitch, yaw;
+         m.getRPY(roll,pitch,yaw);
+
+         //Set rotation components
+         new_base_pose[3] = roll;
+         new_base_pose[4] = pitch;
+         new_base_pose [5] = yaw;
+         return new_base_pose; //This vector effectively describes the base pose in terms of the 'odom' frame
+    }
+
     void MotionPlannerBaseClass::SetJointLimits() {
         std::map<std::string,double> model_state;
         model_state["world_joint/trans_x"] = rest_pose[0];
@@ -150,6 +178,7 @@ using namespace exotica;
     void MotionPlannerBaseClass::ResetRestPoseCb(const std_msgs::Bool::ConstPtr &msg) {
         if (msg->data == true) {
             rest_pose = base_pose; //Resets the rest pose
+            // rest_pose = LookupBasePose();
             SetJointLimits(); //Resets the joint limits according to new rest pose
         }
     }
@@ -165,8 +194,10 @@ using namespace exotica;
 
             //If base DOF is not zero, update the base pose in q
             if (base_dof != 0) {
+                // std::vector<double> start_base_pose = LookupBasePose();
                 for (size_t i = 0; i < base_dof; i++) {
                     q(i) = base_pose[i];
+                    // q(i) = start_base_pose[i];
                 }
                 Eigen::MatrixXd joint_limits = kinematic_tree->GetJointLimits();
                 //Clamp q to within constraints
@@ -232,7 +263,8 @@ using namespace exotica;
     }
 
     void MotionPlannerBaseClass::InteractiveServoing() {
-        std::vector<double> update_xy = base_pose;
+        std::vector<double> update_xy = base_pose;        
+        // std::vector<double> update_xy = LookupBasePose();
         std::map<std::string, double> model_state_xy;
         model_state_xy["world_joint/trans_x"] = update_xy[0];
         model_state_xy["world_joint/trans_y"] = update_xy[1];

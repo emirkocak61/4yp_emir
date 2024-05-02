@@ -81,14 +81,14 @@ protected:
     ros::Rate rate; //Control frequency
     double start_tolerance; //Tolerance between the End Effector Frame and Target at the start of motion plan
     double gradient_tolerance; //Tolerance between previous and current error, used for stopping upon convergence
+    int gradient_counter_limit; //No of consecutive iterations for which gradient is within tolerance
     double convergence_tolerance; //Tolerance between End Effector Frame and Target once having stopped upon convergence
+    double previous_error; //Records previous planning error (for computation of error gradient)
     std::string error_metric;
     double tolerance_; //Tolerance between EEF and Target
     int counter_limit; //No of consecutive iterations for which EEF is within tolerance
-    int gradient_counter_limit; //No of consecutive iterations for which gradient is within tolerance
     double t_limit; //Time limit to achieve goal 
     double t; //Time in exotica planning problem
-    double previous_error; //Records previous planning error (for computation of error gradient)
     Eigen::VectorXd q; //Joint states of the robot
     Eigen::VectorXd robot_state;
     //If the real arm can't follow the motion plans for manipulation, the motion plan should be stopped
