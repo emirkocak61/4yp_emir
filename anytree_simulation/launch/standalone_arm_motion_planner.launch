@@ -2,6 +2,8 @@
 <launch>
     <!-- This arg enables to choose between kinematic or dynamic planners -->
     <arg name="planner_type" default="dynamic" />
+    <arg name="debug_motion_plan" default="true" />
+    <param name="debug_motion_plan" value="$(arg debug_motion_plan)" />
     
     <!-- Motion Planner-->
     <group if="$(eval planner_type == 'kinematic')">
@@ -15,5 +17,8 @@
         <node name="grasptarget" pkg="anytree_motion_planner" type="grasptargetStandaloneArm_dynamic" output="screen" />
         <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetargetStandaloneArm_dynamic" output="screen" />
         <node name="retracttarget" pkg="anytree_motion_planner" type="retracttargetStandaloneArm_dynamic" output="screen" />
-    </group>    
+    </group> 
+
+  <node name="rviz_debug_motion_plan" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/debug_motion_plan_standalone_arm.rviz" if="$(arg debug_motion_plan)"/>
+
 </launch>

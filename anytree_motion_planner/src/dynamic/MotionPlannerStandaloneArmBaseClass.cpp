@@ -27,10 +27,9 @@ using namespace exotica;
                                                                             counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                                                             self_counter(10), listener(tfBuffer)
         {   
-            //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             error_publisher = nh_.advertise<std_msgs::Float64>("/motion_plan_error", 10);
-            state_subscriber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MotionPlannerStandaloneArmBaseClass::RobotStateCb,this);
+            // state_subscriber = nh_.subscribe("/z1_gazebo/joint_states_filtered",10,&MotionPlannerStandaloneArmBaseClass::RobotStateCb,this);
             std::cout << "Action name: " << action_name << std::endl;
             solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic/" + action_name + "StandaloneArm_dynamic.xml");
             PlanningProblemPtr planning_problem =  solver->GetProblem();

@@ -6,6 +6,8 @@
     <param name="isSim" value="$(arg isSim)"/>
     <arg name="base_dof" default="6" />
     <param name="base_dof" value="$(arg base_dof)" />
+    <arg name="debug_motion_plan" default="false" />
+    <param name="debug_motion_plan" value="$(arg debug_motion_plan)" />
 
     <!-- Control Nodes-->
     <node name="anytree_base_control" pkg="anytree_control" type="anytree_base_control.py" output="screen" />
@@ -26,4 +28,7 @@
         <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_dynamic" output="screen" />
         <node name="retracttarget" pkg="anytree_motion_planner" type="retracttarget_dynamic" output="screen" />
     </group>    
+
+    <node name="rviz_debug_motion_plan" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/debug_motion_plan.rviz" if="$(arg debug_motion_plan)"/>
+
 </launch>

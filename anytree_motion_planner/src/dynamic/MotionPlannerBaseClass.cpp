@@ -27,10 +27,18 @@ using namespace exotica;
                                 counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
         {   
-            //Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("as")));
+            bool debug_motion_plan = false;
+            if (ros::param::has("/debug_motion_plan")) {
+                ros::param::get("/debug_motion_plan", debug_motion_plan);
+            }
+            if (debug_motion_plan) {Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("~")));}
+            else {
+                ros::AsyncSpinner spinner(2);
+                spinner.start();
+            }            
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             error_publisher = nh_.advertise<std_msgs::Float64>("/motion_plan_error", 10);
-            state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
+            // state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
             base_pose_sub = nh_.subscribe("state_estimator/pose_in_odom",1,&MotionPlannerBaseClass::BasePoseCb,this);
             std::cout << "Action name: " << action_name << std::endl;
             solver = XMLLoader::LoadSolver("{anytree_motion_planner}/resources/configs/dynamic/" + action_name + "_dynamic.xml");

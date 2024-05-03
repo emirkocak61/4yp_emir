@@ -101,8 +101,16 @@ protected:
 };
 
 int main(int argc,char** argv) {
-
-    ros::init(argc,argv,"ApproachTarget");
+    ros::init(argc,argv,"approachTarget");
+    bool debug_motion_plan = false;
+    if (ros::param::has("/debug_motion_plan")) {
+        ros::param::get("/debug_motion_plan", debug_motion_plan);
+    }
+    if (debug_motion_plan) {Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("~")));}
     ApproachTargetStandaloneArmActionServer s; //Construct action server
-    ros::spin();
+    if (!debug_motion_plan) {
+        ros::MultiThreadedSpinner spinner(2);
+        spinner.spin();
+    }
+    else {ros::waitForShutdown();}
 }
