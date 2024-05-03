@@ -2,7 +2,7 @@
 <launch>
     <!-- This arg enables to choose between kinematic or dynamic planners -->
     <arg name="planner_type" default="dynamic" />
-    <arg name="debug_motion_plan" default="true" />
+    <arg name="debug_motion_plan" default="false" />
     <param name="debug_motion_plan" value="$(arg debug_motion_plan)" />
     
     <!-- Motion Planner-->
