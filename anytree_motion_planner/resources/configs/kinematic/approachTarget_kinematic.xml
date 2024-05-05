@@ -36,13 +36,13 @@
                 </EndEffector>
             </EffFrame>
             <JointLimit Name="JointLimit" />
-            <JointVelocityLimit Name="JointVelocityLimit" dt="0.02" SafePercentage="0.01" MaximumJointVelocity="1.0" Debug="0" />
+            <JointVelocityLimit Name="JointVelocityLimit" dt="0.1" SafePercentage="0.01" MaximumJointVelocity="1.0" Debug="0" />
         </Maps>
         
         <Cost>
             <Task Task="Position" />
             <!-- Note: gets set in Python for each forward-iteration in finite horizon anyway... -->
-            <Task Task="JointLimit" Rho="1e3"/>
+            <Task Task="JointLimit" Rho="1e5"/>
             <Task Task="JointVelocityLimit" Rho="1"/>
         </Cost>
 

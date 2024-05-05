@@ -18,8 +18,10 @@ int main(int argc,char** argv) {
     //Use behavior tree factory to register custom nodes
     BT::BehaviorTreeFactory factory;
 
+    // To use compiled shared libraries
+    factory.registerFromROSPlugins();
+
     factory.registerNodeType<MotionTransitionerAnymal>("GoToMotionState");
-    factory.registerNodeType<ExampleNodes::SaySomething>("SaySomething");
     factory.registerNodeType<ApproachTarget>("ApproachTarget");
     factory.registerNodeType<GraspTarget>("GraspTarget");
     factory.registerNodeType<ManipulateTarget>("ManipulateTarget");
@@ -28,7 +30,8 @@ int main(int argc,char** argv) {
 
     
     //Load tree from xml file
-    std::string tree_path = package_path + "/resources/trees/manipulate.xml";
+    //std::string tree_path = package_path + "/resources/trees/manipulate.xml";
+    std::string tree_path = package_path + "/resources/trees/main.xml";
     BT::Tree tree = factory.createTreeFromFile(tree_path);
 
     tree.tickWhileRunning();

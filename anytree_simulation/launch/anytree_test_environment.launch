@@ -7,11 +7,11 @@
     <arg name="extension_config_file" value="$(find anytree_simulation)/config/drs_sim_anytree.yaml"/>
   </include>
 
-  <arg name="device" default="needle_valve" />
+  <arg name="device_type" default="DN40_globe_valve"/>
 
   <!--=================================================================================================================================================================-->
   <!-- Handles -->
-  <group if="$(eval device == 'handle')">
+  <group if="$(eval device_type == 'handle')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/handle/launch/spawn_handle.launch">
         <arg name="handle_ID" value="0"/>
         <arg name="x" value="-1.0"/>
@@ -27,7 +27,7 @@
 
 
 <!-- Valves -->
-  <group if="$(eval device == 'needle_valve')">
+  <group if="$(eval device_type == 'needle_valve')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/needle_valve/launch/spawn_needle_valve.launch">
       <arg name="needle_valve_ID" value="0"/>
       <arg name="x" value="0.7"/>
@@ -40,7 +40,7 @@
   </group>
 
 <!-- TODO: Fix orientation -->
-  <group if="$(eval device == 'gate_valve')">
+  <group if="$(eval device_type == 'gate_valve')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/PN16_gate_valve/launch/spawn_PN16_gate_valve.launch">
       <arg name="PN16_gate_valve_ID" value="0"/>
       <arg name="x" value="0.5"/>
@@ -51,6 +51,55 @@
       <arg name="R" value="0.0"/>
     </include>
   </group>
+
+  <group if="$(eval device_type == 'button')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/button/launch/spawn_button.launch">
+      <arg name="button_ID" value="0"/>
+      <arg name="x" value="0.7"/>
+      <arg name="y" value="0.0"/>
+      <arg name="z" value="1.0"/>
+      <arg name="Y" value="1.5708"/>
+      <arg name="P" value="0.0"/>
+      <arg name="R" value="-1.5708"/>
+    </include>
+  </group>
+
+  <group if="$(eval device_type == 'DN40_globe_valve')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/DN40_globe_valve/launch/spawn_DN40_globe_valve.launch">
+      <arg name="DN40_globe_valve_ID" value="0"/>
+      <arg name="x" value="1.2"/>
+      <arg name="y" value="0.0"/>
+      <arg name="z" value="1.0"/>
+      <arg name="Y" value="1.5708"/>
+      <arg name="P" value="0.0"/>
+      <arg name="R" value="-1.5708"/>
+    </include>
+  </group>
+
+  <group if="$(eval device_type == 'valve')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/valve/launch/spawn_valve.launch">
+      <arg name="valve_ID" value="0"/>
+      <arg name="x" value="2.0"/>
+      <arg name="y" value="0.0"/>
+      <arg name="z" value="0.5"/>
+      <arg name="Y" value="-1.5708"/>
+      <arg name="P" value="0.0"/>
+      <arg name="R" value="1.5708"/>
+    </include>
+  </group>
+
+  <group if="$(eval device_type == 'HNF361_safety_switch')">
+    <include file="$(find manipulation_playground_articulated_devices)/devices/HNF361_safety_switch/launch/spawn_HNF361_safety_switch.launch">
+      <arg name="HNF361_safety_switch_ID" value="0"/>
+      <arg name="x" value="2.0"/>
+      <arg name="y" value="1.0"/>
+      <arg name="z" value="0.5"/>
+      <arg name="Y" value="-1.5708"/>
+      <arg name="P" value="0.0"/>
+      <arg name="R" value="1.5708"/>
+    </include>
+  </group>
+
 
 <!--Connect odom and exotica/world_frame-->
   <node pkg="tf2_ros" type="static_transform_publisher" name="exotica_world_frame_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 odom exotica/world_frame"/>

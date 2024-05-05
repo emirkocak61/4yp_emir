@@ -15,7 +15,6 @@ public:
     robot_name("anytree"),
     //Instantiate the action server
     as_(nh_,action_name + "_as", boost::bind(&GraspTargetActionServer::execute_cb,this, _1), false) {
-        gripper_command_publisher = nh_.advertise<std_msgs::Bool>("/gripper_command",10);
         as_.start();
     }
 
@@ -36,14 +35,63 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
     Eigen::MatrixXd trajectory;
     if (goal->device_type == "needle_valve") {
        if(goal->strategy == 0) {
-        trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
-        trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-        trajectory.row(1) << 2.0, 0.0, -0.0, 0.0, 0.0, 0.0, 0.0; //head on
-        trajectory.row(2) << 4.0, 0.0, -0.0, 0.0, 0.0, 0.0, -1.5708; //rotate gripper
-        trajectory.row(3) << 6.0, 0.0, -0.0, -0.097, 0.0, 0.0, -1.5708; //grasp
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+        trajectory.row(1) << 2.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 6.0, 0.015, 0.0, 0.190, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 7.0, 0.0, 0.0, 0.190, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 9.0, 0.0, 0.0, 0.190, 0.0, 0.0, 1.5708; //hold 
        } 
+       else if(goal->strategy == 1){
+        double phi = pi/5;
+        trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
+        trajectory.row(0) << 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 1.5708; //start
+        trajectory.row(1) << 1.0, 0.015, 0.0, 0.3, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 10.0, 0.015, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(3) << 11.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 13.0, 0.0, -0.138*sin(phi), 0.138*cos(phi), 0.0, -phi, 1.5708; //hold 
+       }
     }
-    Trajectory traj_exotica(trajectory,1.0);
+
+    else if (goal->device_type == "button"){
+        if (goal->strategy == 0) {
+            if (goal->direction == 1) { //Pushing the button
+                trajectory = Eigen::MatrixXd::Zero(3,7); //time + xyz + rpy 
+                trajectory.row(0) << 0.5, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+                trajectory.row(1) << 3.0, 0.0, -0.0, 0.250, 0.0, 0.0, 0.0; // 
+                trajectory.row(2) << 6.0, 0.0, 0.0, 0.225,0.0, 0.0, 0.0;
+            }
+            else if (goal->direction == -1) {   //Releasing the button
+                trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy 
+                trajectory.row(0) << 0.5, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+                trajectory.row(1) << 2.0, 0.0, -0.021, 0.225, 0.0, 0.0, 0.0; //get closer from below
+                trajectory.row(2) << 6.0, 0.0, -0.021, 0.187,0.0, 0.0, 0.0; //Get really close
+                trajectory.row(3) << 8.0, 0.0, -0.017, 0.187,0.0, 0.0, 0.0; //move slightly upwards for grasping with the non-actuated gripper  
+            }
+        }    
+    }
+    else if (goal->device_type == "DN40_globe_valve") {
+        double radius = 0.086;
+        int direction = goal->direction;
+        if (goal->strategy == 0) {
+            trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+            trajectory.row(0) << 0.5, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+            trajectory.row(1) << 3.0, 0.0, radius - 0.02, 0.250, 0.0, 0.0, 0.0; //Head on
+            trajectory.row(2) << 6.0, 0.0, radius - 0.02, 0.135, 0.0, 0.0, 0.0; //grasp
+            trajectory.row(3) << 7.0, 0.0, radius - 0.017, 0.135, 0.0, 0.0, 0.0; //hold
+        }
+
+        else if (goal->strategy == 1) {
+            double offset = 0.7854; // 45 degrees
+            trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
+            trajectory.row(0) << 0.5, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0; //start
+            trajectory.row(1) << 3.0, 0.0, -radius, 0.250, 0.0, 0.0, 0.0; //Head on
+            trajectory.row(2) << 6.0, radius/2 + 0.019, -radius + 0.019, 0.135, 0.0, 0.0, offset; //grasp
+            trajectory.row(3) << 7.0, radius/2 + 0.018, -radius + 0.019 , 0.135, 0.0, 0.0, offset; //hold
+        }
+    }
+    
+    Trajectory traj_exotica(trajectory,0.1);
     return traj_exotica;
 }
 
@@ -53,8 +101,7 @@ void PerformTrajectory(const  std::shared_ptr<Trajectory> &trajectory) override 
     scene->AddTrajectory("TargetRelative",trajectory);
     t = 0.0;
     Eigen::MatrixXd data = trajectory->GetData();
-    t_limit = data(data.rows()-1,0);
-    std_msgs::Bool gripper_goal;
+    t_limit = data(data.rows()-1,0) + 1; //Add a constant as a safety margin
 
     //Check that EEF is within tolerance of the start waypoint
     problem->SetStartTime(t);
@@ -112,7 +159,6 @@ protected:
     actionlib::SimpleActionServer<bt_drs_msgs::graspTargetAction> as_;
     bt_drs_msgs::graspTargetFeedback feedback_;
     bt_drs_msgs::graspTargetResult result_;
-    ros::Publisher gripper_command_publisher;
 };
 
 int main(int argc,char** argv) {

@@ -25,7 +25,8 @@ public:
         return {BT::InputPort<Position3D>("position"),
                 BT::InputPort<Orientation3D>("orientation_3D"),
                 BT::InputPort<std::string>("device_type"),
-                BT::InputPort<int>("strategy")};
+                BT::InputPort<int>("strategy"),
+                BT::InputPort<int>("direction")};
     }
     
     geometry_msgs::Pose GetPoseFromEuler(const Position3D &position,
@@ -53,6 +54,7 @@ public:
         auto orientation_bt = getInput<Orientation3D>("orientation_3D");
         auto device_type = getInput<std::string>("device_type");
         auto strategy = getInput<int>("strategy");
+        auto direction = getInput<int>("direction");
 
         if (!position_bt && !orientation_bt) {
             throw BT::RuntimeError("Missing required inputs");
@@ -72,6 +74,7 @@ public:
         goal.target = GetPoseFromEuler(position,orientation);
         goal.device_type = device_type.value();
         goal.strategy = strategy.value();
+        goal.direction = direction.value();
         std::cout << "Sending grasping goal..." << std::endl;
 
         client_ptr->sendGoal(goal);

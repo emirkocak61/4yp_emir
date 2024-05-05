@@ -62,11 +62,11 @@ public:
         double alpha = 0.99;
         double rho = 1e1;
         for (int t(0); t < T; t++) {
-            //rho = pow(alpha,t) * 1e3; //Rho decreses with each time step
+            //rho = pow(alpha,t) * 1e1; //Rho decreses with each time step
             problem->cost.SetGoal("Position", goal, t);
             problem->cost.SetRho("Position",rho,t);
         }
-        problem->cost.SetRho("Position",1e3,T-1);
+        //problem->cost.SetRho("Position",1e3,T-1);
     }
 
     void SetJointLimits() {  

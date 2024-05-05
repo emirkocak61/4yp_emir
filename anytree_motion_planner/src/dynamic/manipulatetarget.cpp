@@ -6,6 +6,7 @@
 #include <bt_drs_msgs/manipulateTargetResult.h>
 #include <actionlib/server/simple_action_server.h>
 #include <anytree_motion_planner/MotionPlannerBaseClass.hpp>
+#include <cmath>
 
 class ManipulateTargetActionServer : public MotionPlannerBaseClass {
 public:
@@ -37,7 +38,7 @@ public:
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0) + 5; //Add a constant as a safety margin
+        t_limit = data(data.rows()-1,0) + 2; //Add a constant as a safety margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
@@ -105,21 +106,111 @@ public:
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, 0.0, 0.0, -0.097, 0.0, 0.0, manipulation_done - 1.5708;
+                    point << time_stamp, 0.0, 0.0, 0.190, 0.0, 0.0, -manipulation_done + 1.5708;
                     trajectoryPoints.push_back(point);
                 }
             }
-        }
-        //Now convert the std::vector into Eigen Matrix
-        size_t n = trajectoryPoints.size();
-        int m = 7;
-        trajectory = Eigen::MatrixXd::Zero(n,m);
-        
-        //Copy the manipulation trajectory
-        for (size_t i = 0; i < n; i++) {
-            trajectory.row(i) = trajectoryPoints[i];
+
+            //Now convert the std::vector into Eigen Matrix
+            size_t n = trajectoryPoints.size();
+            int m = 7;
+            trajectory = Eigen::MatrixXd::Zero(n,m);
+            
+            //Copy the manipulation trajectory
+            for (size_t i = 0; i < n; i++) {
+                trajectory.row(i) = trajectoryPoints[i];
+            }
         }
 
+        else if (goal->device_type == "button") {
+            manipulation_todo = 1.0; //Button is either on or it isn't
+            if (goal->strategy == 0) {
+                if (goal->direction == 1) { //Push button
+                    trajectory = Eigen::MatrixXd::Zero(6,7); //time + xyz + rpy
+                    trajectory.row(0) << 0.5, 0.0, 0.0, 0.225,0.0, 0.0, 0.0;
+                    trajectory.row(1) << 1.5, 0.0, 0.0, 0.200, 0.0, 0.0, 0.0;
+                    trajectory.row(2) << 2.0, 0.0, 0.0, 0.195, 0.0, 0.0, 0.0;
+                    trajectory.row(3) << 2.5, 0.0, 0.0, 0.195, 0.0, 0.0, 0.0;
+                    trajectory.row(4) << 3.0, 0.0, 0.0, 0.200, 0.0, 0.0,0.0;
+                    trajectory.row(5) << 3.5, 0.0, 0.0, 0.225, 0.0, 0.0, 0.0;
+                }
+                else if (goal->direction == -1) { //Release button
+                    trajectory = Eigen::MatrixXd::Zero(3,7); //time + xyz + rpy
+                    trajectory.row(0) << 0.0, 0.0, -0.017, 0.187, 0.0, 0.0, 0.0;
+                    trajectory.row(1) << 5.0, 0.0, -0.017, 0.187, 0.0, 0.0, -1.5708;
+                    trajectory.row(2) << 6.0, 0.0, -0.017, 0.187, 0.0, 0.0, -1.5708;
+                }
+            }
+        }
+
+        else if (goal->device_type == "DN40_globe_valve") {
+            max_increment = 0.003;
+            double radius = 0.086;
+            manipulation_todo = goal->manipulation_todo;
+            int direction = goal->direction;
+
+            if (goal->strategy == 0) {
+                double time_stamp = 0.0;
+                double manipulation_done = 0.0;
+
+                Eigen::VectorXd startPoint(7);
+                startPoint << time_stamp, 0.0, radius - 0.017, 0.135, 0.0, 0.0, 0.0;
+                trajectoryPoints.push_back(startPoint);
+
+                while (std::abs(manipulation_done) < std::abs(manipulation_todo)) {
+                    time_stamp += dt;
+                    manipulation_done += max_increment * direction;
+                    Eigen::VectorXd point(7);
+                    point << time_stamp,
+                             (radius - 0.017) * std::sin(manipulation_done),
+                             (radius - 0.017) * std::cos(manipulation_done),
+                             0.135,
+                             0.0,
+                             0.0,
+                             -manipulation_done;
+                    trajectoryPoints.push_back(point);
+                }
+            }
+
+            if (goal->strategy == 1) {
+                double time_stamp = 0.0;
+                double manipulation_done = 0.0;
+                double offset = 0.7854; // 45 degrees
+
+                Eigen::VectorXd startPoint(7);
+                startPoint << time_stamp, radius/2 + 0.018, -radius + 0.019 , 0.135, 0.0, 0.0, offset; //hold
+                trajectoryPoints.push_back(startPoint);
+                double phi = atan2((-radius + 0.019), (radius/2 + 0.018));
+                double r = sqrt(pow((radius/2 + 0.018),2) + pow((-radius + 0.019),2));
+                while (std::abs(manipulation_done) < std::abs(manipulation_todo)) {
+                    time_stamp += dt;
+                    manipulation_done += max_increment * -1;
+                    Eigen::VectorXd point(7);
+                    point << time_stamp,
+                             r * std::cos(phi + manipulation_done) ,
+                             r * std::sin(phi + manipulation_done),
+                             0.135,
+                             0.0,
+                             0.0,
+                             offset+manipulation_done;
+                    std::cout << point.transpose() << std::endl;
+                    trajectoryPoints.push_back(point);
+                }
+            }
+
+            //Now convert the std::vector into Eigen Matrix
+            size_t n = trajectoryPoints.size();
+            int m = 7;
+            trajectory = Eigen::MatrixXd::Zero(n,m);
+            
+            //Copy the manipulation trajectory
+            for (size_t i = 0; i < n; i++) {
+                trajectory.row(i) = trajectoryPoints[i];
+            }
+        }
+
+
+        
         Trajectory traj_exotica(trajectory,0.1);
         return traj_exotica;
     }

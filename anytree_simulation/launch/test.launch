@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- This arg enables to choose between kinematic or dynamic planners -->
-    <arg name="planner_type" default="kinematic" />
+    <arg name="planner_type" default="dynamic" />
     <arg name="isSim" default="true" />
     <arg name="base_dof" default="6" />
     <param name="isSim" value="$(arg isSim)"/>
@@ -23,5 +23,6 @@
         <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_dynamic" output="screen" />
         <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_dynamic" output="screen" />
         <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_dynamic" output="screen" />
+        <node name="retracttarget" pkg="anytree_motion_planner" type="retracttarget_dynamic" output="screen" />
     </group>    
 </launch>

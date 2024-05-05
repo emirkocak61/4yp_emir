@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree" BTCPP_format="4">
+
+
+    <BehaviorTree ID="MainTree">
+        <Sequence name="testing">
+             <!-- Manipulation Task Arguments -->
+            <Script code="device_type:='DN40_globe_valve'" />
+            <Script code="direction:= -1" />
+            <Script code="manipulation_todo:= 1.5708" />
+            <!-- Set to -1 for adaptive behavior -->
+            <Script code="input_strategy:= 1" />
+
+            <Script code="device_position:= '0.9 0.0 1.0'"/>  //x_offset = -0.3 for DN40_globe_valve
+            <Script code="device_orientation:= '1.5708 0.0 -1.5708'"/>
+
+            <!-- Move to startFlat State -->
+            <SaySomething message="Moving back to start flat" />
+            <UnitreeMoveArm duration="1000" label="startFlat"/>
+            
+            <!-- Manipulation Task -->
+            <SubTree ID="ManipulationSequence" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" device_position="{device_position}"
+                                       device_orientation="{device_orientation}" strategy="{input_strategy}"/>
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="ManipulationSequence">
+        <Sequence>
+            <SaySomething message="Starting Manipulation Task..." />
+
+            <!-- Close Gripper (if not already closed)-->
+            <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+
+            <GoToMotionState goal_motion_state="torso_control"/>
+            <SleepNode msec="3000" />
+            <SaySomething message="Transitioned to torso control, setting target..."/>
+
+            <SubTree _skipIf="device_type != 'button'" ID="ManipulateButton" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" device_position="{device_position}" device_orientation="{device_orientation}" strategy="{strategy}" />
+            <SubTree _skipIf="device_type != 'needle_valve'" ID="ManipulateNeedleValve" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" device_position="{device_position}" device_orientation="{device_orientation}" strategy="{strategy}" />
+            <SubTree _skipIf="device_type != 'DN40_globe_valve'" ID="ManipulateGlobeValve" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" device_position="{device_position}" device_orientation="{device_orientation}" strategy="{strategy}" />
+            <UnitreeMoveArm duration="2000" label="startFlat"/> 
+        </Sequence>
+    </BehaviorTree>
+                                    
+    <BehaviorTree ID="ManipulateButton">
+        <Sequence>
+            <ApproachTarget position="{device_position}" orientation_3D="{device_orientation}"/>
+            <Precondition if="direction == -1" else="SUCCESS">
+                <Sequence>
+                    <UnitreeGripperCommand targetQ="-0.70" duration="1000"/>
+                    <GraspTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+                    <UnitreeGripperCommand targetQ="-0.23" duration="1000"/>
+                    <SleepNode msec="2000"/>
+                </Sequence>
+            </Precondition>
+            <Precondition if="direction == 1" else="SUCCESS">
+                <GraspTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            </Precondition>
+            
+            <ManipulateTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" 
+                              direction="{direction}"  manipulation_todo="{manipulation_todo}" /> 
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="ManipulateNeedleValve">
+        <Sequence>
+            <SaySomething message="Manipulating needle valve" />
+            <ApproachTarget position="{device_position}" orientation_3D="{device_orientation}"/>
+            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+            <GraspTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+            <ManipulateTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" 
+                              direction="{direction}"  manipulation_todo="{manipulation_todo}" />
+            <SaySomething message="Retracting..." />
+            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+            <Script code="source_frame:='gripperStator'" />
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+            <!--retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/ -->
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="ManipulateGlobeValve">
+        <Sequence>
+            <SaySomething message="Manipulating globe valve" />
+            <ApproachTarget position="{device_position}" orientation_3D="{device_orientation}"/>
+            <UnitreeGripperCommand targetQ="-0.60" duration="1000"/>
+            <GraspTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <UnitreeGripperCommand targetQ="-0.60" duration="1000"/>
+            <SleepNode msec="1000" />
+            <ManipulateTarget position="{device_position}" orientation_3D="{device_orientation}" device_type="{device_type}" strategy="{strategy}" 
+                              direction="{direction}"  manipulation_todo="{manipulation_todo}" />
+            <SaySomething message="Retracting..." />
+            <UnitreeGripperCommand targetQ="-0.60" duration="1000"/>
+            <SleepNode msec="3000" />
+
+            <!--
+            <Script code="source_frame:='gripperStator'" />
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+            <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="-1"/ -->
+        </Sequence>
+    </BehaviorTree>
+
+</root>
+
