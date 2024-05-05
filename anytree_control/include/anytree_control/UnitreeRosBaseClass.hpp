@@ -150,12 +150,12 @@ public:
         //Timer timer(control_frequency);
         Eigen::VectorXd noise = Eigen::VectorXd::Ones(6);
         for(int i(0); i<duration; i++){
-            arm.q =  initQ * (1-i/duration) + targetQ * (i/duration); //+ distribution(generator) * noise;
+            arm.q =  initQ * (1-i/duration) + targetQ * (i/duration); // + distribution(generator) * noise;
             arm.qd = (targetQ - initQ) / (duration * dt);
             arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
             //gripperQ = -0.001;
             arm.setArmCmd(arm.q, arm.qd, arm.tau);
-            //setGripperCmd(gripperQ, gripperW, gripperTau);
+            arm.setGripperCmd(arm.gripperQ, arm.gripperW);
             arm.sendRecv();
             timer.sleep();
         }
