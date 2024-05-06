@@ -2,10 +2,17 @@
 <launch>
 
     <arg name="isSim" default="false"/>
+    <arg name="blind" default="false"/>
 
     <!-- getHandleAngle-->
-    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_precise.py" output="screen" unless="$(arg isSim)"/>
-    <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_sim.py" output="screen" if="$(arg isSim)"/>
+    <group unless="$(arg blind)">
+        <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_precise.py" output="screen" unless="$(arg isSim)"/>
+        <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_sim.py" output="screen" if="$(arg isSim)"/>
+    </group>
+
+    <group if="$(arg blind)">
+        <node name="getHandleAngle" pkg="template_matcher" type="getHandleAngle_dummy.py" output="screen"/>
+    </group>
 
     <!-- manipulationDataRecorder-->
     <node name="manipulationDataRecorder" pkg="anytree_adaptive" type="manipulationDataRecorder.py" output="screen"/>
