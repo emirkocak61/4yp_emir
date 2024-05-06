@@ -67,9 +67,9 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/include
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_controller/config
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_controller/include
+  ${PROJECT_SOURCE_DIR}/../../z1_sdk/include
+  ${PROJECT_SOURCE_DIR}/../../z1_controller/config
+  ${PROJECT_SOURCE_DIR}/../../z1_controller/include
   /usr/include/eigen3
 )
 # TODO: improve include definitions
@@ -79,34 +79,10 @@ function(Compile name)
   add_dependencies(${name} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
   target_link_libraries(${name} 
   ${catkin_LIBRARIES}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so)
+  ${PROJECT_SOURCE_DIR}/../../z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so)
 endfunction()
 
-#Compile(z1_lowcmd_ros)
-#Compile(armMotion)
-#Compile(state_thread_test)
 Compile(unitree)
 Compile(UnitreeSim)
 Compile(UnitreeHw)
-
-add_executable(z1_control_interface src/z1_lowcmd_ros.cpp)
-target_link_libraries(z1_control_interface 
-  ${catkin_LIBRARIES}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so
-)
-
-
-add_executable(state_thread_test src/state_thread_test.cpp)
-target_link_libraries(state_thread_test
-  ${catkin_LIBRARIES}
-  ${PROJECT_SOURCE_DIR}/../../unitree_ros/z1_sdk/lib/libZ1_SDK_${CMAKE_HOST_SYSTEM_PROCESSOR}.so
-)
-
-add_executable(robot_interface_test src/robot_interface_test.cpp)
-target_link_libraries(robot_interface_test
-  ${catkin_LIBRARIES}
-)
-
-add_executable(pin src/tests/pin.cpp)
-target_link_libraries(pin ${catkin_LIBRARIES} ${PINOCCHIO_LIBRARIES})
 
