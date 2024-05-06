@@ -86,3 +86,4 @@ Compile(unitree)
 Compile(UnitreeSim)
 Compile(UnitreeHw)
 
+install(DIRECTORY launch/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)

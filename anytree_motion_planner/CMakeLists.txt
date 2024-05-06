@@ -103,7 +103,7 @@ CompileDynamicStandaloneArm(grasptargetStandaloneArm)
 CompileDynamicStandaloneArm(manipulatetargetStandaloneArm)
 CompileDynamicStandaloneArm(retracttargetStandaloneArm)
 
-
+install(DIRECTORY launch/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
 
 
 ## Add cmake target dependencies of the executable
