@@ -19,6 +19,6 @@
         <node name="retracttarget" pkg="anytree_motion_planner" type="retracttargetStandaloneArm_dynamic" output="screen" />
     </group> 
 
-  <node name="rviz_debug_motion_plan" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/debug_motion_plan_standalone_arm.rviz" if="$(arg debug_motion_plan)"/>
+    <node name="rviz_debug_motion_plan" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/debug_motion_plan_standalone_arm.rviz" if="$(arg debug_motion_plan)"/>
 
 </launch>

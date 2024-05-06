@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- This arg enables to choose between kinematic or dynamic planners -->
+    <arg name="planner_type" default="dynamic" />
+    <arg name="debug_motion_plan" default="false" />
+    <param name="debug_motion_plan" value="$(arg debug_motion_plan)" />
+    
+    <!-- Motion Planner-->
+    <group if="$(eval planner_type == 'kinematic')">
+        <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_as" output="screen" />
+        <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_as" output="screen" />
+        <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_as" output="screen" />
+    </group>    
+
+    <group if="$(eval planner_type == 'dynamic')">
+        <node name="approachtarget" pkg="anytree_motion_planner" type="approachtarget_dynamic" output="screen" />
+        <node name="grasptarget" pkg="anytree_motion_planner" type="grasptarget_dynamic" output="screen" />
+        <node name="manipulatetarget" pkg="anytree_motion_planner" type="manipulatetarget_dynamic" output="screen" />
+        <node name="retracttarget" pkg="anytree_motion_planner" type="retracttarget_dynamic" output="screen" />
+    </group>    
+
+    <node name="rviz_debug_motion_plan" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/debug_motion_plan.rviz" if="$(arg debug_motion_plan)"/>
+
+</launch>
