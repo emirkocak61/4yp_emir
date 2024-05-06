@@ -51,4 +51,4 @@ qtcreator-*
 CATKIN_IGNORE
 
 # Manipulation data
-/anytree_simulation/manipulation_database/*.pkl
+/anytree_adaptive/manipulation_database/*.pkl

@@ -10,7 +10,7 @@ import pandas as pd
 import os
 
 rp = rospkg.RosPack()
-PACKAGE_PATH = rp.get_path("anytree_simulation")
+PACKAGE_PATH = rp.get_path("anytree_adaptive")
 
 
 class ManipulationDataRecorder:

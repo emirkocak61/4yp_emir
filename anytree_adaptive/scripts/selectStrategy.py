@@ -12,7 +12,7 @@ import os
 np.set_printoptions(precision=3)
 
 rp = rospkg.RosPack()
-PACKAGE_PATH = rp.get_path("anytree_simulation")
+PACKAGE_PATH = rp.get_path("anytree_adaptive")
 
 
 class selectStrategyServer:
