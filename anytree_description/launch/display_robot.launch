@@ -1,6 +1,6 @@
 <?xml version ="1.0" ?>
 <launch>
-    <arg name="use_gui" default="true" />
+    <arg name="use_gui" default="false" />
     <param name="robot_description" textfile="$(find anytree_description)/urdf/anytree.urdf" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>

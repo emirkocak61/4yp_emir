@@ -7,7 +7,6 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   joint_state_publisher
-  joint_state_publisher_gui
   robot_state_publisher
   rviz
   urdf
