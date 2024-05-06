@@ -15,3 +15,5 @@ if __name__ == "__main__":
         "wb",
     ) as g:
         pickle.dump(manipulation_database, g, protocol=pickle.HIGHEST_PROTOCOL)
+
+    print("SUCCESS: Manipulation Database Reset")
