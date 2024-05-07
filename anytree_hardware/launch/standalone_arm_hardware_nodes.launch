@@ -6,6 +6,7 @@
     <arg name="unitree_ns" default="z1_gazebo"/>
 
     <arg name="blind" default="false"/>
+    <arg name="rviz" default="true"/>
 
     <param name="robot_description" command="$(find xacro)/xacro $(find anymal_coyote_drs)/urdf/modules/unitree_z1/robot_standalone.xacro arm_root:=unitree_mount arm_ns:=$(arg unitree_ns) unitree_gripper:=$(arg unitree_gripper) unitree_realsense:=$(arg unitree_realsense)"/>
 
@@ -13,7 +14,7 @@
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_simulation)/resources/unitree.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find anytree_hardware)/resources/unitree.rviz" if="$(arg rviz)"/>
 
     <!--Connect world and exotica/world_frame-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="exotica_world_frame_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 world exotica/world_frame"/>
