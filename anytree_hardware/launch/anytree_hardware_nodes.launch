@@ -3,7 +3,7 @@
 
     <arg name="blind" default="false"/>
 
-    <include file="$(find anymal_coyote_drs)/launch/z1_robot_state_publisher.launch">
+    <include file="$(find anymal_coyote_drs)/launch/z1_robot_state_publisher.launch"/>
 
     <!--Connect odom and exotica/world_frame-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="exotica_world_frame_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 odom exotica/world_frame"/>
