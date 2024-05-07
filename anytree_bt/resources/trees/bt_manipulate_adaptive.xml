@@ -68,7 +68,7 @@
 
                     <!-- Move to Raised Pose (to see the apriltag) -->
                     <SaySomething message="Moving to Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.6" label="" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.5" label="" />
 
                     <!-- LookupDevicePose -->
 
@@ -76,9 +76,9 @@
                     <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
 
                     <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
-                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
-                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/>
-                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/>
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
 
                     <!-- Approach -->
 
@@ -164,8 +164,8 @@
 
             <!-- Get Pose of (Rotated) Handle -->
             <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
 
             <!-- Tick approachTarget Action-->
             <SaySomething message="Moving to Adjusted Pre-Grasp Pose..." />
@@ -414,7 +414,7 @@
             <!-- Tick retractTarget Action -->
             <SaySomething message="Retracting..." />
             <Script code="source_frame:='gripperStator'" />
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="world" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
             <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <!-- Close Gripper -->
