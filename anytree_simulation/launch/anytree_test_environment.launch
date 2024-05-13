@@ -8,6 +8,9 @@
   </include>
 
   <arg name="device" default="needle_valve" />
+  <arg name="device_ID" default="0" />
+  <arg name="dynamics" default="none" />
+  <arg name="continuous" default="true" />
 
   <!--=================================================================================================================================================================-->
   <!-- Handles -->
@@ -29,13 +32,15 @@
 <!-- Valves -->
   <group if="$(eval device == 'needle_valve')">
     <include file="$(find manipulation_playground_articulated_devices)/devices/needle_valve/launch/spawn_needle_valve.launch">
-      <arg name="needle_valve_ID" value="0"/>
+      <arg name="needle_valve_ID" value="$(arg device_ID)"/>
       <arg name="x" value="0.85"/>
       <arg name="y" value="0.0"/>
       <arg name="z" value="1.0"/>
       <arg name="Y" value="-1.5708"/>
       <arg name="P" value="0.0"/>
       <arg name="R" value="1.5708"/>
+      <arg name="dynamics" value="$(arg dynamics)"/>
+      <arg name="continuous" value="$(arg continuous)"/>
     </include>
   </group>
 

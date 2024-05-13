@@ -74,14 +74,16 @@
                     <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/> -->
-                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/>
-                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/> -->
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+
+                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.033 -0.02 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
 
                     <!-- Approach -->
 
                     <!-- Tick approachTarget Action-->
                     <SaySomething message="Moving to Pre-Grasp Pose..." />
-                    <approachTargetNode target="{handle_pose}"/>
+                    <approachTargetNode target="{handle_pose_camera_aligned}"/>
 
                     <!-- Update device state for SelectStrategy (don't worry about pre-grasp or angle limits here - already handled within SelectStrategy)-->
                     <getHandleAngleNode device_type="{device_type}" device_id="{device_id}" angle="{handle_angle}"/>
@@ -94,9 +96,9 @@
                     <!-- StrategySwitchStatement -->
                     <Sequence>
 
-                        <SubTree _skipIf="strategy != 0" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+                        <SubTree _skipIf="strategy != 0" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
 
-                        <SubTree _skipIf="strategy != 1" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+                        <SubTree _skipIf="strategy != 1" ID="StrategySubtree" device_type="{device_type}" device_id="{device_id}" direction="{direction}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" strategy="{strategy}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
 
                         <Script _skipIf="strategy != -1" code="DUMMY:=1"/>
 
@@ -160,13 +162,12 @@
             <SubTree ID="GetHandleAngle" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" pre_grasp_relative_rotation="{pre_grasp_relative_rotation}" handle_angle_rad="{handle_angle_rad}" handle_angle_quaternion="{handle_angle_quaternion}" handle_angle_pre_grasp_quaternion="{handle_angle_pre_grasp_quaternion}" min_angle="{min_angle}" max_angle="{max_angle}" rot_sym_angle="{rot_sym_angle}"/>
 
             <!-- Get Pose of (Rotated) Handle -->
-            <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
+            <OffsetPose input_pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}" output_pose="{handle_pose_rotated}"/>
+            <OffsetPose input_pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}" output_pose="{handle_pose_rotated_pre_grasp}"/>
 
             <!-- Tick approachTarget Action-->
             <SaySomething message="Moving to Adjusted Pre-Grasp Pose..." />
-            <approachTargetNode target="{handle_pose_pre_grasp}"/>
+            <approachTargetNode target="{handle_pose_rotated_pre_grasp}"/>
 
             <!-- Open Gripper -->
             <SaySomething message="Opening Gripper" />
@@ -176,7 +177,7 @@
 
             <!-- Tick graspTarget Action-->
             <SaySomething message="Moving to Grasp Pose..." />
-            <graspTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <!-- Close Gripper -->
             <SaySomething message="Closing Gripper" />
@@ -184,7 +185,7 @@
 
             <!-- Manipulate -->
 
-            <SubTree ID="Manipulate" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_pose="{handle_pose}" manipulation_todo="{manipulation_todo}" direction="{direction}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" handle_angle_rad="{handle_angle_rad}" ignore_device_effort_limit="{ignore_device_effort_limit}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
+            <SubTree ID="Manipulate" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_pose_rotated="{handle_pose_rotated}" manipulation_todo="{manipulation_todo}" direction="{direction}" strategy_effort_limit="{strategy_effort_limit}" min_angle="{min_angle}" max_angle="{max_angle}" handle_angle_rad="{handle_angle_rad}" ignore_device_effort_limit="{ignore_device_effort_limit}" device_effort_limit="{device_effort_limit}" sim="{sim}"/>
 
         </Sequence>
 
@@ -332,7 +333,7 @@
                         </Precondition>
 
                         <!-- Tick manipulateTarget Action -->
-                        <manipulateTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" manipulation_todo="{manipulation_todo}" manipulation_remaining="{manipulation_todo}" angle_rotated="{angle_rotated}" direction="{direction}"/>
+                        <manipulateTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" manipulation_todo="{manipulation_todo}" manipulation_remaining="{manipulation_todo}" angle_rotated="{angle_rotated}" direction="{direction}"/>
 
                     </ReactiveSequence>
 

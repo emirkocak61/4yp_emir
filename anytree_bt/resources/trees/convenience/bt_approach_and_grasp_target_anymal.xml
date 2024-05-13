@@ -20,14 +20,16 @@
             <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
             <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
             <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/> -->
-            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/>
-            <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
+            <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/> -->
+            <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
+
+            <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.033 -0.02 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
 
             <!-- Approach -->
 
             <!-- Tick approachTarget Action-->
             <SaySomething message="Moving to Pre-Grasp Pose..." />
-            <approachTargetNode target="{handle_pose}"/>
+            <approachTargetNode target="{handle_pose_camera_aligned}"/>
 
 
             <Script code="handle_angle_rad:=0.0" />
@@ -53,13 +55,12 @@
                     <SubTree ID="GetHandleAngle" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" pre_grasp_relative_rotation="{pre_grasp_relative_rotation}" handle_angle_rad="{handle_angle_rad}" handle_angle_quaternion="{handle_angle_quaternion}" handle_angle_pre_grasp_quaternion="{handle_angle_pre_grasp_quaternion}" max_angle="{max_angle}" min_angle="{min_angle}" sweep_angle="{sweep_angle}"/>
 
                     <!-- Get Pose of (Rotated) Handle -->
-                    <Script code="source_frame:=device_type + '/' + device_id + '/handle'" />
-                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}"/>
-                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose_pre_grasp}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}"/>
+                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_quaternion}" output_pose="{handle_pose_rotated}"/>
+                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="{handle_angle_pre_grasp_quaternion}" output_pose="{handle_pose_rotated_pre_grasp}"/>
 
                     <!-- Tick approachTarget Action-->
                     <SaySomething message="Moving to Adjusted Pre-Grasp Pose..." />
-                    <approachTargetNode target="{handle_pose_pre_grasp}"/>
+                    <approachTargetNode target="{handle_pose_rotated_pre_grasp}"/>
                 </Sequence>
             </Precondition>
 
@@ -84,7 +85,7 @@
 
             <!-- Tick graspTarget Action-->
             <SaySomething message="Moving to Grasp Pose..." />
-            <graspTargetNode target="{handle_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <!-- Close Gripper -->
             <!-- <SaySomething message="Closing Gripper" />
