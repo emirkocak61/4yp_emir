@@ -26,16 +26,7 @@ using namespace exotica;
                                 error_metric("Position"),tolerance_(1.0e-2),
                                 counter_limit(10), t_limit(90.0), self_tolerance(5e-2),
                                 self_counter(10), listener(tfBuffer)
-        {   
-            bool debug_motion_plan = false;
-            if (ros::param::has("/debug_motion_plan")) {
-                ros::param::get("/debug_motion_plan", debug_motion_plan);
-            }
-            if (debug_motion_plan) {Server::InitRos(std::shared_ptr<ros::NodeHandle>(new ros::NodeHandle("~")));}
-            else {
-                ros::AsyncSpinner spinner(2);
-                spinner.start();
-            }            
+        {            
             motion_plan_publisher = nh_.advertise<trajectory_msgs::JointTrajectory>("/motion_plan", 10);
             error_publisher = nh_.advertise<std_msgs::Float64>("/motion_plan_error", 10);
             // state_subscriber = nh_.subscribe("/robot_state",10,&MotionPlannerBaseClass::RobotStateCb,this);
