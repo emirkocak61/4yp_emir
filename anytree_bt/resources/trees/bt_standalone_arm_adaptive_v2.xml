@@ -28,10 +28,6 @@
             <!-- <Script code="device_id:='1'" /> -->
             <!-- <Script code="manipulation_todo:=1.5708" /> -->
 
-            <!-- Move to Forward State -->
-            <SaySomething message="Moving to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
-
             <!-- Manipulation Task -->
             <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
 
@@ -66,9 +62,13 @@
                     <SaySomething message="Closing Gripper" />
                     <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
 
+                    <!-- Move to Forward State -->
+                    <SaySomething message="Moving to Forward State" />
+                    <UnitreeMoveArm label="forward" duration="3000"/>
+
                     <!-- Move to Raised Pose (to see the apriltag) -->
-                    <SaySomething message="Moving to Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.6" label="" />
+                    <!-- <SaySomething message="Moving to Pose" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.6" label="" /> -->
 
                     <!-- LookupDevicePose -->
 

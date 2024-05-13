@@ -7,7 +7,7 @@
 
             <Script code="target_device:=device_type + '/' + device_id + '/handle'"/>
 
-            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 1.0" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
+            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 0.8" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
 
             <!-- <GoToMotionStateAnymal goal_motion_state="perceptive_walk"/> -->
             <GoToMotionStateAnymal goal_motion_state="walk"/>

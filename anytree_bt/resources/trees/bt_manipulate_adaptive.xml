@@ -28,10 +28,6 @@
             <!-- <Script code="device_id:='1'" /> -->
             <!-- <Script code="manipulation_todo:=1.5708" /> -->
 
-            <!-- Move to Forward State -->
-            <SaySomething message="Moving to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
-
             <!-- Manipulation Task -->
             <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
 
@@ -68,7 +64,7 @@
 
                     <!-- Move to Raised Pose (to see the apriltag) -->
                     <SaySomething message="Moving to Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.3 0.0 0.5" label="" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.2 0.0 0.4" label="" />
 
                     <!-- LookupDevicePose -->
 
@@ -77,7 +73,8 @@
 
                     <!-- Note - Link Offset Translation is used to Align Realsense with Device Centre for Handle Angle Estimation -->
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 -0.06 0" link_offset_rotation="0 0 0 1"/> -->
-                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/>
+                    <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 -0.01 0" link_offset_rotation="0 0 0 1"/> -->
+                    <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/>
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/> -->
 
                     <!-- Approach -->

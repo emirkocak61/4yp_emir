@@ -19,5 +19,7 @@
 
     <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_handle_broadcaster" args="0.0 0.0 0.071 0.0 0.0 0.0 needle_valve/0/base needle_valve/0/handle"/>
 
+    <node pkg="tf2_ros" type="static_transform_publisher" name="link00_to_world_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 link00 world"/>
+
     <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_handle_broadcaster" args="0.3 0.3 0.1 0.0 0.0 0.0 needle_valve/0/base needle_valve/0/handle"/> -->
 </launch>
