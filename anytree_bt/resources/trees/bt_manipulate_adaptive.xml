@@ -77,7 +77,7 @@
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/> -->
                     <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
 
-                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.033 -0.02 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
+                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.036 -0.03 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
 
                     <!-- Approach -->
 
@@ -118,8 +118,8 @@
                         <SaySomething message="Manipulation Task Failed" />
 
                         <!-- Return to Forward State -->
-                        <SaySomething message="Returning to Forward State" />
-                        <UnitreeMoveArm label="forward" duration="3000"/>
+                        <!-- <SaySomething message="Returning to Forward State" />
+                        <UnitreeMoveArm label="forward" duration="3000"/> -->
 
                         <!-- Return to StartFlat State -->
                         <SaySomething message="Returning to StartFlat State" />
@@ -134,8 +134,8 @@
             <SaySomething message="Manipulation Task Complete" />
 
             <!-- Return to Forward State -->
-            <SaySomething message="Returning to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
+            <!-- <SaySomething message="Returning to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/> -->
 
             <!-- Return to StartFlat State -->
             <SaySomething message="Returning to StartFlat State" />
