@@ -63,8 +63,10 @@
                     <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
 
                     <!-- Move to Raised Pose (to see the apriltag) -->
-                    <SaySomething message="Moving to Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.2 0.0 0.4" label="" />
+                    <!-- <SaySomething message="Moving to Pose" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.2 0.0 0.4" label="" /> -->
+                    <SaySomething message="Moving to Forward State" />
+                    <UnitreeMoveArm label="forward" duration="3000"/>
 
                     <!-- LookupDevicePose -->
 
@@ -118,8 +120,8 @@
                         <SaySomething message="Manipulation Task Failed" />
 
                         <!-- Return to Forward State -->
-                        <!-- <SaySomething message="Returning to Forward State" />
-                        <UnitreeMoveArm label="forward" duration="3000"/> -->
+                        <SaySomething message="Returning to Forward State" />
+                        <UnitreeMoveArm label="forward" duration="3000"/>
 
                         <!-- Return to StartFlat State -->
                         <SaySomething message="Returning to StartFlat State" />
@@ -134,8 +136,8 @@
             <SaySomething message="Manipulation Task Complete" />
 
             <!-- Return to Forward State -->
-            <!-- <SaySomething message="Returning to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/> -->
+            <SaySomething message="Returning to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/>
 
             <!-- Return to StartFlat State -->
             <SaySomething message="Returning to StartFlat State" />
