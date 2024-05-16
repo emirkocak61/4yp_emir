@@ -5,9 +5,9 @@
             <Script code="device_type:='needle_valve'" />
             <Script code="device_id:='0'" />
 
-            <Script code="target_device:=device_type + '/' + device_id + '/handle'"/>
+            <Script code="target_device:=device_type + '/' + device_id + '/waypoint'"/>
 
-            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 0.8" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
+            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 0" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
 
             <!-- <GoToMotionStateAnymal goal_motion_state="perceptive_walk"/> -->
             <GoToMotionStateAnymal goal_motion_state="walk"/>

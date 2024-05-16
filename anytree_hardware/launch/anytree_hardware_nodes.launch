@@ -13,6 +13,11 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_base_broadcaster" args="0.003 -0.147 0.025 0.0 0.0 0.0 tag_3 needle_valve/0/base"/>
     </group>
 
+    <!-- Place needle_valve manipulation position relative to larger apriltag -->
+    <group unless="$(arg blind)">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_waypoint_broadcaster" args="-0.423 -0.123 0.105 0.0 0.0 0.0 tag_25 needle_valve/0/waypoint"/>
+    </group>
+
     <group if="$(arg blind)">
         <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_base_broadcaster" args="0.85 0.0 1.0 -1.5708 0.0 1.5708 odom needle_valve/0/base"/>
     </group>
