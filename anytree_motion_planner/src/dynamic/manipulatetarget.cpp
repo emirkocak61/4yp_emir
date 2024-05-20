@@ -99,6 +99,7 @@ public:
             direction = goal->direction;
             if (goal->strategy == 0) {
                 max_increment = 0.005;
+                double z_offset = 0.125;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
                 //Now define the manipulation trajectory
@@ -106,12 +107,13 @@ public:
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, 0.0, 0.0, 0.125, 0.0, 0.0, 1.5708 + manipulation_done;
+                    point << time_stamp, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708 + manipulation_done;
                     trajectoryPoints.push_back(point);
                 }
             }
             else if (goal->strategy == 1) {
                 max_increment = 0.001;
+                double z_offset = 0.125;
                 double phi = pi/5;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
@@ -120,7 +122,7 @@ public:
                     time_stamp += dt;
                     manipulation_done += max_increment * direction;
                     Eigen::VectorXd point(7);
-                    point << time_stamp, -0.138*sin(phi)*sin(manipulation_done), 0.138*sin(phi)*cos(manipulation_done), 0.138*cos(phi), 0.0, phi, 1.5708 + manipulation_done;
+                    point << time_stamp, -z_offset*sin(phi)*sin(manipulation_done), z_offset*sin(phi)*cos(manipulation_done), z_offset*cos(phi), 0.0, phi, 1.5708 + manipulation_done;
                     trajectoryPoints.push_back(point);
                 }
             }

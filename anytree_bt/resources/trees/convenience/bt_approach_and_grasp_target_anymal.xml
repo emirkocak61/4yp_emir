@@ -7,6 +7,7 @@
             <Script code="device_id:='0'" />
             <Script code="manipulation_todo:=1.5707" />
             <Script code="strategy:=0" />
+            <Script code="close_gripper_after_grasp:=false" />
 
             <Script code="sweep_angle:=3.1415" />
             <Script code="min_angle:=-3.1415" />
@@ -87,9 +88,12 @@
             <SaySomething message="Moving to Grasp Pose..." />
             <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
-            <!-- Close Gripper -->
-            <!-- <SaySomething message="Closing Gripper" />
-            <UnitreeGripperCommand targetQ="-0.18" duration="1000"/> -->
+            <Precondition if="close_gripper_after_grasp == true" else="SUCCESS">
+                <!-- Close Gripper -->
+                <SaySomething message="Closing Gripper" />
+                <!-- <UnitreeGripperCommand targetQ="-0.18" duration="1000"/> -->
+                <UnitreeGripperCommand targetQ="-0.25" duration="1000"/>
+            </Precondition>
 
         </Sequence>
     </BehaviorTree>

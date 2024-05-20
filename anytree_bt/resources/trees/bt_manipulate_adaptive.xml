@@ -21,6 +21,8 @@
             <!-- (Load device dynamics as none for test A, and normal for test B) -->
             <Script code="device_id:='0'" />
             <Script code="manipulation_todo:=7.5" />
+            <!-- <Script code="manipulation_todo:=1.85" /> -->
+            <!-- <Script code="manipulation_todo:=3.14" /> -->
 
             <!-- Test C: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as normal for device 0, and stiff for device 1) -->
@@ -184,6 +186,7 @@
             <!-- Close Gripper -->
             <SaySomething message="Closing Gripper" />
             <UnitreeGripperCommand targetQ="-0.18" duration="1000"/>
+            <!-- <UnitreeGripperCommand targetQ="-0.25" duration="1000"/> -->
 
             <!-- Manipulate -->
 
