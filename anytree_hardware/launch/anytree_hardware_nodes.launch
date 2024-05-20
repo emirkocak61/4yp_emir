@@ -15,7 +15,7 @@
 
     <!-- Place needle_valve manipulation position relative to larger apriltag -->
     <group unless="$(arg blind)">
-        <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_waypoint_broadcaster" args="-0.423 -0.123 0.105 0.0 0.0 0.0 tag_25 needle_valve/0/waypoint"/>
+        <node pkg="tf2_ros" type="static_transform_publisher" name="needle_valve_waypoint_broadcaster" args="-0.423 -0.123 0.925 0.0 0.0 0.0 tag_25 needle_valve/0/waypoint"/>
     </group>
 
     <group if="$(arg blind)">
