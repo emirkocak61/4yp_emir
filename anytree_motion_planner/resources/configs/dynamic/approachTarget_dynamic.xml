@@ -46,8 +46,8 @@
         </Maps>
 
         <!-- Penalities on joint positions and velocities -->
-        <Q>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 0.5</Q>
-        <Q_rate>1</Q_rate> <!-- Relative scaling on Q matrix -->
+        <Q>0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 0.2</Q>
+        <Q_rate>5</Q_rate> <!-- Relative scaling on Q matrix -->
 
         <!-- Penalties on terminal joint positions and velocities -->
         <!-- Note high penalty on terminal velocities to encourage motion at earlier iterations -->
@@ -55,8 +55,8 @@
         <Qf_rate>1e2</Qf_rate> <!-- Relative scaling on Qf matrix -->
 
         <!-- Weights on joint accelerations -->
-        <R>1 1 1 1 1 1 1 1 1 1 1 0.5</R>
-        <R_rate>2</R_rate> <!-- Relative scaling on R matrix -->
+        <R>1 1 1 1 1 1 1 1 1 1 1 0.2</R>
+        <R_rate>5</R_rate> <!-- Relative scaling on R matrix -->
 
         <Cost>
             <Task Task="Position"  />

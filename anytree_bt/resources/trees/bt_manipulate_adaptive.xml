@@ -20,15 +20,31 @@
             <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as none for test A, and normal for test B) -->
             <Script code="device_id:='0'" />
-            <Script code="manipulation_todo:=7.5" />
+            <!-- <Script code="manipulation_todo:=7.5" /> -->
             <!-- <Script code="manipulation_todo:=1.85" /> -->
-            <!-- <Script code="manipulation_todo:=3.14" /> -->
+            <Script code="manipulation_todo:=3.14" />
 
             <!-- Test C: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as normal for device 0, and stiff for device 1) -->
             <!-- <Script code="device_id:='0'" /> -->
             <!-- <Script code="device_id:='1'" /> -->
             <!-- <Script code="manipulation_todo:=1.5708" /> -->
+
+            <!-- Enter Torso Control Mode -->
+            <GoToMotionStateAnymal goal_motion_state="torso_control"/>
+            <SleepNode msec="2000" />
+
+            <!-- Clear Base Command -->
+            <clearBaseCommandNode clear_base_command="true" />
+            <SleepNode msec="5000" />
+
+            <!-- Reset Rest Pose -->
+            <resetRestPoseNode reset_rest_pose="true" />
+            <SleepNode msec="2000" />
+
+            <!-- Move to Forward State -->
+            <SaySomething message="Moving to Forward State" />
+            <UnitreeMoveArm label="forward" duration="3000"/>
 
             <!-- Manipulation Task -->
             <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
@@ -65,10 +81,8 @@
                     <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
 
                     <!-- Move to Raised Pose (to see the apriltag) -->
-                    <!-- <SaySomething message="Moving to Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.2 0.0 0.4" label="" /> -->
-                    <SaySomething message="Moving to Forward State" />
-                    <UnitreeMoveArm label="forward" duration="3000"/>
+                    <SaySomething message="Moving to Raised Pose" />
+                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.4 -0.05 0.45" label="" />
 
                     <!-- LookupDevicePose -->
 
@@ -81,7 +95,7 @@
                     <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/> -->
                     <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
 
-                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.036 -0.03 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
+                    <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.036 -0.05 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
 
                     <!-- Approach -->
 
@@ -129,6 +143,10 @@
                         <SaySomething message="Returning to StartFlat State" />
                         <UnitreeMoveArm label="startFlat" duration="3000"/>
 
+                        <!-- Clear Base Command -->
+                        <clearBaseCommandNode clear_base_command="true" />
+                        <SleepNode msec="5000" />
+
                     </Sequence>
 
                 </ForceFailure>
@@ -144,6 +162,10 @@
             <!-- Return to StartFlat State -->
             <SaySomething message="Returning to StartFlat State" />
             <UnitreeMoveArm label="startFlat" duration="3000"/>
+
+            <!-- Clear Base Command -->
+            <clearBaseCommandNode clear_base_command="true" />
+            <SleepNode msec="5000" />
 
         </Sequence>
 
@@ -185,8 +207,18 @@
 
             <!-- Close Gripper -->
             <SaySomething message="Closing Gripper" />
-            <UnitreeGripperCommand targetQ="-0.18" duration="1000"/>
-            <!-- <UnitreeGripperCommand targetQ="-0.25" duration="1000"/> -->
+
+            <Precondition if="strategy == 0" else="SUCCESS">
+
+                <UnitreeGripperCommand targetQ="-0.2" duration="1000"/>
+
+            </Precondition>
+
+            <Precondition if="strategy == 1" else="SUCCESS">
+
+                <UnitreeGripperCommand targetQ="-0.22" duration="1000"/>
+
+            </Precondition>
 
             <!-- Manipulate -->
 

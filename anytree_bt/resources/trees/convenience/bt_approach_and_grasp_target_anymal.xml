@@ -7,7 +7,7 @@
             <Script code="device_id:='0'" />
             <Script code="manipulation_todo:=1.5707" />
             <Script code="strategy:=0" />
-            <Script code="close_gripper_after_grasp:=false" />
+            <Script code="close_gripper_after_grasp:=true" />
 
             <Script code="sweep_angle:=3.1415" />
             <Script code="min_angle:=-3.1415" />
@@ -24,7 +24,7 @@
             <!-- <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0.033 0 0" link_offset_rotation="0 0 0 1"/> -->
             <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{handle_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
 
-            <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.036 -0.03 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
+            <OffsetPose input_pose="{handle_pose}" link_offset_translation="0.036 -0.05 0" link_offset_rotation="0 0 0 1" output_pose="{handle_pose_camera_aligned}"/>
 
             <!-- Approach -->
 
@@ -89,10 +89,23 @@
             <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
 
             <Precondition if="close_gripper_after_grasp == true" else="SUCCESS">
-                <!-- Close Gripper -->
-                <SaySomething message="Closing Gripper" />
-                <!-- <UnitreeGripperCommand targetQ="-0.18" duration="1000"/> -->
-                <UnitreeGripperCommand targetQ="-0.25" duration="1000"/>
+                <Sequence>
+                    <!-- Close Gripper -->
+                    <SaySomething message="Closing Gripper" />
+
+                        <Precondition if="strategy == 0" else="SUCCESS">
+
+                            <UnitreeGripperCommand targetQ="-0.2" duration="1000"/>
+
+                        </Precondition>
+
+                        <Precondition if="strategy == 1" else="SUCCESS">
+
+                            <UnitreeGripperCommand targetQ="-0.22" duration="1000"/>
+
+                        </Precondition>
+
+                </Sequence>
             </Precondition>
 
         </Sequence>

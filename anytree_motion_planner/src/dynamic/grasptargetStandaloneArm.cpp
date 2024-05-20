@@ -45,7 +45,7 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
         trajectory.row(4) << 9.0, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708; //hold 
        } 
        else if(goal->strategy == 1){
-        double z_offset = 0.125;
+        double z_offset = 0.132;
         double phi = -pi/5;
         trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 1.5708; //start

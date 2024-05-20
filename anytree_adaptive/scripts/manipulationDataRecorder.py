@@ -38,7 +38,6 @@ class ManipulationDataRecorder:
         self.direction = req.direction
         if req.record_data and not self.record_data:
             self.start_time = rospy.Time.now()
-            self.record_data = req.record_data
             self.new_data = [
                 pd.DataFrame(
                     columns=[
@@ -54,6 +53,7 @@ class ManipulationDataRecorder:
                     ]
                 )
             ]
+            self.record_data = req.record_data
             rospy.loginfo("Manipulation Data Recorder ON")
         elif self.record_data and not req.record_data:
             self.record_data = req.record_data

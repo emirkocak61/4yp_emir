@@ -113,7 +113,7 @@ public:
             }
             else if (goal->strategy == 1) {
                 max_increment = 0.001;
-                double z_offset = 0.125;
+                double z_offset = 0.132;
                 double phi = -pi/5;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
