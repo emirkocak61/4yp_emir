@@ -110,6 +110,20 @@ public:
                     trajectoryPoints.push_back(point);
                 }
             }
+            else if (goal->strategy == 1) {
+                max_increment = 0.001;
+                double phi = pi/5;
+                double time_stamp = 0.0;
+                double manipulation_done = 0.0;
+                //Now define the manipulation trajectory
+                while (std::abs(manipulation_done) < std::abs(manipulation_todo)) {
+                    time_stamp += dt;
+                    manipulation_done += max_increment * direction;
+                    Eigen::VectorXd point(7);
+                    point << time_stamp, -0.138*sin(phi)*sin(manipulation_done), 0.138*sin(phi)*cos(manipulation_done), 0.138*cos(phi), 0.0, phi, 1.5708 + manipulation_done;
+                    trajectoryPoints.push_back(point);
+                }
+            }
         }
         //Now convert the std::vector into Eigen Matrix
         size_t n = trajectoryPoints.size();
