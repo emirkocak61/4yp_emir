@@ -482,7 +482,7 @@
             <NavigateToGoalAnymal target="{waypoint}"/>
             <GoToMotionStateAnymal goal_motion_state="square_up"/>
             <GoToMotionStateAnymal goal_motion_state="stand"/>
-            <SleepNode msec="2000" />
+            <SleepNode msec="5000" />
             <GoToMotionStateAnymal goal_motion_state="torso_control"/>
             <SleepNode msec="2000" />
         </SequenceWithMemory>
@@ -505,7 +505,7 @@
             <NavigateToGoalAnymal target="{target}"/>
             <GoToMotionStateAnymal goal_motion_state="square_up"/>
             <GoToMotionStateAnymal goal_motion_state="stand"/>
-            <SleepNode msec="2000" />
+            <SleepNode msec="5000" />
             <GoToMotionStateAnymal goal_motion_state="torso_control"/>
             <SleepNode msec="2000" />
 
