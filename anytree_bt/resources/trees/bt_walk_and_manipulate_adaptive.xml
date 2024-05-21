@@ -12,6 +12,7 @@
 
             <!-- Manipulation Task Arguments -->
             <Script code="device_type:='needle_valve'" />
+            <Script code="floor:=false" />
             <Script code="direction:=-1" />
 
             <!-- Set to -1 for adaptive behavior -->
