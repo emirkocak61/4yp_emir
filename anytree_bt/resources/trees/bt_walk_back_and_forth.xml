@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree" BTCPP_format="4">
+
+
+
+    <BehaviorTree ID="MainTree">
+
+        <Sequence>
+
+            <!-- Set Sim Flag -->
+            <Script code="sim:=false" />
+
+            <!-- Manipulation Task Arguments -->
+            <Script code="device_type:='needle_valve'" />
+            <Script code="floor:=false" />
+            <Script code="direction:=-1" />
+
+            <!-- Set to -1 for adaptive behavior -->
+            <Script code="input_strategy:=0" />
+
+            <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
+            <!-- (Load device dynamics as none for test A, and normal for test B) -->
+            <Script code="device_id:='0'" />
+            <Script code="manipulation_todo:=7.5" />
+            <!-- <Script code="manipulation_todo:=1.85" /> -->
+            <!-- <Script code="manipulation_todo:=3.14" /> -->
+
+            <!-- Test C: Adaptive Behavior Between Two Strategies -->
+            <!-- (Load device dynamics as normal for device 0, and stiff for device 1) -->
+            <!-- <Script code="device_id:='0'" /> -->
+            <!-- <Script code="device_id:='1'" /> -->
+            <!-- <Script code="manipulation_todo:=1.5708" /> -->
+
+            <!-- Set Home -->
+            <SubTree ID="SetWaypointAsCurrentBasePose" waypoint="{home}" />
+
+            <!-- Navigate to Device -->
+            <SubTree ID="NavigateToDevice" device_type="{device_type}" device_id="{device_id}" floor="{floor}"/>
+
+            <SleepNode msec="2000" />
+
+            <!-- Return to Home -->
+            <SubTree ID="NavigateToWaypoint" waypoint="{home}" />
+
+        </Sequence>
+
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="SetWaypointAsCurrentBasePose">
+        <SequenceWithMemory>
+            <GetTFTransformAsPose source_frame="base" target_frame="odom" pose="{waypoint}"/>
+        </SequenceWithMemory>
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="NavigateToWaypoint">
+        <SequenceWithMemory>
+            <!-- <GoToMotionStateAnymal goal_motion_state="perceptive_walk"/> -->
+            <GoToMotionStateAnymal goal_motion_state="walk"/>
+
+            <!-- NB: walking in dynamic gaits mode causes a crash on hardware -->
+            <!-- <SwitchControllerAndSetOperationModeAnymal motion_controller="dynamic_gaits" reference_type="2" operation_mode="walk"/> -->
+            <NavigateToGoalAnymal target="{waypoint}"/>
+            <GoToMotionStateAnymal goal_motion_state="square_up"/>
+            <GoToMotionStateAnymal goal_motion_state="stand"/>
+            <SleepNode msec="2000" />
+            <GoToMotionStateAnymal goal_motion_state="torso_control"/>
+            <SleepNode msec="2000" />
+        </SequenceWithMemory>
+    </BehaviorTree>
+
+
+
+    <BehaviorTree ID="NavigateToDevice">
+        <SequenceWithMemory>
+
+            <Script code="target_device:=device_type + '/' + device_id + '/waypoint'"/>
+
+            <GetTFTransformAsPose source_frame="{target_device}" target_frame="odom" pose="{target}" link_offset_translation="0 0 0" link_offset_rotation="-0.5 0.5 0.5 0.5"/>
+
+            <!-- <GoToMotionStateAnymal goal_motion_state="perceptive_walk"/> -->
+            <GoToMotionStateAnymal goal_motion_state="walk"/>
+
+            <!-- NB: walking in dynamic gaits mode causes a crash on hardware -->
+            <!-- <SwitchControllerAndSetOperationModeAnymal motion_controller="dynamic_gaits" reference_type="2" operation_mode="walk"/> -->
+            <NavigateToGoalAnymal target="{target}"/>
+            <GoToMotionStateAnymal goal_motion_state="square_up"/>
+            <GoToMotionStateAnymal goal_motion_state="stand"/>
+            <SleepNode msec="2000" />
+            <GoToMotionStateAnymal goal_motion_state="torso_control"/>
+            <SleepNode msec="2000" />
+
+        </SequenceWithMemory>
+    </BehaviorTree>
+
+</root>
