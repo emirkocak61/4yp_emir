@@ -29,7 +29,7 @@ class selectStrategyServer:
         # Strategy effort limits (Nm) [j1 ,j2, j3, j4, j5 ,j6]
         self.strategy_effort_limits = {
             "needle_valve": {
-                0: [100.0, 100.0, 100.0, 100.0, 100.0, 6.0],
+                0: [100.0, 100.0, 100.0, 100.0, 100.0, 4.0],
                 1: [100.0, 100.0, 100.0, 100.0, 100.0, 7.0],
             },
             "button": {
@@ -58,7 +58,7 @@ class selectStrategyServer:
         self.strategy_angle_limits = {
             "needle_valve": {
                 0: [-3.6652, 0.5236, 3.1415],
-                1: [-1.8849, 1.2566, 3.1415],
+                1: [-2.0944, 1.1566, 3.1415],
             },
             "button": {
                 0: [-1.0000, 1.0000, 6.2831],

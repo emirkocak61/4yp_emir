@@ -6,7 +6,7 @@
             <Script code="direction:=-1" />
             <Script code="device_id:='0'" />
             <Script code="manipulation_todo:=1.5707" />
-            <Script code="strategy:=0" />
+            <Script code="strategy:=1" />
             <Script code="close_gripper_after_grasp:=true" />
 
             <Script code="sweep_angle:=3.1415" />
@@ -95,13 +95,13 @@
 
                         <Precondition if="strategy == 0" else="SUCCESS">
 
-                            <UnitreeGripperCommand targetQ="-0.2" duration="1000"/>
+                            <UnitreeGripperCommand targetQ="-0.18" duration="1000"/>
 
                         </Precondition>
 
                         <Precondition if="strategy == 1" else="SUCCESS">
 
-                            <UnitreeGripperCommand targetQ="-0.22" duration="1000"/>
+                            <UnitreeGripperCommand targetQ="-0.20" duration="1000"/>
 
                         </Precondition>
 
