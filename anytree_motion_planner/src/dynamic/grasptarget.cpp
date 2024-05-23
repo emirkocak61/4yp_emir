@@ -46,7 +46,7 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
        }
        else if(goal->strategy == 1){
         double z_offset = 0.132;
-        double phi = pi/4.5;
+        double phi = pi/5;
         trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 1.5708; //start
         trajectory.row(1) << 1.0, 0.015, 0.0, 0.2, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
