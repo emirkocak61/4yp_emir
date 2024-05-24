@@ -3,7 +3,7 @@
         <SequenceWithMemory>
 
             <resetRestPoseNode reset_rest_pose="true" />
-            <SleepNode msec="2000" />
+            <SleepNode msec="250" />
 
         </SequenceWithMemory>
     </BehaviorTree>

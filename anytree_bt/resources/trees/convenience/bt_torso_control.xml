@@ -3,7 +3,7 @@
         <SequenceWithMemory>
 
             <GoToMotionStateAnymal goal_motion_state="torso_control"/>
-            <SleepNode msec="2000" />
+            <SleepNode msec="2500" />
 
         </SequenceWithMemory>
     </BehaviorTree>

@@ -4,7 +4,7 @@
 
             <!-- Move to Pose -->
             <SaySomething message="Moving to Pose" />
-            <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.4 -0.05 0.45" label="" />
+            <UnitreeMoveArm duration="1500" orientation="0.0 0.0 0.0" position="0.4 -0.05 0.45" label="" />
 
         </Sequence>
     </BehaviorTree>

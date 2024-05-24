@@ -4,7 +4,7 @@
 
             <!-- Move to Forward State -->
             <SaySomething message="Moving to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
+            <UnitreeMoveArm label="forward" duration="1500"/>
 
         </Sequence>
     </BehaviorTree>

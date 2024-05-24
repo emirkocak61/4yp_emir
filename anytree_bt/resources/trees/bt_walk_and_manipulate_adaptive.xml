@@ -39,11 +39,11 @@
 
             <!-- Reset Rest Pose -->
             <resetRestPoseNode reset_rest_pose="true" />
-            <SleepNode msec="2000" />
+            <SleepNode msec="250" />
 
             <!-- Move to Forward State -->
             <SaySomething message="Moving to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
+            <UnitreeMoveArm label="forward" duration="1500"/>
 
             <!-- Manipulation Task -->
             <SubTree ID="AdaptiveBehavior" device_type="{device_type}" device_id="{device_id}" direction="{direction}" manipulation_todo="{manipulation_todo}" sim="{sim}" input_strategy="{input_strategy}"/>
@@ -80,11 +80,11 @@
 
                     <!-- Close Gripper (if not already closed)-->
                     <SaySomething message="Closing Gripper" />
-                    <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
+                    <UnitreeGripperCommand targetQ="-0.001" duration="400"/>
 
                     <!-- Move to Raised Pose (to see the apriltag) -->
                     <SaySomething message="Moving to Raised Pose" />
-                    <UnitreeMoveArm duration="3000" orientation="0.0 0.0 0.0" position="0.4 -0.05 0.45" label="" />
+                    <UnitreeMoveArm duration="1500" orientation="0.0 0.0 0.0" position="0.4 -0.05 0.45" label="" />
 
                     <!-- LookupDevicePose -->
 
@@ -139,15 +139,15 @@
 
                         <!-- Return to Forward State -->
                         <SaySomething message="Returning to Forward State" />
-                        <UnitreeMoveArm label="forward" duration="3000"/>
+                        <UnitreeMoveArm label="forward" duration="1500"/>
 
                         <!-- Return to StartFlat State -->
                         <SaySomething message="Returning to StartFlat State" />
-                        <UnitreeMoveArm label="startFlat" duration="3000"/>
+                        <UnitreeMoveArm label="startFlat" duration="1500"/>
 
                         <!-- Clear Base Command -->
                         <clearBaseCommandNode clear_base_command="true" />
-                        <SleepNode msec="5000" />
+                        <SleepNode msec="3000" />
 
                     </Sequence>
 
@@ -157,17 +157,21 @@
 
             <SaySomething message="Manipulation Task Complete" />
 
+            <!-- Close Gripper -->
+            <SaySomething message="Closing Gripper" />
+            <UnitreeGripperCommand targetQ="-0.001" duration="400"/>
+
             <!-- Return to Forward State -->
             <SaySomething message="Returning to Forward State" />
-            <UnitreeMoveArm label="forward" duration="3000"/>
+            <UnitreeMoveArm label="forward" duration="1500"/>
 
             <!-- Return to StartFlat State -->
             <SaySomething message="Returning to StartFlat State" />
-            <UnitreeMoveArm label="startFlat" duration="3000"/>
+            <UnitreeMoveArm label="startFlat" duration="1500"/>
 
             <!-- Clear Base Command -->
             <clearBaseCommandNode clear_base_command="true" />
-            <SleepNode msec="5000" />
+            <SleepNode msec="3000" />
 
         </Sequence>
 
@@ -199,7 +203,7 @@
 
             <!-- Open Gripper -->
             <SaySomething message="Opening Gripper" />
-            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+            <UnitreeGripperCommand targetQ="-0.50" duration="400"/>
 
             <!-- Grasp -->
 
@@ -212,13 +216,13 @@
 
             <Precondition if="strategy == 0" else="SUCCESS">
 
-                <UnitreeGripperCommand targetQ="-0.2" duration="1000"/>
+                <UnitreeGripperCommand targetQ="-0.18" duration="300"/>
 
             </Precondition>
 
             <Precondition if="strategy == 1" else="SUCCESS">
 
-                <UnitreeGripperCommand targetQ="-0.22" duration="1000"/>
+                <UnitreeGripperCommand targetQ="-0.20" duration="300"/>
 
             </Precondition>
 
@@ -303,10 +307,9 @@
                 <Sequence>
                     <SaySomething message="Device Dynamic Properties Activated" />
                     <setControllerCommandNode device_type="{device_type}" device_id="{device_id}" controller_command="true" />
+                    <SleepNode msec="1000" />                    
                 </Sequence>
             </Precondition>
-
-            <SleepNode msec="1000" />
 
             <!-- Start Manipulation Data Recorder -->
             <recordManipulationDataNode record_data="true" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
@@ -446,17 +449,13 @@
 
             <!-- Open Gripper -->
             <SaySomething message="Opening Gripper" />
-            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+            <UnitreeGripperCommand targetQ="-0.50" duration="400"/>
 
             <!-- Tick retractTarget Action -->
             <SaySomething message="Retracting..." />
             <Script code="source_frame:='gripperStator'" />
             <GetTFTransformAsPose source_frame="{source_frame}" target_frame="odom" pose="{eef_retract_pose}" link_offset_translation="0 0 0" link_offset_rotation="0 0 0 1"/>
             <retractTargetNode target="{eef_retract_pose}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
-
-            <!-- Close Gripper -->
-            <SaySomething message="Closing Gripper" />
-            <UnitreeGripperCommand targetQ="-0.001" duration="1000"/>
 
         </Sequence>
 
@@ -484,7 +483,7 @@
             <GoToMotionStateAnymal goal_motion_state="stand"/>
             <SleepNode msec="5000" />
             <GoToMotionStateAnymal goal_motion_state="torso_control"/>
-            <SleepNode msec="2000" />
+            <SleepNode msec="2500" />
         </SequenceWithMemory>
     </BehaviorTree>
 
@@ -507,7 +506,7 @@
             <GoToMotionStateAnymal goal_motion_state="stand"/>
             <SleepNode msec="5000" />
             <GoToMotionStateAnymal goal_motion_state="torso_control"/>
-            <SleepNode msec="2000" />
+            <SleepNode msec="2500" />
 
         </SequenceWithMemory>
     </BehaviorTree>

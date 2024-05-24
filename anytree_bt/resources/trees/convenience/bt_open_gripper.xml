@@ -4,7 +4,7 @@
 
             <!-- Open Gripper -->
             <SaySomething message="Opening Gripper" />
-            <UnitreeGripperCommand targetQ="-0.50" duration="1000"/>
+            <UnitreeGripperCommand targetQ="-0.50" duration="400"/>
 
         </Sequence>
     </BehaviorTree>

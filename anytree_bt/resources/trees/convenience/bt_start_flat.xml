@@ -4,7 +4,7 @@
 
             <!-- Return to StartFlat State -->
             <SaySomething message="Returning to StartFlat State" />
-            <UnitreeMoveArm label="startFlat" duration="3000"/>
+            <UnitreeMoveArm label="startFlat" duration="1500"/>
 
         </Sequence>
     </BehaviorTree>

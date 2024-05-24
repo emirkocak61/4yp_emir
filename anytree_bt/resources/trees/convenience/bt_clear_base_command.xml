@@ -4,7 +4,7 @@
 
             <!-- Clear Base Command-->
             <clearBaseCommandNode clear_base_command="true" />
-            <SleepNode msec="5000" />
+            <SleepNode msec="3000" />
 
         </SequenceWithMemory>
     </BehaviorTree>
