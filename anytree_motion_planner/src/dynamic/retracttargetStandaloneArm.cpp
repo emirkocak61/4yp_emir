@@ -38,16 +38,16 @@ Trajectory DefineTrajectory(const bt_drs_msgs::retractTargetGoalConstPtr &goal) 
        if(goal->strategy == 0) {
         trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-        trajectory.row(1) << 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
-        trajectory.row(2) << 4.0, -0.08, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
-        trajectory.row(3) << 6.0, -0.08, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
+        trajectory.row(1) << 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 2.25, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
+        trajectory.row(3) << 3.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
        } 
        else if(goal->strategy == 1) {
         trajectory = Eigen::MatrixXd::Zero(4,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //start
-        trajectory.row(1) << 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
-        trajectory.row(2) << 4.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
-        trajectory.row(3) << 6.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
+        trajectory.row(1) << 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0; //head on
+        trajectory.row(2) << 3.25, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //retract
+        trajectory.row(3) << 4.0, -0.1, 0.0, 0.0, 0.0, 0.0, 0.0; //hold
        } 
     }
     Trajectory traj_exotica(trajectory,1.0);

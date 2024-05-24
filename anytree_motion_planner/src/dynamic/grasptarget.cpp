@@ -39,20 +39,20 @@ Trajectory DefineTrajectory(const bt_drs_msgs::graspTargetGoalConstPtr &goal) {
         double z_offset = 0.125;
         trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.015, 0.0, 0.2, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
-        trajectory.row(2) << 6.0, 0.015, 0.0, z_offset, 0.0, 0.0, 1.5708; //grasp (distances stator finger from handle)
-        trajectory.row(3) << 7.0, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
-        trajectory.row(4) << 9.0, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708; //hold 
+        trajectory.row(1) << 0.5, 0.015, 0.0, 0.2, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 4.0, 0.015, 0.0, z_offset, 0.0, 0.0, 1.5708; //grasp
+        trajectory.row(3) << 4.5, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708; //grasp (moves stator finger to handle)
+        trajectory.row(4) << 5.0, 0.0, 0.0, z_offset, 0.0, 0.0, 1.5708; //hold 
        }
        else if(goal->strategy == 1){
         double z_offset = 0.132;
         double phi = pi/5;
         trajectory = Eigen::MatrixXd::Zero(5,7); //time + xyz + rpy
         trajectory.row(0) << 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 1.5708; //start
-        trajectory.row(1) << 1.0, 0.015, 0.0, 0.2, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
-        trajectory.row(2) << 10.0, 0.015, z_offset*sin(phi), z_offset*cos(phi), 0.0, phi, 1.5708; //grasp (distances stator finger from handle)
+        trajectory.row(1) << 0.5, 0.015, 0.0, 0.2, 0.0, 0.0, 1.5708; //head on (distances stator finger from handle)
+        trajectory.row(2) << 10.5, 0.015, z_offset*sin(phi), z_offset*cos(phi), 0.0, phi, 1.5708; //grasp
         trajectory.row(3) << 11.0, 0.0, z_offset*sin(phi), z_offset*cos(phi), 0.0, phi, 1.5708; //grasp (moves stator finger to handle)
-        trajectory.row(4) << 13.0, 0.0, z_offset*sin(phi), z_offset*cos(phi), 0.0, phi, 1.5708; //hold 
+        trajectory.row(4) << 12.0, 0.0, z_offset*sin(phi), z_offset*cos(phi), 0.0, phi, 1.5708; //hold 
        }
     }
     Trajectory traj_exotica(trajectory,1.0);

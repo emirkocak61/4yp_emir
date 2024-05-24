@@ -37,7 +37,7 @@ public:
         scene->AddTrajectory("TargetRelative",trajectory);
         t = 0.0;
         Eigen::MatrixXd data = trajectory->GetData();
-        t_limit = data(data.rows()-1,0) + 2; //Add a constant as a safety margin
+        t_limit = data(data.rows()-1,0) + 1; //Add a constant as a safety margin
 
         //Check that EEF is within tolerance of the start waypoint
         problem->SetStartTime(t);
@@ -98,7 +98,7 @@ public:
             manipulation_todo = goal->manipulation_todo;
             direction = goal->direction;
             if (goal->strategy == 0) {
-                max_increment = 0.005;
+                max_increment = 0.01;
                 double z_offset = 0.125;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
@@ -112,8 +112,8 @@ public:
                 }
             }
             else if (goal->strategy == 1) {
-                max_increment = 0.001;
-                double z_offset = 0.132;
+                max_increment = 0.002;
+                double z_offset = 0.13;
                 double phi = -pi/5;
                 double time_stamp = 0.0;
                 double manipulation_done = 0.0;
