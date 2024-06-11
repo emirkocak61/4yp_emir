@@ -15,7 +15,9 @@
             <Script code="direction:=-1" />
 
             <!-- Set to -1 for adaptive behavior -->
-            <Script code="input_strategy:=0" />
+            <Script code="input_strategy:=-1" />
+            <!-- <Script code="input_strategy:=0" /> -->
+            <!-- <Script code="input_strategy:=1" /> -->
 
             <!-- Test A: Smart Twisting, and Test B: Adaptive Behavior Between Two Strategies -->
             <!-- (Load device dynamics as none for test A, and normal for test B) -->
@@ -76,6 +78,11 @@
 
                     <!-- Ensure Manipulation Data Recorder has Stopped -->
                     <recordManipulationDataNode record_data="false" device_type="{device_type}" device_id="{device_id}" direction="{direction}" />
+
+                    <!-- Clear Base Command -->
+                    <!-- Needs less sleep because close_gripper and move_to_pose give it time to settle -->
+                    <clearBaseCommandNode clear_base_command="true" />
+                    <SleepNode msec="1000" />
 
                     <!-- Close Gripper (if not already closed)-->
                     <SaySomething message="Closing Gripper" />
@@ -208,7 +215,27 @@
 
             <!-- Tick graspTarget Action-->
             <SaySomething message="Moving to Grasp Pose..." />
-            <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+            <Fallback>
+                <graspTargetNode target="{handle_pose_rotated}" device_type="{device_type}" strategy="{strategy}" direction="{direction}"/>
+
+                <ForceFailure>
+
+                    <!-- Retract -->
+
+                    <Sequence>
+
+                        <SaySomething message="Failed to Grasp Target - Retracting..." />
+
+                        <SleepNode msec="100"/>
+
+                        <!-- Retract Arm -->
+                        <Script code="angle_rotated := 0.0"/>
+                        <SubTree ID="Retract" device_type="{device_type}" device_id="{device_id}" strategy="{strategy}" handle_angle_rad="{handle_angle_rad}" angle_rotated="{angle_rotated}" direction="{direction}"/>
+
+                    </Sequence>
+
+                </ForceFailure>
+            </Fallback>
 
             <!-- Close Gripper -->
             <SaySomething message="Closing Gripper" />
